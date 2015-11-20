@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="time_array">
+        <item> 年前</item>
+        <item> 月前</item>
+        <item> 天前</item>
+        <item> 小时前</item>
+        <item> 分钟前</item>
+        <item> 秒前</item>
+        <item> 刚刚</item>
+    </string-array>
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="actionbar_bg_pressed">#E45366</color>
+    <color name="white">#FFFFFF</color>
+    <color name="gray">#f1f1f1</color>
+
+    <color name="gainsboro">#dcdcdc</color><!--淡灰色 -->
+    <color name="yellow">#ffff00</color><!--黄色 -->
+    <color name="black">#000000</color><!--黑色 -->
+    <color name="main_color">#018be6</color>
+    <color name="text_color_black">#545759</color>
+    <color name="window_background">#efeff4</color>
+    <color name="act_bar_btn_bg_normal">#ffffff</color>
+    <color name="actionbar_bg">#ff596a</color>
+
+
+    <drawable name="default_divider">#d9d9d9</drawable>
+</resources>

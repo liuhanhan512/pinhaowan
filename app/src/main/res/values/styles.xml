@@ -1,0 +1,187 @@
+<resources>
+
+    <!-- Base application theme. -->
+
+    <style name="AppTheme" >
+        <!-- Customize your theme here. -->
+        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
+        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
+    </style>
+
+    <style name="Actionbar_Animation" parent="@android:style/Theme.Holo.Light">
+        <item name="android:screenOrientation">portrait</item>
+        <item name="android:windowContentOverlay">@null</item>
+
+        <!--<item name="vpiTabPageIndicatorStyle">@style/MyWidget.TabPageIndicator</item>-->
+
+        <item name="android:homeAsUpIndicator">@mipmap/actbar_home_up_indicator</item>
+        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="android:actionMenuTextColor">@color/text_color_black</item>
+        <item name="android:actionMenuTextAppearance">@style/MenuTextAppearance</item>
+        <item name="android:actionBarItemBackground">@drawable/actbar_selector</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Rimet</item>
+        <item name="android:actionDropDownStyle">@style/DropDownNav.Rimet</item>
+        <item name="android:windowBackground">@color/window_background</item>
+    </style>
+
+    <style name="NoUnderline_Actionbar_Animation" parent="Popup_Actionbar_Animation">
+        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar.NoUnderline</item>
+    </style>
+
+    <style name="SearchViewStyle" parent="@android:style/Widget.Holo.Light.AutoCompleteTextView">
+        <item name="android:textCursorDrawable">@drawable/search_cursor</item>
+
+    </style>
+    <!-- 重写actionbar中 OverFlow的属性 -->
+    <style name="OverFlow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
+        <item name="android:src">@mipmap/menu_overflow</item>
+    </style>
+
+    <style name="Popup_Actionbar_Animation" parent="Actionbar_Animation">
+        <item name="android:actionOverflowButtonStyle">@style/OverFlow</item>
+        <item name="android:popupMenuStyle">@android:style/Widget.Holo.Light.ListPopupWindow</item>
+
+    </style>
+
+    <style name="SubTitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/text_color_black</item>
+    </style>
+
+    <style name="MenuTextAppearance">
+        <item name="android:textSize">15dp</item>
+        <item name="android:textColor">@color/text_color_black</item>
+    </style>
+
+    <!-- 从首页进入搜索的动画 -->
+    <style name="activity_global_search_input">
+        <item name="android:activityOpenEnterAnimation">@anim/scale_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/hold</item>
+        <item name="android:activityCloseEnterAnimation">@anim/hold</item>
+        <item name="android:activityCloseExitAnimation">@anim/scale_out</item>
+    </style>
+
+    <style name="activity_push">
+        <item name="android:activityOpenEnterAnimation">@anim/push_left_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/push_left_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/push_right_out</item>
+        <item name="android:activityCloseExitAnimation">@anim/push_right_in</item>
+    </style>
+
+    <style name="activity_push_zoom_in">
+        <item name="android:activityOpenEnterAnimation">@anim/scale_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/hold</item>
+        <item name="android:activityCloseEnterAnimation">@anim/push_right_out</item>
+        <item name="android:activityCloseExitAnimation">@anim/push_right_in</item>
+    </style>
+
+    <style name="Theme.FirstGuideActivity" parent="Theme.Transparent">
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.8</item>
+    </style>
+
+    <style name="Theme.MenuDialog" parent="android:Theme.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <style name="HomeMenuDialog">
+        <item name="android:windowIsFloating">true</item>
+        <!--是否浮现在activity之上-->
+        <item name="android:windowNoTitle">true</item>
+        <!--无标题-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--背景透明-->
+    </style>
+
+    <style name="Theme.ImageFolderDialog" parent="android:Theme.Dialog">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:background">@android:color/white</item>
+    </style>
+
+
+    <style name="Theme.GlobalSearchInput" parent="@android:style/Theme.Holo">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:homeAsUpIndicator">@mipmap/actbar_home_up_indicator</item>
+        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="android:actionBarItemBackground">@drawable/actbar_selector</item>
+        <item name="android:actionMenuTextColor">@color/text_color_black</item>
+        <item name="android:actionMenuTextAppearance">@style/MenuTextAppearance</item>
+    </style>
+
+    <style name="Actionbar_Small_Indicator" parent="Actionbar_Animation">
+        <item name="android:homeAsUpIndicator">@mipmap/small_home_up_indicator</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar" parent="@android:style/Widget.Holo.ActionBar.Solid">
+        <item name="android:subtitleTextStyle">@style/SubTitleTextStyle</item>
+        <!--<item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>-->
+        <item name="android:background">@drawable/actionbar_bg</item>
+        <item name="android:backgroundSplit">@drawable/actionbar_bg</item>
+        <item name="android:titleTextStyle">@style/ActionBar.Solid.Rimet.TextAppearance</item>
+
+    </style>
+
+    <style name="Widget.Styled.ActionBar.NoUnderline" parent="@android:style/Widget.Holo.ActionBar.Solid">
+        <item name="android:subtitleTextStyle">@style/SubTitleTextStyle</item>
+        <!--<item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>-->
+        <item name="android:background">@color/actionbar_bg</item>
+        <item name="android:backgroundSplit">@color/actionbar_bg</item>
+        <item name="android:titleTextStyle">@style/ActionBar.Solid.Rimet.TextAppearance</item>
+
+    </style>
+
+
+    <style name="ActionBar.Solid.Rimet.TextAppearance" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/text_color_black</item>
+    </style>
+
+
+    <style name="DropDownListView.Rimet" parent="@android:style/Widget.Holo.Light.ListView.DropDown">
+        <item name="android:listSelector">@drawable/actbar_selector</item>
+        <item name="android:textAppearance">@style/MenuTextAppearance</item>
+    </style>
+
+    <style name="DropDownNav.Rimet" parent="@android:style/Widget.Holo.Light.Spinner">
+        <item name="android:dropDownSelector">@drawable/actbar_selector</item>
+        <item name="android:textAppearance">@style/MenuTextAppearance</item>
+    </style>
+
+
+    <style name="Theme.Transparent" parent="Actionbar_Animation">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="Theme.Normal" parent="Actionbar_Animation">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Splash.Normal" parent="Actionbar_Animation">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@drawable/logo</item>
+    </style>
+
+    <style name="Theme.Album" parent="@android:style/Theme.Holo">
+        <item name="android:windowAnimationStyle">@style/activity_push</item>
+
+        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="android:actionBarItemBackground">@drawable/actbar_selector</item>
+        <item name="android:homeAsUpIndicator">@mipmap/actbar_home_up_indicator</item>
+    </style>
+
+    <style name="Theme.AlbumZoomIn" parent="Theme.Album">
+        <item name="android:windowAnimationStyle">@style/activity_push_zoom_in</item>
+    </style>
+
+</resources>

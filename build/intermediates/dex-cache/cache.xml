@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/hanhanliu/Documents/New_Work/Haowan/Code/pinhaowan/Pinhaowanr/app/libs/android-support-v4.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="3e4e879d0b3dc11f2feb3f55e77e3b5bd82c4a28">
+        <dex dex="/Users/hanhanliu/Documents/New_Work/Haowan/Code/pinhaowan/Pinhaowanr/app/build/intermediates/pre-dexed/debug/android-support-v4-113a90e2fbbbb8ff46ce3ec45a130436b0c8c2a4.jar" />
+    </item>
+    <item
+        jar="/Users/hanhanliu/Documents/New_Work/Haowan/Code/pinhaowan/Pinhaowanr/app/libs/nineoldandroids-2.4.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="59f19e43354d32de831379c23ce03bb259a4c2b7">
+        <dex dex="/Users/hanhanliu/Documents/New_Work/Haowan/Code/pinhaowan/Pinhaowanr/app/build/intermediates/pre-dexed/debug/nineoldandroids-2.4.0-f535887b71c2d4ad9155207ba5484feb061fcf8a.jar" />
+    </item>
+    <item
+        jar="/Users/hanhanliu/Documents/New_Work/Haowan/Code/pinhaowan/Pinhaowanr/app/libs/org.apache.http.legacy.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="fa331331b626ee78c52bea16ce1e34b39e666ce5">
+        <dex dex="/Users/hanhanliu/Documents/New_Work/Haowan/Code/pinhaowan/Pinhaowanr/app/build/intermediates/pre-dexed/debug/org.apache.http.legacy-387141fdc1345f30aeb0bef22ed1c1e787cfbc57.jar" />
+    </item>
+    <item
+        jar="/Users/hanhanliu/Documents/New_Work/Haowan/Code/pinhaowan/Pinhaowanr/app/libs/gson-2.2.4.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="973e832af433b44c3ed11c426f2f390b29f3f3f8">
+        <dex dex="/Users/hanhanliu/Documents/New_Work/Haowan/Code/pinhaowan/Pinhaowanr/app/build/intermediates/pre-dexed/debug/gson-2.2.4-13bc6f9cf78151c218f478110b101f9490e0ff3e.jar" />
+    </item>
+    <item
+        jar="/Users/hanhanliu/Documents/New_Work/Haowan/Code/pinhaowan/Pinhaowanr/app/libs/universal-image-loader-1.9.2.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="9e025bc5b84968e7d6ac765e660a70b3e5a87432">
+        <dex dex="/Users/hanhanliu/Documents/New_Work/Haowan/Code/pinhaowan/Pinhaowanr/app/build/intermediates/pre-dexed/debug/universal-image-loader-1.9.2-2e1a4853490d9993f09010ffde4a56879e5e8921.jar" />
+    </item>
+
+</items>
