@@ -16,6 +16,9 @@
     <color name="window_background">#efeff4</color>
     <color name="act_bar_btn_bg_normal">#ffffff</color>
     <color name="actionbar_bg">#ff596a</color>
+    <color name="color_divider_line">#B5B6B6</color>
+    <color name="transparent_grey">#80000000</color>
+    <color name="style_divider_color">#C9C7CD</color>
 
 
     <drawable name="default_divider">#d9d9d9</drawable>
