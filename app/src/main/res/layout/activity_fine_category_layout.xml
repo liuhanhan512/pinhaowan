@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/indicator"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        >
+        <RelativeLayout
+            android:id="@+id/area_layout"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/area_text"
+                android:textSize="15sp"
+                android:padding="0dp"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:includeFontPadding="true"
+                android:gravity="center"
+                android:text="@string/area"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/area_indicator"
+                android:layout_toRightOf="@+id/area_text"
+                android:layout_marginLeft="8dp"
+                android:layout_width="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/down_indicator"
+                />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="#cccccc"
+            />
+
+
+        <RelativeLayout
+            android:id="@+id/age_layout"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/age_text"
+                android:textSize="15sp"
+                android:padding="0dp"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:includeFontPadding="true"
+                android:gravity="center"
+                android:text="@string/age"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/age_indicator"
+                android:layout_toRightOf="@+id/age_text"
+                android:layout_marginLeft="8dp"
+                android:layout_width="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/down_indicator"
+                />
+
+        </RelativeLayout>
+
+
+
+    </LinearLayout>
+
+
+    <com.hwand.pinhaowanr.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ListView
+            android:id="@+id/listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:cacheColorHint="#00000000"
+            android:fadingEdge="none"
+
+            >
+
+        </ListView>
+
+    </com.hwand.pinhaowanr.widget.SwipeRefreshLayout>
+
+</LinearLayout>

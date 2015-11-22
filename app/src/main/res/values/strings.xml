@@ -18,4 +18,6 @@
     <string name="community_text">社区</string>
     <string name="star_mom_text">星妈</string>
     <string name="mine_text">我的</string>
+    <string name="area">区域</string>
+    <string name="age">适合年龄</string>
 </resources>
