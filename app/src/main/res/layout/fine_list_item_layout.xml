@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="160dp"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:scaleType="fitXY"
+            />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/image"
+            android:textColor="@color/black"
+            android:lines="2"
+            android:ellipsize="end"
+            android:textSize="20sp"
+            />
+
+        <TextView
+            android:id="@+id/address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:textColor="@color/gray"
+            android:lines="1"
+            android:ellipsize="end"
+            android:textSize="16sp"
+            />
+
+        <RelativeLayout
+            android:id="@+id/bottom_layout"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:layout_below="@+id/address"
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                android:id="@+id/tickets"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:background="@drawable/fine_list_text_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                />
+
+
+            <TextView
+                android:id="@+id/payment"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:background="@drawable/fine_list_text_bg"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
