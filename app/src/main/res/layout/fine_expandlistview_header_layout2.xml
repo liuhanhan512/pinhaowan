@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="180dp">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <RelativeLayout
+            android:padding="12dp"
+            android:id="@+id/over_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/starting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:background="@mipmap/starting_bg"
+                />
+
+            <RelativeLayout
+                android:id="@+id/left_bottom_layout"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="6dp"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp"
+                    android:layout_centerVertical="true"
+                    android:lines="1"
+                    android:ellipsize="end"
+                    android:textSize="16sp"
+                    android:text="address"
+                    />
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_alignTop="@+id/address"
+                    android:layout_alignBottom="@+id/address"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_width="1dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/main_color"
+                    android:layout_toRightOf="@+id/address"
+                    android:layout_marginLeft="8dp"
+                    ></View>
+
+                <TextView
+                    android:id="@+id/distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/divider"
+                    android:layout_marginLeft="8dp"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp"
+                    android:layout_centerVertical="true"
+                    android:lines="1"
+                    android:ellipsize="end"
+                    android:textSize="16sp"
+                    android:text="distance"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/right_bottom_layout"
+                android:layout_toRightOf="@+id/left_bottom_layout"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tickets"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp"
+                    android:layout_toLeftOf="@+id/payment"
+                    android:layout_marginRight="12dp"
+                    android:background="@drawable/fine_list_text_bg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="tickets"
+                    />
+
+
+                <TextView
+                    android:id="@+id/payment"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp"
+                    android:background="@drawable/fine_list_text_bg"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="payment"
+                    />
+
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/sub_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/left_bottom_layout"
+                android:layout_marginBottom="12dp"
+                android:textColor="@color/black"
+                android:lines="1"
+                android:ellipsize="end"
+                android:textSize="16sp"
+                android:text="sub_title"
+                />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/sub_title"
+                android:layout_marginBottom="12dp"
+                android:textColor="@color/black"
+                android:lines="1"
+                android:ellipsize="end"
+                android:textSize="20sp"
+                android:text="title"
+                />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
@@ -23,7 +24,7 @@ import java.util.List;
 /**
  * Created by hanhanliu on 15/11/20.
  */
-public class FineFragment<T> extends BaseFragment {
+public class FineFragment<T> extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -43,6 +44,65 @@ public class FineFragment<T> extends BaseFragment {
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_fine_layout;
+    }
+
+    @Override
+    protected void initViews() {
+        super.initViews();
+        initView();
+        fetchData();
+    }
+
+    private void initView(){
+        mSwipeRefreshLayout = (SwipeRefreshLayout)mFragmentView. findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        //加载颜色是循环播放的，只要没有完成刷新就会一直循环，color1>color2>color3>color4
+        mSwipeRefreshLayout.setColorScheme(android.R.color.white, android.R.color.holo_green_light,
+                android.R.color.holo_orange_light, android.R.color.holo_red_light);
+
+        mExpandableListView = (ExpandableListView) mFragmentView.findViewById(R.id.listview);
+        mExpandableListView.addHeaderView(initHeaderView());
+        mExpandableListView.setOnGroupClickListener(new GroupClickListener());
+
+        mExpandableListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                return false;
+            }
+        });
+
+        mExpandAdapter = new ExpandAdapter(getActivity());
+        mExpandableListView.setAdapter(mExpandAdapter);
+    }
+
+    private View initHeaderView(){
+        View headerView = View.inflate(getActivity() , R.layout.fine_expandlistview_header_layout2, null);
+
+        return headerView;
+    }
+
+    class GroupClickListener implements ExpandableListView.OnGroupClickListener {
+        @Override
+        public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+            return true;
+        }
+    }
+
+    private void expandView() {
+        for (int i = 0; i < mListData.size(); i++) {
+            mExpandableListView.expandGroup(i);
+        }
+    }
+
+    private void fetchData(){
+
+    }
+
+    @Override
+    public void onRefresh() {
+
     }
 
     class ExpandAdapter extends BaseExpandableListAdapter {
