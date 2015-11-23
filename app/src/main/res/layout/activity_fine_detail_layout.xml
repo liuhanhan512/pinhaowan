@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.hwand.pinhaowanr.widget.SwipeRefreshLayout
+        android:id="@+id/container"
+        android:layout_above="@+id/indicator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ListView
+            android:id="@+id/listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:cacheColorHint="#00000000"
+            android:fadingEdge="none"
+
+            >
+
+        </ListView>
+
+    </com.hwand.pinhaowanr.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:id="@+id/indicator"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        >
+        <RelativeLayout
+            android:id="@+id/contact_layout"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/contact_image"
+                android:layout_width="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/contact"
+                />
+
+            <TextView
+                android:id="@+id/contact_text"
+                android:textSize="15sp"
+                android:padding="0dp"
+                android:layout_toRightOf="@+id/contact_image"
+                android:layout_marginLeft="8dp"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:includeFontPadding="true"
+                android:gravity="center"
+                android:text="@string/contact"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="#cccccc"
+            />
+
+
+        <RelativeLayout
+            android:id="@+id/reservation_layout"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/reservation_image"
+                android:layout_width="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/reservation"
+                />
+
+            <TextView
+                android:id="@+id/reservation_text"
+                android:textSize="15sp"
+                android:padding="0dp"
+                android:layout_toRightOf="@+id/reservation_image"
+                android:layout_marginLeft="8dp"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:includeFontPadding="true"
+                android:gravity="center"
+                android:text="@string/reservation"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="#cccccc"
+            />
+
+
+        <RelativeLayout
+            android:id="@+id/gift_ticket_layout"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/gift_ticket_image"
+                android:layout_width="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/gift_ticket"
+                />
+
+            <TextView
+                android:id="@+id/gift_ticket_text"
+                android:textSize="15sp"
+                android:padding="0dp"
+                android:layout_toRightOf="@+id/gift_ticket_image"
+                android:layout_marginLeft="8dp"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:includeFontPadding="true"
+                android:gravity="center"
+                android:text="@string/gift_ticket"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

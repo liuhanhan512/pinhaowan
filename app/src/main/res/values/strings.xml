@@ -20,4 +20,7 @@
     <string name="mine_text">我的</string>
     <string name="area">区域</string>
     <string name="age">适合年龄</string>
+    <string name="contact">联系</string>
+    <string name="reservation">预约</string>
+    <string name="gift_ticket">赠票</string>
 </resources>
