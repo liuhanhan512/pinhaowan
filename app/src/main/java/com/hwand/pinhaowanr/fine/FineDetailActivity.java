@@ -140,13 +140,12 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
         public View getView(int position, View convertView, ViewGroup viewGroup) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(FineDetailActivity.this)
-                        .inflate(R.layout.fine_category_list_item_layout, viewGroup, false);
+                        .inflate(R.layout.fine_detail_list_item_layout, viewGroup, false);
             }
-            ImageView imageView = CommonViewHolder.get(convertView, R.id.image);
+
             TextView title = CommonViewHolder.get(convertView , R.id.title);
-            TextView address = CommonViewHolder.get(convertView , R.id.address);
-            TextView ticket = CommonViewHolder.get(convertView , R.id.tickets);
-            TextView payment = CommonViewHolder.get(convertView , R.id.payment);
+            TextView content = CommonViewHolder.get(convertView , R.id.content);
+            ImageView image = CommonViewHolder.get(convertView , R.id.image);
             return convertView;
         }
     }

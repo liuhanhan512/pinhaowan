@@ -23,4 +23,5 @@
     <string name="contact">联系</string>
     <string name="reservation">预约</string>
     <string name="gift_ticket">赠票</string>
+    <string name="shield">屏蔽</string>
 </resources>

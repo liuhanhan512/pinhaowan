@@ -72,4 +72,100 @@
     </RelativeLayout>
 
 
+    <RelativeLayout
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:background="@drawable/bottom_border_bg"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <ImageView
+            android:id="@+id/image_more"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/more"
+            />
+
+        <RelativeLayout
+            android:id="@+id/left_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/image_more"
+            android:gravity="left|center"
+            >
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="address"
+                android:drawableRight="@mipmap/location"
+                android:drawablePadding="8dp"
+                android:singleLine="true"
+                android:lines="1"
+                android:ellipsize="end"
+                android:textSize="15sp"
+                />
+
+
+            <TextView
+                android:id="@+id/tel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/address"
+                android:layout_marginTop="4dp"
+                android:text="Tel"
+                />
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:background="@drawable/bottom_border_bg"
+        android:gravity="left|center"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <TextView
+            android:id="@+id/hours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="address"
+            android:drawablePadding="8dp"
+            android:singleLine="true"
+            android:lines="1"
+            android:ellipsize="end"
+            android:textSize="15sp"
+            />
+
+
+        <TextView
+            android:id="@+id/age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/hours"
+            android:layout_marginTop="4dp"
+            android:text="Tel"
+            />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/shield"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/fine_list_text_bg"
+        android:text="@string/shield"
+        android:gravity="center"
+        android:textSize="20sp"
+        />
+
+
 </LinearLayout>
