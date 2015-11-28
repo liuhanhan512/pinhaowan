@@ -9,7 +9,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.LinkedList;
@@ -58,7 +57,7 @@ public class MainApplication extends Application {
                 .discCacheFileCount(CACHE_DEFAULT_IMAGE_NUM)// 缓存一百张图片
                 .writeDebugLogs()//
                 .build();//
-        ImageLoader.getInstance().init(config);
+        com.nostra13.universalimageloader.core.ImageLoader.getInstance().init(config);
     }
 
     private void initVolley() {

@@ -16,14 +16,19 @@
 
 package com.android.volley.toolbox;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyLog;
+import com.hwand.pinhaowanr.utils.NetworkRequest;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A request for retrieving a T type response body at a given URL that also
@@ -98,5 +103,20 @@ public abstract class JsonRequest<T> extends Request<T> {
                     mRequestBody, PROTOCOL_CHARSET);
             return null;
         }
+    }
+
+    /* (non-Javadoc)
+ * @see com.android.volley.Request#getHeaders()
+ */
+    @Override
+    public Map<String, String> getHeaders() throws AuthFailureError {
+        Map<String, String> headers = super.getHeaders();
+        if (headers == null
+                || headers.equals(Collections.emptyMap())) {
+            headers = new HashMap<String, String>();
+        }
+        NetworkRequest.addSessionCookie(headers);
+
+        return headers;
     }
 }

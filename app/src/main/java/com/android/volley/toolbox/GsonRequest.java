@@ -1,6 +1,7 @@
 package com.android.volley.toolbox;
 
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -10,10 +11,14 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.hwand.pinhaowanr.utils.NetworkRequest;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.URLDecoder;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by dxz on 15-11-18.
@@ -57,6 +62,7 @@ public class GsonRequest<T> extends Request<T> {
 
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
+        NetworkRequest.checkSessionCookie(response.headers);
         final String json = new String(response.data);
         return Response.success(mGson.fromJson(json, mClazz),
                 HttpHeaderParser.parseCacheHeaders(response));
@@ -79,5 +85,21 @@ public class GsonRequest<T> extends Request<T> {
                 return null;
             }
         }
+    }
+
+    /* (non-Javadoc)
+ * @see com.android.volley.Request#getHeaders()
+ */
+    @Override
+    public Map<String, String> getHeaders() throws AuthFailureError {
+        Map<String, String> headers = super.getHeaders();
+        if (headers == null
+                || headers.equals(Collections.emptyMap())) {
+            headers = new HashMap<String, String>();
+        }
+        // 使用Session
+        NetworkRequest.addSessionCookie(headers);
+
+        return headers;
     }
 }

@@ -15,7 +15,7 @@ import com.hwand.pinhaowanr.widget.DDProgressDialog;
 /**
  * A login screen that offers login via phone/password.
  */
-public class LoginActivity extends BaseActivity {
+public class ForgetPwdActivity extends BaseActivity {
 
     // UI references.
     private EditText mUserName;
@@ -100,7 +100,7 @@ public class LoginActivity extends BaseActivity {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            DDProgressDialog.show(this,"登录中","正在努力加载...");
+            DDProgressDialog.show(this, "登录中", "正在努力加载...");
 //            NetworkRequest.get();
         }
     }
