@@ -185,4 +185,31 @@
         <attr name="isEnable" format="boolean"/>
     </declare-styleable>
 
+    <declare-styleable name="CircleImageView">
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
+        <attr name="border_overlay" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="UniformGridView">
+        <attr name="horizontal_layout_mode">
+            <enum name="scaleAll" value="0" />
+            <enum name="scaleItem" value="1" />
+            <enum name="scaleSpace" value="2" />
+            <enum name="wrapSpace" value="3" />
+        </attr>
+        <attr name="vertical_layout_mode">
+            <enum name="scaleAll" value="0" />
+            <enum name="scaleItem" value="1" />
+            <enum name="scaleSpace" value="2" />
+            <enum name="wrapSpace" value="3" />
+        </attr>
+        <attr name="horizontal_space_proportion" format="float" />
+        <attr name="vertical_space_proportion" format="float" />
+        <attr name="item_width" format="dimension" />
+        <attr name="item_height" format="dimension" />
+        <attr name="horizontal_space" format="dimension" />
+        <attr name="vertical_space" format="dimension" />
+    </declare-styleable>
+
 </resources>
