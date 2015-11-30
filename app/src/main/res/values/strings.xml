@@ -24,4 +24,16 @@
     <string name="reservation">预约</string>
     <string name="gift_ticket">赠票</string>
     <string name="shield">屏蔽</string>
+    <string name="small_partner">小伙伴</string>
+    <string name="spell_d">拼拼</string>
+
+
+    <string name="calendar_sunday">日</string>
+    <string name="calendar_monday">一</string>
+    <string name="calendar_saturday">六</string>
+    <string name="calendar_thursday">四</string>
+    <string name="calendar_tuesday">二</string>
+    <string name="calendar_wednesday">三</string>
+    <string name="calendar_friday">五</string>
+
 </resources>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.hwand.pinhaowanr.widget.calendar.UniformGridView
+        android:id="@+id/calendar_title"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@android:color/holo_green_light" />
+
+    <com.hwand.pinhaowanr.widget.InterruptTouchView
+        android:id="@+id/calendar_touch_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.hwand.pinhaowanr.widget.calendar.CalendarViewPager
+            android:id="@+id/calendar_body"
+            android:layout_width="match_parent"
+            android:layout_height="252dp"
+            android:background="@android:color/holo_green_light" />
+
+        <LinearLayout
+            android:id="@+id/attendance_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="42dp"
+            android:background="@color/uidic_global_color_7_5"
+            android:clickable="true"
+            android:orientation="vertical">
+
+            <ExpandableListView
+                android:id="@+id/listview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </ExpandableListView>
+
+        </LinearLayout>
+
+    </com.hwand.pinhaowanr.widget.InterruptTouchView>
+
+
+</LinearLayout>
