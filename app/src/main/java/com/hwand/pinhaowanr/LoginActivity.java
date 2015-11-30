@@ -1,5 +1,7 @@
 package com.hwand.pinhaowanr;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -26,10 +28,22 @@ public class LoginActivity extends BaseActivity {
 
     private InputMethodManager mImm;
 
+    private static final String TARGET_CLASS_KEY = "target_class_key";
+    private String mTargetClassName;
+
+    public static void launch(Context context ,String targetClassName){
+        Intent intent = new Intent();
+        intent.setClass(context,LoginActivity.class);
+        intent.putExtra(TARGET_CLASS_KEY , targetClassName);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mTargetClassName = getIntent().getStringExtra(TARGET_CLASS_KEY);
 
         // Set up the login form.
         mUserName = (EditText) findViewById(R.id.phone_input);
