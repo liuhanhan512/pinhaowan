@@ -33,37 +33,50 @@
                 android:textSize="15sp" />
 
             <View
+                android:layout_alignLeft="@+id/small_partner_text"
+                android:layout_alignRight="@+id/small_partner_text"
                 android:id="@+id/bottom_week_indicator"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_alignParentBottom="true"
-                android:background="@color/main_color" />
+                android:background="@drawable/indicator_bottom_selector" />
 
         </RelativeLayout>
 
+        <View
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:background="@color/normal_gray"
+            android:layout_width="1dp"
+            android:layout_height="match_parent">
+
+        </View>
+
         <RelativeLayout
-            android:id="@+id/community_nearby_layout"
+            android:id="@+id/spell_d_layout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/tv_near_text"
+                android:id="@+id/spell_d_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:padding="0dp"
                 android:text="@string/spell_d"
-                android:textColor="@color/main_color"
+                android:textColor="@drawable/indicator_selected_selector"
                 android:textSize="15sp" />
 
             <View
+                android:layout_alignLeft="@+id/spell_d_text"
+                android:layout_alignRight="@+id/spell_d_text"
                 android:id="@+id/bottom_near_indicator"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_alignParentBottom="true"
-                android:background="@color/main_color" />
+                android:background="@drawable/indicator_bottom_selector" />
 
         </RelativeLayout>
 

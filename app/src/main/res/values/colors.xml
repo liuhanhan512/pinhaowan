@@ -20,7 +20,7 @@
     <color name="transparent_grey">#80000000</color>
     <color name="style_divider_color">#C9C7CD</color>
     <color name="uidic_global_color_7_5">#efeff4</color>
-
+    <color name="normal_gray">#f1f1f1</color>
 
     <drawable name="default_divider">#d9d9d9</drawable>
 </resources>
