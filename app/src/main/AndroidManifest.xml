@@ -79,6 +79,12 @@
 
         </activity>
 
+        <!-- 超级妈咪列表页面 -->
+        <activity android:name=".community.SuperMomActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+
     </application>
 
 

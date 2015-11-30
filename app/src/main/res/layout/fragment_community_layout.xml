@@ -1,6 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/indicator"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <RelativeLayout
+            android:id="@+id/small_partner_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/small_partner_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:includeFontPadding="true"
+                android:padding="0dp"
+                android:singleLine="true"
+                android:text="@string/small_partner"
+                android:textColor="@drawable/indicator_selected_selector"
+                android:textSize="15sp" />
+
+            <View
+                android:id="@+id/bottom_week_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/main_color" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/community_nearby_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv_near_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:padding="0dp"
+                android:text="@string/spell_d"
+                android:textColor="@color/main_color"
+                android:textSize="15sp" />
+
+            <View
+                android:id="@+id/bottom_near_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/main_color" />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/indicator" />
 
 </LinearLayout>
