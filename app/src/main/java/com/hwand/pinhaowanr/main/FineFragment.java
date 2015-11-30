@@ -54,7 +54,7 @@ public class FineFragment<T> extends BaseFragment implements SwipeRefreshLayout.
     }
 
     private void initView(){
-        mSwipeRefreshLayout = (SwipeRefreshLayout)mFragmentView. findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)mFragmentView.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         //加载颜色是循环播放的，只要没有完成刷新就会一直循环，color1>color2>color3>color4
         mSwipeRefreshLayout.setColorScheme(android.R.color.white, android.R.color.holo_green_light,

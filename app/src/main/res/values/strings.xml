@@ -9,7 +9,7 @@
     <string name="error_invalid_phone">手机号码不存在</string>
     <string name="error_invalid_password">密码太短了</string>
     <string name="error_incorrect_password">密码不正确</string>
-    <string name="error_field_required">需要填写用户名</string>
+    <string name="error_field_required">需要填写</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>

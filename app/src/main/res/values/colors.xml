@@ -22,5 +22,8 @@
     <color name="uidic_global_color_7_5">#efeff4</color>
     <color name="normal_gray">#f1f1f1</color>
 
+    <color name="bg_fragment_white">#fbfbfa</color>
+    <color name="bg_btn_yellow">#fff100</color>
+
     <drawable name="default_divider">#d9d9d9</drawable>
 </resources>

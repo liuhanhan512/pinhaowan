@@ -23,6 +23,8 @@ import java.util.List;
  */
 public class MainActivity extends BaseActivity {
 
+    public static final String INTENT_KEY_TAB = "intent_key_tab";
+
     private ViewPager mPager;
     private MainPagerAdapter mPageAdapter;
     private TextView mTitle;
@@ -30,7 +32,7 @@ public class MainActivity extends BaseActivity {
     private static final int FINE = 0;
     private static final int COMMUNITY = 1;
     private static final int STAR_MOM = 2;
-    private static final int MINE = 3;
+    public static final int MINE = 3;
 
     private static final int TAB_COUNT = 4;
 
@@ -50,6 +52,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_layout);
 
+        mCurrentIndex = getIntent().getIntExtra(INTENT_KEY_TAB,FINE);
         initTitle();
         initViews();
     }

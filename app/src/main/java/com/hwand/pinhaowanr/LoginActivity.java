@@ -7,19 +7,24 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLayoutChangeListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.hwand.pinhaowanr.main.MainActivity;
+import com.hwand.pinhaowanr.utils.AndTools;
+import com.hwand.pinhaowanr.utils.StrUtils;
 import com.hwand.pinhaowanr.widget.DDProgressDialog;
 
 /**
  * A login screen that offers login via phone/password.
  */
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements OnClickListener, OnLayoutChangeListener {
 
     // UI references.
+    private View mRootView;
     private EditText mUserName;
     private EditText mPassword;
     private TextView mBtnLogin;
@@ -27,14 +32,18 @@ public class LoginActivity extends BaseActivity {
     private TextView mRegister;
 
     private InputMethodManager mImm;
+    //屏幕高度
+    private int screenHeight = 0;
+    //软件盘弹起后所占高度阀值
+    private int keyHeight = 0;
 
     private static final String TARGET_CLASS_KEY = "target_class_key";
     private String mTargetClassName;
 
-    public static void launch(Context context ,String targetClassName){
+    public static void launch(Context context, String targetClassName) {
         Intent intent = new Intent();
-        intent.setClass(context,LoginActivity.class);
-        intent.putExtra(TARGET_CLASS_KEY , targetClassName);
+        intent.setClass(context, LoginActivity.class);
+        intent.putExtra(TARGET_CLASS_KEY, targetClassName);
         context.startActivity(intent);
     }
 
@@ -44,10 +53,16 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
 
         mTargetClassName = getIntent().getStringExtra(TARGET_CLASS_KEY);
+        screenHeight = AndTools.getScreenHeight(this);
+        keyHeight = screenHeight / 4;
 
         // Set up the login form.
+        mRootView = findViewById(R.id.login_activity_view);
         mUserName = (EditText) findViewById(R.id.phone_input);
         mPassword = (EditText) findViewById(R.id.pwd_input);
+        mBtnLogin = (TextView) findViewById(R.id.btn_login);
+        mForgetPwd = (TextView) findViewById(R.id.btn_forget_pwd);
+        mRegister = (TextView) findViewById(R.id.btn_register);
         mPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -58,16 +73,11 @@ public class LoginActivity extends BaseActivity {
                 return false;
             }
         });
-        mBtnLogin = (TextView) findViewById(R.id.btn_login);
-        mForgetPwd = (TextView) findViewById(R.id.btn_forget_pwd);
-        mRegister = (TextView) findViewById(R.id.btn_register);
 
-        mBtnLogin.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
+        mRootView.addOnLayoutChangeListener(this);
+        mBtnLogin.setOnClickListener(this);
+        mForgetPwd.setOnClickListener(this);
+        mRegister.setOnClickListener(this);
 
     }
 
@@ -90,18 +100,22 @@ public class LoginActivity extends BaseActivity {
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+        if (TextUtils.isEmpty(password)) {
+            mPassword.setError(getString(R.string.error_field_required));
+            focusView = mPassword;
+            cancel = true;
+        } else if (!isPasswordValid(password)) {
             mPassword.setError(getString(R.string.error_invalid_password));
             focusView = mPassword;
             cancel = true;
         }
 
-        // Check for a valid email address.
+        // Check for a valid phone.
         if (TextUtils.isEmpty(phone)) {
             mUserName.setError(getString(R.string.error_field_required));
             focusView = mUserName;
             cancel = true;
-        } else if (!isPhoneValid(phone)) {
+        } else if (!StrUtils.isPhone(phone)) {
             mUserName.setError(getString(R.string.error_invalid_phone));
             focusView = mUserName;
             cancel = true;
@@ -114,14 +128,9 @@ public class LoginActivity extends BaseActivity {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            DDProgressDialog.show(this,"登录中","正在努力加载...");
+            DDProgressDialog.show(this, "登录中", "正在努力加载...", true);
 //            NetworkRequest.get();
         }
-    }
-
-    private boolean isPhoneValid(String phone) {
-        //TODO: Replace this with your own logic
-        return true;
     }
 
     private boolean isPasswordValid(String password) {
@@ -134,5 +143,33 @@ public class LoginActivity extends BaseActivity {
         mRegister.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_login:
+                attemptLogin();
+                break;
+            case R.id.btn_forget_pwd:
+                startActivity(new Intent(this, ForgetPwdActivity.class));
+                break;
+            case R.id.btn_register:
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra(MainActivity.INTENT_KEY_TAB, MainActivity.MINE);
+                startActivity(intent);
+                break;
+        }
+    }
+
+    @Override
+    public void onLayoutChange(View v, int left, int top, int right,
+                               int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+        //old是改变前的左上右下坐标点值，没有old的是改变后的左上右下坐标点值
+        //现在认为只要控件将Activity向上推的高度超过了1/4屏幕高，就认为软键盘弹起
+        if (oldBottom != 0 && bottom != 0 && (oldBottom - bottom > keyHeight)) {
+            showRegister(false);
+        } else if (oldBottom != 0 && bottom != 0 && (bottom - oldBottom > keyHeight)) {
+            showRegister(true);
+        }
+    }
 }
 

@@ -31,18 +31,9 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/Actionbar_Animation">
-        <activity
-            android:screenOrientation="portrait"
-            android:name=".LoginActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustPan">
-
-        </activity>
 
         <activity
-            android:name=".main.MainActivity"
+            android:name=".BaseLoginCheckActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Normal">
@@ -52,6 +43,29 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+        </activity>
+
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".LoginActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+        </activity>
+
+        <activity
+            android:name=".ForgetPwdActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Normal">
+        </activity>
+
+        <activity
+            android:name=".main.MainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Normal">
 
         </activity>
 

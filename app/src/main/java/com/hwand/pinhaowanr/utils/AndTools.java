@@ -967,7 +967,7 @@ public class AndTools {
      */
     public static String getCurrentData(Context context, String key) {
         String strT = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext())
-                .getString(key, null);
+                .getString(key, "");
         return strT;
     }
 

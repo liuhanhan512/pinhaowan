@@ -22,4 +22,6 @@ public class MineFragment extends BaseFragment {
     protected int getLayoutId() {
         return R.layout.fragment_mine_layout;
     }
+
+
 }

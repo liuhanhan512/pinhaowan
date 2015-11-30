@@ -1,16 +1,14 @@
 package com.hwand.pinhaowanr;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.hwand.pinhaowanr.widget.DDProgressDialog;
+import com.hwand.pinhaowanr.utils.StrUtils;
+import com.hwand.pinhaowanr.widget.DDAlertDialog;
 
 /**
  * A login screen that offers login via phone/password.
@@ -19,106 +17,51 @@ public class ForgetPwdActivity extends BaseActivity {
 
     // UI references.
     private EditText mUserName;
-    private EditText mPassword;
-    private TextView mBtnLogin;
-    private TextView mForgetPwd;
-    private TextView mRegister;
-
-    private InputMethodManager mImm;
+    private TextView mNext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_forget_pwd);
 
         // Set up the login form.
         mUserName = (EditText) findViewById(R.id.phone_input);
-        mPassword = (EditText) findViewById(R.id.pwd_input);
-        mPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mNext = (TextView) findViewById(R.id.btn_next);
+
+        mNext.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.btn_login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
+            public void onClick(View v) {
+                String phone = mUserName.getText().toString();
+                boolean cancel = false;
+                View focusView = null;
+                if (TextUtils.isEmpty(phone)) {
+                    mUserName.setError(getString(R.string.error_field_required));
+                    focusView = mUserName;
+                    cancel = true;
+                } else if (!StrUtils.isPhone(phone)) {
+                    mUserName.setError(getString(R.string.error_invalid_phone));
+                    focusView = mUserName;
+                    cancel = true;
                 }
-                return false;
+                if (cancel) {
+                    // There was an error; don't attempt login and focus the first
+                    // form field with an error.
+                    focusView.requestFocus();
+                } else {
+                    //            NetworkRequest.get();
+                    new DDAlertDialog.Builder(ForgetPwdActivity.this)
+                            .setTitle("提示").setMessage("新的密码已发送到您的手机，请注意查收")
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            ForgetPwdActivity.this.finish();
+                        }
+                    }).show();
+                }
             }
         });
-        mBtnLogin = (TextView) findViewById(R.id.btn_login);
-        mForgetPwd = (TextView) findViewById(R.id.btn_forget_pwd);
-        mRegister = (TextView) findViewById(R.id.btn_register);
-
-        mBtnLogin.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
 
     }
-
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
-    private void attemptLogin() {
-
-        // Reset errors.
-        mUserName.setError(null);
-        mPassword.setError(null);
-
-        // Store values at the time of the login attempt.
-        String phone = mUserName.getText().toString();
-        String password = mPassword.getText().toString();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPassword.setError(getString(R.string.error_invalid_password));
-            focusView = mPassword;
-            cancel = true;
-        }
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(phone)) {
-            mUserName.setError(getString(R.string.error_field_required));
-            focusView = mUserName;
-            cancel = true;
-        } else if (!isPhoneValid(phone)) {
-            mUserName.setError(getString(R.string.error_invalid_phone));
-            focusView = mUserName;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            DDProgressDialog.show(this, "登录中", "正在努力加载...");
-//            NetworkRequest.get();
-        }
-    }
-
-    private boolean isPhoneValid(String phone) {
-        //TODO: Replace this with your own logic
-        return true;
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
-    }
-
-    private void showRegister(boolean show) {
-        //TODO: Replace this with your own logic
-        mRegister.setVisibility(show ? View.VISIBLE : View.GONE);
-    }
-
 }
 

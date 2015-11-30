@@ -2,11 +2,12 @@ package com.hwand.pinhaowanr;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.text.TextUtils;
 
+import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -33,12 +34,11 @@ public class MainApplication extends Application {
         if (sMainApplication == null) {
             sMainApplication = this;
         }
-        Context context = getApplicationContext();
-
         initImageLoader();
         initVolley();
 
     }
+
     private void initImageLoader() {
         /**
          * 开源框架 Image-Loader
@@ -145,7 +145,7 @@ public class MainApplication extends Application {
     }
 
     public boolean isLogin() {
-        return true;
+        return !TextUtils.isEmpty(AndTools.getCurrentData(this, NetworkRequest.SESSION_COOKIE));
     }
 
 }
