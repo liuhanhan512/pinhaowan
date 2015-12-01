@@ -49,8 +49,8 @@
 
         <TextView
             android:id="@+id/btn_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="330dp"
+            android:layout_height="33dp"
             android:layout_marginTop="24dp"
             android:layout_below="@+id/rl_input"
             android:layout_centerHorizontal="true"
@@ -59,7 +59,7 @@
             android:textSize="17sp"
             android:gravity="center"
             android:textColor="@color/text_color_black"
-            android:background="@mipmap/bg_input">
+            android:background="@drawable/btn_yellow_light">
         </TextView>
         <TextView
             android:id="@+id/btn_forget_pwd"
@@ -84,7 +84,8 @@
         android:textSize="14sp"
         android:singleLine="true"
         android:gravity="center"
-        android:textColor="@color/black">
+        android:textColor="@color/black"
+        android:background="@color/bg_btn_yellow_light">
     </TextView>
 
 </RelativeLayout>

@@ -1,9 +1,12 @@
 package com.hwand.pinhaowanr;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,11 +15,14 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -148,23 +154,10 @@ public class BaseActivity extends FragmentActivity implements View.OnClickListen
         mActivityStatck.add(this);
 
         MainApplication.getInstance().addActivity(this);
+        setupStatuBar(this);
 
         initActionBar();
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            //透明状态栏
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//            //透明导航栏
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-//        }
-//        // create our manager instance after the content view is set
-//        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-//        // enable status bar tint
-//        tintManager.setStatusBarTintEnabled(true);
-//        // enable navigation bar tint
-//        tintManager.setNavigationBarTintEnabled(true);
-//        // set a custom tint color for all system bars
-//        tintManager.setTintColor(R.color.yellow);
     }
 
     private void initActionBar() {
@@ -356,6 +349,49 @@ public class BaseActivity extends FragmentActivity implements View.OnClickListen
                 if (f != null)
                     handleResult(f, requestCode, resultCode, data);
             }
+        }
+    }
+
+    @SuppressLint("NewApi")
+    protected void setupStatuBar(Activity activity) {
+        if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.statuBar_color));
+        }else if (Build.VERSION.SDK_INT >= 19) {
+            Window window = activity.getWindow();
+            int flags = window.getAttributes().flags;
+            if ((flags | WindowManager.LayoutParams.FLAG_FULLSCREEN) != flags) {
+                window.setFlags(
+                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                int height = getStatusbarHeight(activity);
+                View contentView = window
+                        .findViewById(Window.ID_ANDROID_CONTENT);
+                contentView.setBackgroundColor(getResources().getColor(R.color.statuBar_color));
+                contentView.setPadding(0, height, 0, 0);
+            } else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                View contentView = window
+                        .findViewById(Window.ID_ANDROID_CONTENT);
+                contentView.setBackgroundColor(getResources().getColor(R.color.statuBar_color));
+                contentView.setPadding(0, 0, 0, 0);
+            }
+        }
+    }
+
+    protected int getStatusbarHeight(Context context) {
+
+        try {
+            Class<?> c = Class.forName("com.android.internal.R$dimen");
+            Object obj = c.newInstance();
+            Field field = c.getField("status_bar_height");
+            int x = Integer.parseInt(field.get(obj).toString());
+            int y = context.getResources().getDimensionPixelSize(x);
+            return y;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return (int) (context.getResources().getDisplayMetrics().density * 20 + 0.5);
         }
     }
 }
