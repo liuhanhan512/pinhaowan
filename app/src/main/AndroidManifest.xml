@@ -85,6 +85,17 @@
 
         </activity>
 
+        <activity android:name=".community.ClassDetailActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity android:name=".community.SpellDListActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+
     </application>
 
 
