@@ -33,6 +33,15 @@
     <string name="the_new">最新</string>
     <string name="spell">拼一下</string>
     <string name="partner">参与者</string>
+    <string name="activity_detail">活动详情</string>
+    <string name="activity_description">活动介绍</string>
+    <string name="project">项目</string>
+    <string name="class_cost">课程费用</string>
+    <string name="one_visit">单次上门</string>
+    <string name="stage_visit">阶段上门</string>
+    <string name="all_visit">全年上门</string>
+    <string name="spell_d_view">查看拼拼</string>
+    <string name="spell_d_launch">发起拼拼</string>
 
 
     <string name="calendar_sunday">日</string>
