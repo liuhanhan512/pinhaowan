@@ -14,6 +14,7 @@ import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.event.TitleChangeEvent;
+import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.StrUtils;
 import com.hwand.pinhaowanr.utils.UrlConfig;
@@ -83,31 +84,45 @@ public class RegisterFragment extends BaseFragment {
                         @Override
                         public void onResponse(String response) {
                             // TODO:
-                            VerifyFragment verifyFragment = VerifyFragment.newInstance();
-                            FragmentManager fm = getFragmentManager();
-                            FragmentTransaction tx = fm.beginTransaction();
-                            tx.hide(RegisterFragment.this);
-                            tx.add(R.id.fragment_content , verifyFragment, "VerifyFragment");
-                            tx.addToBackStack(null);
-                            tx.commit();
+                            LogUtil.d("dxz", response);
+                            if (!TextUtils.isEmpty(response) && response.contains("1")) {
+                                VerifyFragment verifyFragment = VerifyFragment.newInstance();
+                                FragmentManager fm = getFragmentManager();
+                                FragmentTransaction tx = fm.beginTransaction();
+                                tx.hide(RegisterFragment.this);
+                                tx.add(R.id.fragment_content , verifyFragment, "VerifyFragment");
+                                tx.addToBackStack(null);
+                                tx.commit();
+                            } else {
+                                new DDAlertDialog.Builder(getActivity())
+                                        .setTitle("提示").setMessage("该手机号已注册，请直接登录！")
+                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                                getActivity().finish();
+                                            }
+                                        }).show();
+                            }
+
 
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             new DDAlertDialog.Builder(getActivity())
-                                    .setTitle("提示").setMessage("该手机号已注册，请直接登录！")
+                                    .setTitle("提示").setMessage("网络问题请重试！")
                                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.dismiss();
-                                            VerifyFragment verifyFragment = VerifyFragment.newInstance();
-                                            FragmentManager fm = getFragmentManager();
-                                            FragmentTransaction tx = fm.beginTransaction();
-                                            tx.hide(RegisterFragment.this);
-                                            tx.add(R.id.fragment_content , verifyFragment, "VerifyFragment");
-                                            tx.addToBackStack(null);
-                                            tx.commit();
+//                                            VerifyFragment verifyFragment = VerifyFragment.newInstance();
+//                                            FragmentManager fm = getFragmentManager();
+//                                            FragmentTransaction tx = fm.beginTransaction();
+//                                            tx.hide(RegisterFragment.this);
+//                                            tx.add(R.id.fragment_content , verifyFragment, "VerifyFragment");
+//                                            tx.addToBackStack(null);
+//                                            tx.commit();
                                         }
                                     }).show();
                         }

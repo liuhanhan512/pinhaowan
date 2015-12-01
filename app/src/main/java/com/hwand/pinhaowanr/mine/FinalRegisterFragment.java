@@ -1,0 +1,254 @@
+package com.hwand.pinhaowanr.mine;
+
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.hwand.pinhaowanr.BaseFragment;
+import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.event.TitleChangeEvent;
+import com.hwand.pinhaowanr.utils.LogUtil;
+import com.hwand.pinhaowanr.utils.NetworkRequest;
+import com.hwand.pinhaowanr.utils.UrlConfig;
+import com.hwand.pinhaowanr.widget.DDAlertDialog;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
+import de.greenrobot.event.EventBus;
+
+/**
+ * Created by hanhanliu on 15/11/20.
+ */
+public class FinalRegisterFragment extends BaseFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+
+    public static FinalRegisterFragment newInstance() {
+        FinalRegisterFragment fragment = new FinalRegisterFragment();
+        Bundle bundle = new Bundle();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+
+    // UI references.
+    private EditText mName;
+    private EditText mChildName;
+
+    private RadioButton mCheckBoxMan;
+    private RadioButton mCheckBoxWoman;
+
+    private RadioButton mCheckBoxDaddy;
+    private RadioButton mCheckBoxMommy;
+    private RadioButton mCheckBoxElse;
+
+    private EditText mPwd;
+    private EditText mCommitPwd;
+
+    private TextView mNext;
+
+    private Spinner mSpinnerYear;
+    private Spinner mSpinnerMonth;
+    private Spinner mSpinnerDay;
+    private ArrayList<String> dataYear = new ArrayList<String>();
+    private ArrayList<String> dataMonth = new ArrayList<String>();
+    private ArrayList<String> dataDay = new ArrayList<String>();
+    private ArrayAdapter<String> adapterSpinnerYear;
+    private ArrayAdapter<String> adapterSpinnerMonth;
+    private ArrayAdapter<String> adapterSpinnerDay;
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_final_register_layout;
+    }
+
+    @Override
+    protected void initViews() {
+        super.initViews();
+        initView();
+        EventBus.getDefault().post(new TitleChangeEvent("注册"));
+    }
+
+    private void initView() {
+        mName = (EditText) mFragmentView.findViewById(R.id.name_input);
+        mChildName = (EditText) mFragmentView.findViewById(R.id.child_input);
+        mPwd = (EditText) mFragmentView.findViewById(R.id.pwd_input);
+        mCommitPwd = (EditText) mFragmentView.findViewById(R.id.commit_pwd_input);
+        mCheckBoxMan = (RadioButton) mFragmentView.findViewById(R.id.checkbox_man);
+        mCheckBoxWoman = (RadioButton) mFragmentView.findViewById(R.id.checkbox_woman);
+        mCheckBoxDaddy = (RadioButton) mFragmentView.findViewById(R.id.checkbox_daddy);
+        mCheckBoxMommy = (RadioButton) mFragmentView.findViewById(R.id.checkbox_mommy);
+        mCheckBoxElse = (RadioButton) mFragmentView.findViewById(R.id.checkbox_else);
+        mSpinnerYear = (Spinner) mFragmentView.findViewById(R.id.spinner_year);
+        mSpinnerMonth = (Spinner) mFragmentView.findViewById(R.id.spinner_month);
+        mSpinnerDay = (Spinner) mFragmentView.findViewById(R.id.spinner_day);
+
+        // 年份设定为当年的前后20年
+        Calendar cal = Calendar.getInstance();
+        for (int i = 0; i < 40; i++) {
+            dataYear.add("" + (cal.get(Calendar.YEAR) - 20 + i));
+        }
+        adapterSpinnerYear = new ArrayAdapter<String>(this.getActivity(), R.layout.spinner_item_layout, dataYear);
+        adapterSpinnerYear.setDropDownViewResource(R.layout.spinner_item_layout);
+        mSpinnerYear.setAdapter(adapterSpinnerYear);
+        mSpinnerYear.setSelection(20);// 默认选中今年
+
+        // 12个月
+        for (int i = 1; i <= 12; i++) {
+            dataMonth.add("" + (i < 10 ? "0" + i : i));
+        }
+        adapterSpinnerMonth = new ArrayAdapter<String>(this.getActivity(), R.layout.spinner_item_layout, dataMonth);
+        adapterSpinnerMonth.setDropDownViewResource(R.layout.spinner_item_layout);
+        mSpinnerMonth.setAdapter(adapterSpinnerMonth);
+
+        adapterSpinnerDay = new ArrayAdapter<String>(this.getActivity(), R.layout.spinner_item_layout, dataDay);
+        adapterSpinnerDay.setDropDownViewResource(R.layout.spinner_item_layout);
+        mSpinnerDay.setAdapter(adapterSpinnerDay);
+
+        mSpinnerMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                dataDay.clear();
+                Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.YEAR, Integer.valueOf(mSpinnerYear.getSelectedItem().toString()));
+                cal.set(Calendar.MONTH, arg2);
+                int dayofm = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+                for (int i = 1; i <= dayofm; i++) {
+                    dataDay.add("" + (i < 10 ? "0" + i : i));
+                }
+                adapterSpinnerDay.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+
+            }
+        });
+//        mNext.setOnClickListener(this);
+        //        mCheckBoxMan.setOnCheckedChangeListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        register();
+    }
+
+    private void register() {
+        String name = mName.getText().toString();
+        String childName = mChildName.getText().toString();
+        String pwd = mPwd.getText().toString();
+        String cPwd = mCommitPwd.getText().toString();
+        boolean cancel = false;
+        View focusView = null;
+        if (TextUtils.isEmpty(name)) {
+            mName.setError(getString(R.string.error_field_required));
+            focusView = mName;
+            cancel = true;
+        } else if (TextUtils.isEmpty(childName)) {
+            mChildName.setError(getString(R.string.error_field_required));
+            focusView = mChildName;
+            cancel = true;
+        } else if (TextUtils.isEmpty(pwd)) {
+            mPwd.setError(getString(R.string.error_field_required));
+            focusView = mPwd;
+            cancel = true;
+        } else if (TextUtils.isEmpty(cPwd)) {
+            mCommitPwd.setError(getString(R.string.error_field_required));
+            focusView = mCommitPwd;
+            cancel = true;
+        } else if (!TextUtils.equals(pwd, cPwd)) {
+            mCommitPwd.setError(getString(R.string.error_inconsistent_password));
+            focusView = mCommitPwd;
+            cancel = true;
+        }
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+        } else {
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("name", name);
+            String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_REGISTER, params);
+            NetworkRequest.get(url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    // TODO:
+                    LogUtil.d("dxz", response);
+                    if (!TextUtils.isEmpty(response) && response.contains("1")) {
+                        VerifyFragment verifyFragment = VerifyFragment.newInstance();
+                        FragmentManager fm = getFragmentManager();
+                        FragmentTransaction tx = fm.beginTransaction();
+                        tx.hide(FinalRegisterFragment.this);
+                        tx.add(R.id.fragment_content, verifyFragment, "VerifyFragment");
+                        tx.addToBackStack(null);
+                        tx.commit();
+                    } else {
+                        new DDAlertDialog.Builder(getActivity())
+                                .setTitle("提示").setMessage("该手机号已注册，请直接登录！")
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        getActivity().finish();
+                                    }
+                                }).show();
+                    }
+
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    new DDAlertDialog.Builder(getActivity())
+                            .setTitle("提示").setMessage("网络问题请重试！")
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+//                                            VerifyFragment verifyFragment = VerifyFragment.newInstance();
+//                                            FragmentManager fm = getFragmentManager();
+//                                            FragmentTransaction tx = fm.beginTransaction();
+//                                            tx.hide(RegisterFragment.this);
+//                                            tx.add(R.id.fragment_content , verifyFragment, "VerifyFragment");
+//                                            tx.addToBackStack(null);
+//                                            tx.commit();
+                                }
+                            }).show();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        switch (buttonView.getId()) {
+            case R.id.checkbox_man:
+
+                break;
+            case R.id.checkbox_woman:
+                break;
+            case R.id.checkbox_daddy:
+                break;
+            case R.id.checkbox_mommy:
+                break;
+            case R.id.checkbox_else:
+                break;
+
+
+        }
+
+    }
+}

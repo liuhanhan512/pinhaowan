@@ -26,6 +26,7 @@
     <color name="bg_fragment_white">#fbfbfa</color>
     <color name="bg_btn_yellow">#fff100</color>
     <color name="bg_btn_yellow_light">#fef7a8</color>
+    <color name="text_color_light">#a1a1a1</color>
 
     <drawable name="default_divider">#d9d9d9</drawable>
 </resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="D:\dxz\git\pinhaowan\pinhaowan\app\libs\systembartint-1.0.4.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="06404f77b92ec723cc132e825afe85a07da85ee6">
+        <dex dex="D:\dxz\git\pinhaowan\pinhaowan\app\build\intermediates\pre-dexed\debug\systembartint-1.0.4-62f922000c4f6e4ca5f4a3e6216da10b8119a8c5.jar" />
+    </item>
+
+</items>

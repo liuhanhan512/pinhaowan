@@ -1,6 +1,8 @@
 package com.hwand.pinhaowanr.mine;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -40,6 +42,7 @@ public class VerifyFragment extends BaseFragment implements View.OnClickListener
         mVerifyCode = (EditText) mFragmentView.findViewById(R.id.code_input);
         mNext = (TextView) mFragmentView.findViewById(R.id.btn_next);
         mVerifyCode.requestFocus();
+        mNext.setOnClickListener(this);
     }
 
     @Override
@@ -48,6 +51,13 @@ public class VerifyFragment extends BaseFragment implements View.OnClickListener
             switch (v.getId()) {
                 case R.id.btn_next:
                     // TODO:
+                    FinalRegisterFragment finalRegisterFragment = FinalRegisterFragment.newInstance();
+                    FragmentManager fm = getFragmentManager();
+                    FragmentTransaction tx = fm.beginTransaction();
+                    tx.hide(VerifyFragment.this);
+                    tx.add(R.id.fragment_content, finalRegisterFragment, "FinalRegisterFragment");
+                    tx.addToBackStack(null);
+                    tx.commit();
                 default:
                     break;
             }

@@ -4,6 +4,9 @@ import android.os.Bundle;
 
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.event.TitleChangeEvent;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by hanhanliu on 15/11/20.
@@ -20,6 +23,13 @@ public class MineNaviFragment extends BaseFragment {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_mine_layout;
+        return R.layout.fragment_mine_navi_layout;
+    }
+
+    @Override
+    protected void initViews() {
+        super.initViews();
+        EventBus.getDefault().post(new TitleChangeEvent("我的"));
+
     }
 }
