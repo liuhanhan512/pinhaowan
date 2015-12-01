@@ -12,7 +12,7 @@ import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
 
 /**
- * 社区--拼拼--小伙伴页面
+ * 社区--小伙伴页面
  * Created by hanhanliu on 15/11/30.
  */
 public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener{
