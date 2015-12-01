@@ -58,7 +58,7 @@
         <activity
             android:name=".ForgetPwdActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Normal">
+            android:theme="@style/Actionbar_Animation">
         </activity>
 
         <activity

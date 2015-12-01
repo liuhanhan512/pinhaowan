@@ -39,6 +39,7 @@ public class VerifyFragment extends BaseFragment implements View.OnClickListener
     private void initView() {
         mVerifyCode = (EditText) mFragmentView.findViewById(R.id.code_input);
         mNext = (TextView) mFragmentView.findViewById(R.id.btn_next);
+        mVerifyCode.requestFocus();
     }
 
     @Override

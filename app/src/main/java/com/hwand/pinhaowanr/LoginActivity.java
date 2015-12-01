@@ -1,6 +1,7 @@
 package com.hwand.pinhaowanr;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,10 +14,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.main.MainActivity;
 import com.hwand.pinhaowanr.utils.AndTools;
+import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.StrUtils;
+import com.hwand.pinhaowanr.utils.UrlConfig;
+import com.hwand.pinhaowanr.widget.DDAlertDialog;
 import com.hwand.pinhaowanr.widget.DDProgressDialog;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A login screen that offers login via phone/password.
@@ -129,7 +138,31 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnLa
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             DDProgressDialog.show(this, "登录中", "正在努力加载...", true);
-//            NetworkRequest.get();
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("name", phone);
+            params.put("passward", password);
+            String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_LOGIN, params);
+            NetworkRequest.get(url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    // TODO:
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    new DDAlertDialog.Builder(LoginActivity.this)
+                            .setTitle("提示").setMessage("登录失败请重试")
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
+                }
+            });
         }
     }
 
@@ -139,7 +172,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnLa
     }
 
     private void showRegister(boolean show) {
-        //TODO: Replace this with your own logic
         mRegister.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 

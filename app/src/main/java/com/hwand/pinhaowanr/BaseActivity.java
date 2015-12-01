@@ -150,6 +150,21 @@ public class BaseActivity extends FragmentActivity implements View.OnClickListen
         MainApplication.getInstance().addActivity(this);
 
         initActionBar();
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            //透明状态栏
+//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//            //透明导航栏
+//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//        }
+//        // create our manager instance after the content view is set
+//        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+//        // enable status bar tint
+//        tintManager.setStatusBarTintEnabled(true);
+//        // enable navigation bar tint
+//        tintManager.setNavigationBarTintEnabled(true);
+//        // set a custom tint color for all system bars
+//        tintManager.setTintColor(R.color.yellow);
     }
 
     private void initActionBar() {
@@ -237,17 +252,17 @@ public class BaseActivity extends FragmentActivity implements View.OnClickListen
         mRightText.setText(resId);
     }
 
-    protected void setmRightTextEnable(boolean enable){
+    protected void setmRightTextEnable(boolean enable) {
         mRightText.setEnabled(enable);
         mRightText.setClickable(enable);
-        if(enable){
+        if (enable) {
             mRightText.setTextColor(getResources().getColor(R.color.white));
         } else {
             mRightText.setTextColor(getResources().getColor(R.color.gray));
         }
     }
 
-    protected void setmActionBarTtile(String title) {
+    protected void setActionBarTtile(String title) {
         mTitle.setText(title);
     }
 

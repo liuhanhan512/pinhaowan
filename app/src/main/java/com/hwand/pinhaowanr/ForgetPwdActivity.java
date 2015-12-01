@@ -30,6 +30,7 @@ public class ForgetPwdActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forget_pwd);
+        setActionBarTtile("忘记密码");
 
         // Set up the login form.
         mUserName = (EditText) findViewById(R.id.phone_input);

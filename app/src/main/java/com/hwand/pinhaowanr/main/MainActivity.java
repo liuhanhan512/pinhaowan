@@ -13,10 +13,13 @@ import android.widget.TextView;
 import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.event.TitleChangeEvent;
 import com.hwand.pinhaowanr.utils.AndTools;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by hanhanliu on 15/11/20.
@@ -44,7 +47,7 @@ public class MainActivity extends BaseActivity {
 
     private BaseFragment mCurrentFragment;
 
-    private final int[] FRAGMENT_TITLES = {R.string.fine_text, R.string.community_text, R.string.star_mom_text , R.string.mine_text};
+    private final int[] FRAGMENT_TITLES = {R.string.fine_text, R.string.community_text, R.string.star_mom_text, R.string.mine_text};
 
 
     @Override
@@ -52,19 +55,20 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_layout);
 
-        mCurrentIndex = getIntent().getIntExtra(INTENT_KEY_TAB,FINE);
+        mCurrentIndex = getIntent().getIntExtra(INTENT_KEY_TAB, FINE);
         initTitle();
         initViews();
+        EventBus.getDefault().register(this);
     }
 
-    private void initTitle(){
+    private void initTitle() {
 
     }
 
-    private void initViews(){
-        mTitle = (TextView)findViewById(R.id.title);
+    private void initViews() {
+        mTitle = (TextView) findViewById(R.id.title);
         mPager = (ViewPager) findViewById(R.id.view_pager);
-        mPager.setPageMargin(AndTools.dp2px(this , 1f));
+        mPager.setPageMargin(AndTools.dp2px(this, 1f));
         mPager.setPageMarginDrawable(getResources().getDrawable(R.drawable.default_divider));
         mPager.setOnPageChangeListener(new ViewPagerListener());
         mPager.setOffscreenPageLimit(4);
@@ -79,7 +83,7 @@ public class MainActivity extends BaseActivity {
         setTabLayoutListener();
     }
 
-    private void initTabLayouts(){
+    private void initTabLayouts() {
         RelativeLayout fineTab = (RelativeLayout) findViewById(R.id.fine_layout);
         fineTab.setTag(Integer.valueOf(FINE));
 
@@ -98,10 +102,11 @@ public class MainActivity extends BaseActivity {
         mTabLayouts.add(mineTab);
 
     }
-    private void changeTabLayoutState(){
-        for(int i = 0 ; i < mTabLayouts.size() ; i++){
+
+    private void changeTabLayoutState() {
+        for (int i = 0; i < mTabLayouts.size(); i++) {
             RelativeLayout relativeLayout = mTabLayouts.get(i);
-            if(mCurrentIndex == i){
+            if (mCurrentIndex == i) {
                 relativeLayout.findViewById(R.id.tv_text).setSelected(true);
                 relativeLayout.findViewById(R.id.image_indicator).setSelected(true);
                 relativeLayout.setSelected(true);
@@ -113,17 +118,19 @@ public class MainActivity extends BaseActivity {
         }
 
     }
-    private void setTabLayoutListener(){
-        for(final RelativeLayout relativeLayout : mTabLayouts){
+
+    private void setTabLayoutListener() {
+        for (final RelativeLayout relativeLayout : mTabLayouts) {
             relativeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int index = (Integer)relativeLayout.getTag();
+                    int index = (Integer) relativeLayout.getTag();
                     mPager.setCurrentItem(index);
                 }
             });
         }
     }
+
 
     class ViewPagerListener implements ViewPager.OnPageChangeListener {
 
@@ -174,7 +181,7 @@ public class MainActivity extends BaseActivity {
             if (mListFragments == null) {
                 mListFragments = new SparseArray<BaseFragment>(TAB_COUNT);
             }
-            switch (position){
+            switch (position) {
                 case FINE:
                     mCurrentFragment = FineFragment.newInstance();
                     break;
@@ -188,7 +195,7 @@ public class MainActivity extends BaseActivity {
                     mCurrentFragment = MineFragment.newInstance();
                     break;
             }
-            mListFragments.append(position,mCurrentFragment);
+            mListFragments.append(position, mCurrentFragment);
             return mCurrentFragment;
         }
 
@@ -204,6 +211,15 @@ public class MainActivity extends BaseActivity {
 
         }
 
+    }
 
+    public void onEventMainThread(TitleChangeEvent event) {
+        mTitle.setText(event.mTitle);
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 }
