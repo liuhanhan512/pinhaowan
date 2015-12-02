@@ -50,6 +50,7 @@
                 android:id="@+id/image_indicator"
                 android:layout_width="wrap_content"
                 android:layout_alignParentTop="true"
+                android:layout_marginTop="2dp"
                 android:layout_centerHorizontal="true"
                 android:layout_height="wrap_content"
                 android:src="@drawable/fine_indicator_bottom_selector"
@@ -91,6 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="2dp"
                 android:layout_alignParentTop="true"
                 android:src="@drawable/community_indicator_bottom_selector"
                 />
@@ -131,6 +133,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="2dp"
                 android:layout_alignParentTop="true"
                 android:src="@drawable/star_mom_indicator_bottom_selector"
                 />
@@ -170,6 +173,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="2dp"
                 android:layout_alignParentTop="true"
                 android:src="@drawable/mine_indicator_bottom_selector"
                 />

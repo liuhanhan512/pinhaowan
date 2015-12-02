@@ -1,14 +1,13 @@
-package com.hwand.pinhaowanr;
+package com.hwand.pinhaowanr.mine;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnLayoutChangeListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,7 +15,12 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
+import com.hwand.pinhaowanr.BaseFragment;
+import com.hwand.pinhaowanr.DataCacheHelper;
+import com.hwand.pinhaowanr.ForgetPwdActivity;
+import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.entity.UserInfo;
+import com.hwand.pinhaowanr.event.TitleChangeEvent;
 import com.hwand.pinhaowanr.main.MainActivity;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
@@ -28,10 +32,20 @@ import com.hwand.pinhaowanr.widget.DDProgressDialog;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.greenrobot.event.EventBus;
+
 /**
- * A login screen that offers login via phone/password.
+ * Created by hanhanliu on 15/11/20.
  */
-public class LoginActivity extends BaseActivity implements OnClickListener, OnLayoutChangeListener {
+public class LoginFragment extends BaseFragment implements View.OnClickListener {
+
+    public static LoginFragment newInstance() {
+        LoginFragment fragment = new LoginFragment();
+        Bundle bundle = new Bundle();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
 
     // UI references.
     private View mRootView;
@@ -41,37 +55,32 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnLa
     private TextView mForgetPwd;
     private TextView mRegister;
 
-    //屏幕高度
-    private int screenHeight = 0;
-    //软件盘弹起后所占高度阀值
-    private int keyHeight = 0;
-
-    private static final String TARGET_CLASS_KEY = "target_class_key";
-    private String mTargetClassName;
-
-    public static void launch(Context context, String targetClassName) {
-        Intent intent = new Intent();
-        intent.setClass(context, LoginActivity.class);
-        intent.putExtra(TARGET_CLASS_KEY, targetClassName);
-        context.startActivity(intent);
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_login;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+    protected void initViews() {
+        super.initViews();
+        initView();
+    }
 
-        mTargetClassName = getIntent().getStringExtra(TARGET_CLASS_KEY);
-        screenHeight = AndTools.getScreenHeight(this);
-        keyHeight = screenHeight / 4;
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().post(new TitleChangeEvent(""));
+    }
+
+    private void initView() {
 
         // Set up the login form.
-        mRootView = findViewById(R.id.login_activity_view);
-        mUserName = (EditText) findViewById(R.id.phone_input);
-        mPassword = (EditText) findViewById(R.id.pwd_input);
-        mBtnLogin = (TextView) findViewById(R.id.btn_login);
-        mForgetPwd = (TextView) findViewById(R.id.btn_forget_pwd);
-        mRegister = (TextView) findViewById(R.id.btn_register);
+        mRootView = mFragmentView.findViewById(R.id.login_activity_view);
+        mUserName = (EditText) mFragmentView.findViewById(R.id.phone_input);
+        mPassword = (EditText) mFragmentView.findViewById(R.id.pwd_input);
+        mBtnLogin = (TextView) mFragmentView.findViewById(R.id.btn_login);
+        mForgetPwd = (TextView) mFragmentView.findViewById(R.id.btn_forget_pwd);
+        mRegister = (TextView) mFragmentView.findViewById(R.id.btn_register);
         mPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -83,11 +92,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnLa
             }
         });
 
-        mRootView.addOnLayoutChangeListener(this);
         mBtnLogin.setOnClickListener(this);
         mForgetPwd.setOnClickListener(this);
         mRegister.setOnClickListener(this);
-
+        showRegister(true);
+//        controlKeyboardLayout(mRootView, mRootView);
     }
 
     /**
@@ -137,7 +146,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnLa
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            DDProgressDialog.show(this, "登录中", "正在努力加载...", true);
+            DDProgressDialog.show(getActivity(), "登录中", "正在努力加载...", true);
             Map<String, String> params = new HashMap<String, String>();
             params.put("telephone", phone);
             params.put("passward", password);
@@ -145,13 +154,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnLa
             NetworkRequest.get(url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+
                     if (!TextUtils.isEmpty(response)) {
                         Gson gson = new Gson();
                         UserInfo  info = gson.fromJson(response,UserInfo.class);
                         switch (info.getResult()){
                             case 0:
                             case 1:
-                                new DDAlertDialog.Builder(LoginActivity.this)
+                                new DDAlertDialog.Builder(getActivity())
                                         .setTitle("提示").setMessage("用户名或密码错误")
                                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                             @Override
@@ -163,13 +173,12 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnLa
                             case 2:
                                 AndTools.showToast("登陆成功");
                                 DataCacheHelper.getInstance().saveUserInfo(response);
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                Intent intent = new Intent(getActivity(), MainActivity.class);
                                 startActivity(intent);
-                                finish();
                         }
 
                     } else {
-                        new DDAlertDialog.Builder(LoginActivity.this)
+                        new DDAlertDialog.Builder(getActivity())
                                 .setTitle("提示").setMessage("登录失败请重试")
                                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                     @Override
@@ -178,11 +187,12 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnLa
                                     }
                                 }).show();
                     }
+
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    new DDAlertDialog.Builder(LoginActivity.this)
+                    new DDAlertDialog.Builder(getActivity())
                             .setTitle("提示").setMessage("登录失败请重试")
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
@@ -211,26 +221,46 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnLa
                 attemptLogin();
                 break;
             case R.id.btn_forget_pwd:
-                startActivity(new Intent(this, ForgetPwdActivity.class));
+                startActivity(new Intent(getActivity(), ForgetPwdActivity.class));
                 break;
             case R.id.btn_register:
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.putExtra(MainActivity.INTENT_KEY_TAB, MainActivity.MINE);
-                startActivity(intent);
+                RegisterFragment fragment = RegisterFragment.newInstance();
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction tx = fm.beginTransaction();
+                tx.hide(LoginFragment.this);
+                tx.add(R.id.fragment_content , fragment, "RegisterFragment");
+                tx.addToBackStack(null);
+                tx.commit();
                 break;
         }
     }
 
-    @Override
-    public void onLayoutChange(View v, int left, int top, int right,
-                               int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-        //old是改变前的左上右下坐标点值，没有old的是改变后的左上右下坐标点值
-        //现在认为只要控件将Activity向上推的高度超过了1/4屏幕高，就认为软键盘弹起
-        if (oldBottom != 0 && bottom != 0 && (oldBottom - bottom > keyHeight)) {
-            showRegister(false);
-        } else if (oldBottom != 0 && bottom != 0 && (bottom - oldBottom > keyHeight)) {
-            showRegister(true);
-        }
-    }
+//    /**
+//     * @param root 最外层布局，需要调整的布局
+//     * @param scrollToView 被键盘遮挡的scrollToView，滚动root,使scrollToView在root可视区域的底部
+//     */
+//    private void controlKeyboardLayout(final View root, final View scrollToView) {
+//        root.getViewTreeObserver().addOnGlobalLayoutListener( new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                Rect rect = new Rect();
+//                //获取root在窗体的可视区域
+//                root.getWindowVisibleDisplayFrame(rect);
+//                //获取root在窗体的不可视区域高度(被其他View遮挡的区域高度)
+//                int rootInvisibleHeight = root.getRootView().getHeight() - rect.bottom;
+//                //若不可视区域高度大于100，则键盘显示
+//                if (rootInvisibleHeight > 50) {
+//                    int[] location = new int[2];
+//                    //获取scrollToView在窗体的坐标
+//                    scrollToView.getLocationInWindow(location);
+//                    //计算root滚动高度，使scrollToView在可见区域的底部
+//                    int srollHeight = (location[1] + scrollToView.getHeight()) - rect.bottom;
+//                    root.scrollTo(0, 70);
+//                } else {
+//                    //键盘隐藏
+//                    root.scrollTo(0, 0);
+//                }
+//            }
+//        });
+//    }
 }
-

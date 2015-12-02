@@ -1,14 +1,19 @@
 package com.hwand.pinhaowanr.main;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.event.TitleChangeEvent;
+import com.hwand.pinhaowanr.mine.LoginFragment;
 import com.hwand.pinhaowanr.mine.MineNaviFragment;
 import com.hwand.pinhaowanr.mine.RegisterFragment;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by hanhanliu on 15/11/20.
@@ -22,12 +27,20 @@ public class MineFragment extends BaseFragment {
         return fragment;
     }
 
-
-    private BaseFragment mCurFragment;
+    private Fragment mCurFragment;
 
     private FragmentManager mFragmentManager;
     private MineNaviFragment mMineNaviFragment;
+    private LoginFragment mLoginFragment;
     private RegisterFragment mRegisterFragment;
+
+    private String title = "我的";
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
 
     @Override
     protected int getLayoutId() {
@@ -40,12 +53,38 @@ public class MineFragment extends BaseFragment {
         mFragmentManager = getFragmentManager();
         FragmentTransaction tx = mFragmentManager.beginTransaction();
         if (!MainApplication.getInstance().isLogin()) {
-            mRegisterFragment = RegisterFragment.newInstance();
+            mLoginFragment = LoginFragment.newInstance();
             if (mCurFragment != null && mCurFragment.isVisible()) {
                 tx.hide(mCurFragment);
             }
-            tx.add(R.id.fragment_content, mRegisterFragment, "RegisterFragment");
-            mCurFragment = mRegisterFragment;
+            tx.add(R.id.fragment_content, mLoginFragment, "LoginFragment");
+            mCurFragment = mLoginFragment;
+            title = "";
+            tx.commit();
+        } else {
+            mMineNaviFragment = MineNaviFragment.newInstance();
+            if (mCurFragment != null && mCurFragment.isVisible()) {
+                tx.hide(mCurFragment);
+            }
+            tx.add(R.id.fragment_content, mMineNaviFragment, "MineNaviFragment");
+            mCurFragment = mMineNaviFragment;
+            title = "我的";
+            tx.commit();
+        }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        FragmentTransaction tx = mFragmentManager.beginTransaction();
+        if (!MainApplication.getInstance().isLogin()) {
+            mLoginFragment = LoginFragment.newInstance();
+            if (mCurFragment != null && mCurFragment.isVisible()) {
+                tx.hide(mCurFragment);
+            }
+            tx.add(R.id.fragment_content, mLoginFragment, "LoginFragment");
+            mCurFragment = mLoginFragment;
             tx.commit();
         } else {
             mMineNaviFragment = MineNaviFragment.newInstance();
@@ -56,7 +95,15 @@ public class MineFragment extends BaseFragment {
             mCurFragment = mMineNaviFragment;
             tx.commit();
         }
-
     }
 
+    public void onEventMainThread(TitleChangeEvent event) {
+        title = event.mTitle;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

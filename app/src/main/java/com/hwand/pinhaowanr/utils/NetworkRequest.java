@@ -136,7 +136,7 @@ public class NetworkRequest {
 
     public static <T> Request<T> get(String url, Class<T> clazz,
                                      Response.Listener<T> listener, Response.ErrorListener errorListener) {
-        return get(url, clazz, listener, errorListener, true);
+        return get(url, clazz, listener, errorListener, false);
     }
 
     public static <T> Request<T> get(boolean shouldCache, String url,

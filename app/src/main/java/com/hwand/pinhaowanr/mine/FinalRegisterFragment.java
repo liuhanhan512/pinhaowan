@@ -45,6 +45,7 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
 
 
     // UI references.
+    private View mRootView;
     private EditText mName;
     private EditText mChildName;
 
@@ -83,6 +84,7 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
     }
 
     private void initView() {
+        mRootView = mFragmentView.findViewById(R.id.root_linear);
         mName = (EditText) mFragmentView.findViewById(R.id.name_input);
         mChildName = (EditText) mFragmentView.findViewById(R.id.child_input);
         mPwd = (EditText) mFragmentView.findViewById(R.id.pwd_input);
@@ -271,4 +273,5 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
         }
 
     }
+
 }

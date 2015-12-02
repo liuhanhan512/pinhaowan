@@ -13,7 +13,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.R;
-import com.hwand.pinhaowanr.event.TitleChangeEvent;
 import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.StrUtils;
@@ -22,8 +21,6 @@ import com.hwand.pinhaowanr.widget.DDAlertDialog;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by hanhanliu on 15/11/20.
@@ -51,7 +48,6 @@ public class RegisterFragment extends BaseFragment {
     protected void initViews() {
         super.initViews();
         initView();
-        EventBus.getDefault().post(new TitleChangeEvent("注册"));
     }
 
     private void initView() {

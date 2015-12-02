@@ -145,7 +145,8 @@ public class MainApplication extends Application {
     }
 
     public boolean isLogin() {
-        return !TextUtils.isEmpty(AndTools.getCurrentData(this, NetworkRequest.SESSION_COOKIE));
+        return !TextUtils.isEmpty(AndTools.getCurrentData(this, NetworkRequest.SESSION_COOKIE))
+                    && DataCacheHelper.getInstance().getUserInfo() != null;
     }
 
 }
