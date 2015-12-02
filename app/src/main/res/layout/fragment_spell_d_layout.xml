@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.hwand.pinhaowanr.widget.SwipeRefreshLayout
+        android:id="@+id/container"
+        android:layout_above="@+id/indicator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ListView
+            android:id="@+id/listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:cacheColorHint="#00000000"
+            android:fadingEdge="none"
+
+            >
+
+        </ListView>
+
+    </com.hwand.pinhaowanr.widget.SwipeRefreshLayout>
+
+</RelativeLayout>

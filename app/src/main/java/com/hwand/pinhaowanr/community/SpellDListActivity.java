@@ -1,5 +1,7 @@
 package com.hwand.pinhaowanr.community;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,15 +9,15 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
-import com.hwand.pinhaowanr.BaseFragment;
+import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
 
 /**
- * 社区--小伙伴页面
- * Created by hanhanliu on 15/11/30.
+ * 某个课程的拼课列表
+ * Created by hanhanliu on 15/12/2.
  */
-public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener{
+public class SpellDListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener{
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -23,29 +25,34 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
 
     private Adapter mAdapter;
 
-    public static BaseFragment newInstance(){
-        SmallPartnerFragment fragment = new SmallPartnerFragment();
-        Bundle bundle = new Bundle();
-        fragment.setArguments(bundle);
-        return fragment;
+    public static void launch(Context context){
+        Intent intent = new Intent();
+        intent.setClass(context , SpellDListActivity.class);
+        context.startActivity(intent);
     }
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.fragment_small_partner_layout;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_spell_d_list_layout);
+
+        initTitle();
+        initViews();
     }
 
-    @Override
-    protected void initViews() {
-        super.initViews();
-        mSwipeRefreshLayout = (SwipeRefreshLayout)mFragmentView. findViewById(R.id.container);
+    private void initTitle(){
+
+    }
+
+    private void initViews(){
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         //加载颜色是循环播放的，只要没有完成刷新就会一直循环，color1>color2>color3>color4
         mSwipeRefreshLayout.setColorScheme(android.R.color.white, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
-        mListView = (ListView)mFragmentView . findViewById(R.id.listview);
-        mListView.addHeaderView(initHeaderView());
+        mListView = (ListView) findViewById(R.id.listview);
+//        mListView.addHeaderView(initHeaderView());
 
         mAdapter = new Adapter();
         mListView.setAdapter(mAdapter);
@@ -59,23 +66,12 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
         }
     };
 
-    private View initHeaderView(){
-
-        View headerView = View.inflate(getActivity() , R.layout.small_partner_list_header_layout , null);
-
-        return headerView;
-    }
-
-    private void fetchData(){
-
-    }
-
     @Override
     public void onRefresh() {
 
     }
 
-    class Adapter extends BaseAdapter{
+    class Adapter extends BaseAdapter {
 
         @Override
         public int getCount() {
@@ -95,7 +91,7 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
         @Override
         public View getView(int position, View convertView, ViewGroup viewGroup) {
             if(convertView == null){
-                convertView = View.inflate(getActivity() , R.layout.small_partner_list_item_layout , null);
+                convertView = View.inflate(SpellDListActivity.this , R.layout.spell_d_list_item_layout , null);
             }
             return convertView;
         }
