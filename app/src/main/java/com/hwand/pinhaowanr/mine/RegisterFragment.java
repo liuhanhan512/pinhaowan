@@ -80,6 +80,7 @@ public class RegisterFragment extends BaseFragment {
                     Map<String, String> params = new HashMap<String, String>();
                     params.put("telephone", phone);
                     String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_GET_CODE, params);
+                    LogUtil.d("dxz", url);
                     NetworkRequest.get(url, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {

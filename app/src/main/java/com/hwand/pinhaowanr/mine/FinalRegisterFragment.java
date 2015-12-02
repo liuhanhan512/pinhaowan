@@ -137,8 +137,9 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
 
             }
         });
-//        mNext.setOnClickListener(this);
-        //        mCheckBoxMan.setOnCheckedChangeListener(this);
+        mNext = (TextView) mFragmentView.findViewById(R.id.btn_next);
+        mNext.setOnClickListener(this);
+        mName.requestFocus();
     }
 
     @Override
@@ -151,6 +152,18 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
         String childName = mChildName.getText().toString();
         String pwd = mPwd.getText().toString();
         String cPwd = mCommitPwd.getText().toString();
+        int childSex = mCheckBoxMan.isChecked() ? 1 : 0;
+        int relation = 1;
+        if (mCheckBoxMommy.isChecked()) {
+            relation = 2;
+        } else if (mCheckBoxElse.isChecked()) {
+            relation = 3;
+        }
+        StringBuilder sb = new StringBuilder("");
+        sb.append(mSpinnerYear.getSelectedItem().toString() + "-");
+        sb.append(mSpinnerMonth.getSelectedItem().toString() + "-");
+        sb.append(mSpinnerDay.getSelectedItem().toString());
+        String birthday = sb.toString();
         boolean cancel = false;
         View focusView = null;
         if (TextUtils.isEmpty(name)) {
@@ -181,7 +194,13 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
         } else {
             Map<String, String> params = new HashMap<String, String>();
             params.put("name", name);
+            params.put("childName", childName);
+            params.put("childSex", childSex + "");
+            params.put("birthday", birthday);
+            params.put("relation", relation + "");
+            params.put("passward", pwd);
             String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_REGISTER, params);
+            LogUtil.d("dxz", url);
             NetworkRequest.get(url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -212,6 +231,7 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    LogUtil.d("dxz", error.toString());
                     new DDAlertDialog.Builder(getActivity())
                             .setTitle("提示").setMessage("网络问题请重试！")
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {

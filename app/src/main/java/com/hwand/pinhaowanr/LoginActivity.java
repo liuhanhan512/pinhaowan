@@ -18,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.main.MainActivity;
 import com.hwand.pinhaowanr.utils.AndTools;
+import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.StrUtils;
 import com.hwand.pinhaowanr.utils.UrlConfig;
@@ -139,16 +140,17 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnLa
             // perform the user login attempt.
             DDProgressDialog.show(this, "登录中", "正在努力加载...", true);
             Map<String, String> params = new HashMap<String, String>();
-            params.put("name", phone);
+            params.put("telephone", phone);
             params.put("passward", password);
             String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_LOGIN, params);
             NetworkRequest.get(url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     // TODO:
+                    LogUtil.d("dxz", response);
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
-
+                    finish();
                 }
             }, new Response.ErrorListener() {
                 @Override

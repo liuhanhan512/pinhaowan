@@ -32,7 +32,7 @@ public class NetworkRequest {
 
     private static final String SET_COOKIE_KEY = "Set-Cookie";
     private static final String COOKIE_KEY = "Cookie";
-    public static final String SESSION_COOKIE = "sessionid";
+    public static final String SESSION_COOKIE = "JSESSIONID";
 
     /**
      * prevent make many instances
@@ -76,13 +76,15 @@ public class NetworkRequest {
      * @param headers Response Headers.
      */
     public final static void checkSessionCookie(Map<String, String> headers) {
+        for (String str : headers.keySet()) {
+            LogUtil.d("dxz", str+":" +headers.get(str));
+        }
         if (headers.containsKey(SET_COOKIE_KEY)
                 && headers.get(SET_COOKIE_KEY).startsWith(SESSION_COOKIE)) {
             String cookie = headers.get(SET_COOKIE_KEY);
             if (cookie.length() > 0) {
                 String[] splitCookie = cookie.split(";");
-                String[] splitSessionId = splitCookie[0].split("=");
-                cookie = splitSessionId[1];
+                cookie = splitCookie[0];
                 AndTools.saveCurrentData2Cache(MainApplication.getInstance(),SESSION_COOKIE,cookie);
             }
         }
@@ -97,8 +99,6 @@ public class NetworkRequest {
         String sessionId = AndTools.getCurrentData(MainApplication.getInstance(), SESSION_COOKIE);
         if (sessionId.length() > 0) {
             StringBuilder builder = new StringBuilder();
-            builder.append(SESSION_COOKIE);
-            builder.append("=");
             builder.append(sessionId);
             if (headers.containsKey(COOKIE_KEY)) {
                 builder.append("; ");

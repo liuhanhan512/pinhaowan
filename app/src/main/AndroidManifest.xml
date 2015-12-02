@@ -33,10 +33,10 @@
         android:theme="@style/Actionbar_Animation">
 
         <activity
-            android:name=".BaseLoginCheckActivity"
+            android:name=".SplashActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Normal">
+            android:theme="@android:style/Theme.NoTitleBar">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

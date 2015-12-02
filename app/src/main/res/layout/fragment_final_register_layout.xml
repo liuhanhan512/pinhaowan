@@ -1,209 +1,204 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_fragment_white">
+    android:background="@color/bg_fragment_white"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+    <EditText
+        android:id="@+id/name_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp"
+        android:background="@mipmap/bg_input"
+        android:hint="姓名"
+        android:inputType="textNoSuggestions"
+        android:paddingLeft="9dp"
+        android:singleLine="true"
+        android:textSize="17sp" />
 
-        <EditText
-            android:id="@+id/name_input"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="24dp"
-            android:background="@mipmap/bg_input"
-            android:hint="姓名"
-            android:inputType="phone"
-            android:paddingLeft="9dp"
-            android:singleLine="true"
-            android:textSize="17sp" />
+    <EditText
+        android:id="@+id/child_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="6dp"
+        android:background="@mipmap/bg_input"
+        android:hint="孩子姓名"
+        android:inputType="textNoSuggestions"
+        android:paddingLeft="9dp"
+        android:singleLine="true"
+        android:textSize="17sp" />
 
-        <EditText
-            android:id="@+id/child_input"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="6dp"
-            android:background="@mipmap/bg_input"
-            android:hint="孩子姓名"
-            android:inputType="phone"
-            android:paddingLeft="9dp"
-            android:singleLine="true"
-            android:textSize="17sp" />
-
-        <RelativeLayout
-            android:layout_width="330dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="6dp">
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:paddingLeft="9dp"
-                android:singleLine="true"
-                android:text="孩子性别"
-                android:textColor="@color/text_color_light"
-                android:textSize="17sp" />
-
-            <RadioGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/checkbox_man"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp"
-                    android:checked="true"
-                    android:text="男" />
-
-                <RadioButton
-                    android:id="@+id/checkbox_woman"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="24dp"
-                    android:text="女" />
-            </RadioGroup>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="330dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="2dp">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:paddingLeft="9dp"
-                android:singleLine="true"
-                android:text="孩子出生年月"
-                android:textColor="@color/text_color_light"
-                android:textSize="17sp" />
-
-            <Spinner
-                android:id="@+id/spinner_year"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/spinner_month" />
-
-            <Spinner
-                android:id="@+id/spinner_month"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/spinner_day" />
-
-            <Spinner
-                android:id="@+id/spinner_day"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="8dp" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="330dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="6dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:paddingLeft="9dp"
-                android:singleLine="true"
-                android:text="与孩子关系"
-                android:textColor="@color/text_color_light"
-                android:textSize="17sp" />
-
-            <RadioGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/checkbox_daddy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="6dp"
-                    android:checked="true"
-                    android:text="父亲" />
-
-                <RadioButton
-                    android:id="@+id/checkbox_mommy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="6dp"
-                    android:text="母亲" />
-
-                <RadioButton
-                    android:id="@+id/checkbox_else"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="8dp"
-                    android:text="其他" />
-            </RadioGroup>
-        </RelativeLayout>
-
-        <EditText
-            android:id="@+id/pwd_input"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="12dp"
-            android:background="@mipmap/bg_input"
-            android:hint="设置密码"
-            android:inputType="phone"
-            android:paddingLeft="9dp"
-            android:singleLine="true"
-            android:textSize="17sp" />
-
-        <EditText
-            android:id="@+id/commit_pwd_input"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="6dp"
-            android:background="@mipmap/bg_input"
-            android:hint="确认密码"
-            android:inputType="phone"
-            android:paddingLeft="9dp"
-            android:singleLine="true"
-            android:textSize="17sp" />
+    <RelativeLayout
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="6dp">
 
         <TextView
-            android:id="@+id/btn_next"
-            android:layout_width="330dp"
-            android:layout_height="33dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/btn_yellow_nor"
-            android:gravity="center"
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="9dp"
             android:singleLine="true"
-            android:text="确认"
-            android:textColor="@color/text_color_black"
+            android:text="孩子性别"
+            android:textColor="@color/text_color_light"
             android:textSize="17sp" />
-    </LinearLayout>
-</ScrollView>
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/checkbox_man"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:checked="true"
+                android:text="男" />
+
+            <RadioButton
+                android:id="@+id/checkbox_woman"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="24dp"
+                android:text="女" />
+        </RadioGroup>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="330dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="2dp">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="9dp"
+            android:singleLine="true"
+            android:text="孩子出生年月"
+            android:textColor="@color/text_color_light"
+            android:textSize="17sp" />
+
+        <Spinner
+            android:id="@+id/spinner_year"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/spinner_month" />
+
+        <Spinner
+            android:id="@+id/spinner_month"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/spinner_day" />
+
+        <Spinner
+            android:id="@+id/spinner_day"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="6dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="9dp"
+            android:singleLine="true"
+            android:text="与孩子关系"
+            android:textColor="@color/text_color_light"
+            android:textSize="17sp" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/checkbox_daddy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="6dp"
+                android:checked="true"
+                android:text="父亲" />
+
+            <RadioButton
+                android:id="@+id/checkbox_mommy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="6dp"
+                android:text="母亲" />
+
+            <RadioButton
+                android:id="@+id/checkbox_else"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8dp"
+                android:text="其他" />
+        </RadioGroup>
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/pwd_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:background="@mipmap/bg_input"
+        android:hint="设置密码"
+        android:paddingLeft="9dp"
+        android:password="true"
+        android:singleLine="true"
+        android:textSize="17sp" />
+
+    <EditText
+        android:id="@+id/commit_pwd_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="6dp"
+        android:background="@mipmap/bg_input"
+        android:hint="确认密码"
+        android:paddingLeft="9dp"
+        android:password="true"
+        android:singleLine="true"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/btn_next"
+        android:layout_width="330dp"
+        android:layout_height="33dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/btn_yellow_nor"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="确认"
+        android:textColor="@color/text_color_black"
+        android:textSize="17sp" />
+</LinearLayout>
