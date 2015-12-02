@@ -152,7 +152,6 @@ public class MainActivity extends FragmentActivity {
 
             }
             mCurrentIndex = position;
-            Log.d("lzc", "mCurrentIndex=============>" + mCurrentIndex);
             mTitle.setText(getString(FRAGMENT_TITLES[position]));
             changeTabLayoutState();
         }

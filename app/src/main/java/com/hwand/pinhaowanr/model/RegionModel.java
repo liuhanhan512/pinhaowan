@@ -1,9 +1,11 @@
 package com.hwand.pinhaowanr.model;
 
+import java.io.Serializable;
+
 /**
  * Created by hanhanliu on 15/12/2.
  */
-public class RegionModel {
+public class RegionModel implements Serializable{
     private String key;
     private String value;
 

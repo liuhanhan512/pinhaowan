@@ -1,11 +1,12 @@
 package com.hwand.pinhaowanr.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by hanhanliu on 15/12/2.
  */
-public class ConfigModel {
+public class ConfigModel  implements Serializable{
     private String cityType;
     private String cityName;
     private List<RegionModel> regionMap;

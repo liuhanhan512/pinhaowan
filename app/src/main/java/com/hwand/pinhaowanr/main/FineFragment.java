@@ -23,6 +23,7 @@ import com.hwand.pinhaowanr.CommonViewHolder;
 import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.entity.UserInfo;
+import com.hwand.pinhaowanr.model.HomePageModel;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
@@ -47,6 +48,8 @@ public class FineFragment<T> extends BaseFragment implements SwipeRefreshLayout.
     private ExpandAdapter mExpandAdapter;
 
     private List<T> mListData = new ArrayList<T>();
+
+    private HomePageModel mHomePageModel;
 
     public static FineFragment newInstance(){
         FineFragment fragment = new FineFragment();
@@ -112,13 +115,16 @@ public class FineFragment<T> extends BaseFragment implements SwipeRefreshLayout.
 
     private void fetchData(){
         Map<String, String> params = new HashMap<String, String>();
-
+        params.put("cityType" , "1");
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_HOME_PAGE, params);
         NetworkRequest.get(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
-
+                if(!TextUtils.isEmpty(response)){
+                    Gson gson = new Gson();
+                    mHomePageModel = gson.fromJson(response , HomePageModel.class);
+                }
 
             }
         }, new Response.ErrorListener() {
@@ -128,6 +134,7 @@ public class FineFragment<T> extends BaseFragment implements SwipeRefreshLayout.
             }
         });
     }
+
 
     @Override
     public void onRefresh() {
