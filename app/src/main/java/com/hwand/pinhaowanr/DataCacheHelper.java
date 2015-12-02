@@ -3,14 +3,18 @@ package com.hwand.pinhaowanr;
 
 import com.google.gson.Gson;
 import com.hwand.pinhaowanr.entity.UserInfo;
+import com.hwand.pinhaowanr.model.ConfigModel;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NonProguard;
 
 public class DataCacheHelper implements NonProguard {
 
     private static final String KEY_USER_INFO = "USER_INFO";
+    private static final String KEY_CONFIG = "CONFIG";
 
     private UserInfo mUserInfo;
+
+    private ConfigModel mConfigModel;
 
     private static class SingletonHolder {
         public final static DataCacheHelper instance = new DataCacheHelper();
@@ -39,5 +43,22 @@ public class DataCacheHelper implements NonProguard {
     public void saveUserInfo(String info) {
         AndTools.saveCurrentData2Cache(MainApplication.getInstance(), KEY_USER_INFO, info);
 
+    }
+
+    public void saveConfig(String config){
+        AndTools.saveCurrentData2Cache(MainApplication.getInstance(), KEY_CONFIG, config);
+    }
+
+    public ConfigModel getConfigModel(){
+        if (mConfigModel == null) {
+            try {
+                String config = AndTools.getCurrentData(MainApplication.getInstance(), KEY_CONFIG);
+                Gson gson = new Gson();
+                mConfigModel = gson.fromJson(config, ConfigModel.class);
+            } catch (Exception e) {
+                mConfigModel = null;
+            }
+        }
+        return mConfigModel;
     }
 }

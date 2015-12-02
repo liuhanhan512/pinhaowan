@@ -2,33 +2,43 @@ package com.hwand.pinhaowanr.main;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.hwand.pinhaowanr.BaseActivity;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
+import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.event.TitleChangeEvent;
 import com.hwand.pinhaowanr.utils.AndTools;
+import com.hwand.pinhaowanr.utils.NetworkRequest;
+import com.hwand.pinhaowanr.utils.UrlConfig;
+import com.hwand.pinhaowanr.widget.CustomViewPager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
 /**
  * Created by hanhanliu on 15/11/20.
  */
-public class MainActivity extends BaseActivity {
+public class MainActivity extends FragmentActivity {
 
     public static final String INTENT_KEY_TAB = "intent_key_tab";
 
-    private ViewPager mPager;
+    private CustomViewPager mPager;
     private MainPagerAdapter mPageAdapter;
     private TextView mTitle;
 
@@ -54,34 +64,104 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_layout);
-
         mCurrentIndex = getIntent().getIntExtra(INTENT_KEY_TAB, FINE);
         initTitle();
         initViews();
         EventBus.getDefault().register(this);
+
+        getConfig();
+
     }
+
+
 
     private void initTitle() {
 
     }
 
+    private void getConfig(){
+        Map<String, String> params = new HashMap<String, String>();
+
+        String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_CONFIG, params);
+        NetworkRequest.get(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                if(!TextUtils.isEmpty(response)){
+                    DataCacheHelper.getInstance().saveConfig(response);
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+    }
+
     private void initViews() {
         mTitle = (TextView) findViewById(R.id.title);
-        mPager = (ViewPager) findViewById(R.id.view_pager);
+
+        mPager = (CustomViewPager) findViewById(R.id.view_pager);
+        mPager.setPagingEnabled(false);
         mPager.setPageMargin(AndTools.dp2px(this, 1f));
         mPager.setPageMarginDrawable(getResources().getDrawable(R.drawable.default_divider));
-        mPager.setOnPageChangeListener(new ViewPagerListener());
+        mPager.setOnPageChangeListener(mOnPageChangeListener);
         mPager.setOffscreenPageLimit(4);
         if (mPageAdapter == null) {
             mPageAdapter = new MainPagerAdapter(getSupportFragmentManager());
         }
         mPager.setAdapter(mPageAdapter);
-
         mPager.setCurrentItem(mCurrentIndex);
+
+        mPager.post(new Runnable() {
+            @Override
+            public void run() {
+                mOnPageChangeListener.onPageSelected(mCurrentIndex);
+            }
+        });
+
         initTabLayouts();
         changeTabLayoutState();
         setTabLayoutListener();
     }
+
+    final ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener(){
+
+        @Override
+        public void onPageScrolled(int i, float v, int i1) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            switch (position) {
+                case FINE:
+
+                    break;
+
+                case COMMUNITY:
+                    break;
+
+                case STAR_MOM:
+                    break;
+
+                case MINE:
+                    break;
+
+            }
+            mCurrentIndex = position;
+            Log.d("lzc", "mCurrentIndex=============>" + mCurrentIndex);
+            mTitle.setText(getString(FRAGMENT_TITLES[position]));
+            changeTabLayoutState();
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int i) {
+
+        }
+    };
 
     private void initTabLayouts() {
         RelativeLayout fineTab = (RelativeLayout) findViewById(R.id.fine_layout);
@@ -131,43 +211,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-
-    class ViewPagerListener implements ViewPager.OnPageChangeListener {
-
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            switch (position) {
-                case FINE:
-
-                    break;
-
-                case COMMUNITY:
-                    break;
-
-                case STAR_MOM:
-                    break;
-
-                case MINE:
-                    break;
-
-            }
-
-            mCurrentIndex = position;
-            mTitle.setText(getString(FRAGMENT_TITLES[position]));
-            changeTabLayoutState();
-
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-
-        }
-    }
 
     class MainPagerAdapter extends FragmentPagerAdapter {
 
