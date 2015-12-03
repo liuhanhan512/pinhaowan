@@ -30,7 +30,7 @@ import de.greenrobot.event.EventBus;
  */
 public class RegisterFragment extends BaseFragment {
 
-    public static RegisterFragment newInstance(){
+    public static RegisterFragment newInstance() {
         RegisterFragment fragment = new RegisterFragment();
         Bundle bundle = new Bundle();
         fragment.setArguments(bundle);
@@ -86,17 +86,28 @@ public class RegisterFragment extends BaseFragment {
                         @Override
                         public void onResponse(String response) {
                             LogUtil.d("dxz", response);
-                            if (!TextUtils.isEmpty(response) && response.contains("1")) {
+                            // 0 手机号已经注册过了 1 手机号不合法 2 发送短信失败 3 成功
+                            if (!TextUtils.isEmpty(response) && response.contains("3")) {
                                 VerifyFragment verifyFragment = VerifyFragment.newInstance();
                                 FragmentManager fm = getFragmentManager();
                                 FragmentTransaction tx = fm.beginTransaction();
                                 tx.hide(RegisterFragment.this);
-                                tx.add(R.id.fragment_content , verifyFragment, "VerifyFragment");
+                                tx.add(R.id.fragment_content, verifyFragment, "VerifyFragment");
                                 tx.addToBackStack(null);
                                 tx.commit();
                             } else {
+                                String msg = "网络问题请重试！";
+                                if (TextUtils.isEmpty(response)) {
+
+                                } else if (response.contains("0")) {
+                                    msg = "该手机号已注册，请直接登录！";
+                                } else if (response.contains("1")) {
+                                    msg = "手机号不合法！";
+                                } else if (response.contains("2")) {
+                                    msg = "发送短信失败！";
+                                }
                                 new DDAlertDialog.Builder(getActivity())
-                                        .setTitle("提示").setMessage("该手机号已注册，请直接登录！")
+                                        .setTitle("提示").setMessage(msg)
                                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
