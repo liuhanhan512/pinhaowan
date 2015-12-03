@@ -93,10 +93,18 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     }
 
     private View headerView;
+    private TextView headerAddress,headerDistance,headerTitle,headerSubTitle,headerTickets,headerPayment;
+    private ImageView headerImage;
 
     private View initHeaderView(){
         headerView = View.inflate(getActivity() , R.layout.fine_expandlistview_header_layout2, null);
+        headerAddress = (TextView)headerView.findViewById(R.id.address);
+        headerDistance = (TextView)headerView.findViewById(R.id.distance);
+        headerTitle = (TextView)headerView.findViewById(R.id.title);
+        headerSubTitle = (TextView)headerView.findViewById(R.id.sub_title);
+        headerTickets = (TextView)headerView.findViewById(R.id.tickets);
 
+        headerImage = (ImageView)headerView.findViewById(R.id.image);
         return headerView;
     }
 
@@ -115,12 +123,12 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     private void fetchData(){
         Map<String, String> params = new HashMap<String, String>();
-        params.put("cityType" , "2");
+        params.put("cityType" , "1");
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_HOME_PAGE, params);
         NetworkRequest.get(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
+                mSwipeRefreshLayout.setRefreshing(false);
                 if(!TextUtils.isEmpty(response)){
                     List<HomePageModel> homePageModels  = HomePageModel.arrayHomePageModelFromData(response);
                     wrapperData(homePageModels);
@@ -130,7 +138,7 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -140,7 +148,9 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     private static final int PLEASURE_TYPE = 3;
 
     private void wrapperData(List<HomePageModel> homePageModels){
+
         if(homePageModels != null && homePageModels.size() > 0){
+            mListData.clear();
             for(HomePageModel homePageModel : homePageModels){
                 if(homePageModel.getIsStick() == 1){//1置顶，0不置顶
                     topList.add(homePageModel);
@@ -176,7 +186,14 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     }
 
     private void updateHeaderView(){
+        HomePageModel homePageModel = topList.get(0);
+        headerTitle.setText(homePageModel.getTitle());
+        headerSubTitle.setText(homePageModel.getSubtitle());
+        headerAddress.setText(homePageModel.getDetailAddress());
+//        headerDistance.setText(homePageModel.);
+        headerTickets.setText(getString(R.string.remainder_tickets, homePageModel.getRemainTicket()));
 
+        AndTools.displayImage(null , homePageModel.getPictureUrl(), headerImage);
     }
 
     private void addHomePageModel(HomePageModel homePageModel , int type){
@@ -192,7 +209,7 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     @Override
     public void onRefresh() {
-
+        fetchData();
     }
 
     class ExpandAdapter extends BaseExpandableListAdapter {
@@ -360,13 +377,13 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             }
             HomePageModel homePageModel = homePageModels.get(i);
             ImageView imageView = CommonViewHolder.get(convertView , R.id.image);
-            AndTools.displayImage(null ,homePageModel.getPictureUrl() ,imageView);
+            AndTools.displayImage(null,homePageModel.getPictureUrl() ,imageView);
             TextView title = CommonViewHolder.get(convertView , R.id.title);
             title.setText(homePageModel.getTitle());
             TextView address = CommonViewHolder.get(convertView , R.id.address);
             address.setText(homePageModel.getDetailAddress());
             TextView ticket = CommonViewHolder.get(convertView , R.id.tickets);
-            ticket.setText(homePageModel.getRemainTicket());
+            ticket.setText(getString(R.string.remainder_tickets , homePageModel.getRemainTicket()));
             TextView payment = CommonViewHolder.get(convertView , R.id.payment);
             return convertView;
         }

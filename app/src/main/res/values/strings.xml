@@ -43,6 +43,9 @@
     <string name="all_visit">全年上门</string>
     <string name="spell_d_view">查看拼拼</string>
     <string name="spell_d_launch">发起拼拼</string>
+    <string name="remainder_tickets">剩余%d张票</string>
+    <string name="free">免费</string>
+    <string name="starting">首发</string>
 
 
     <string name="calendar_sunday">日</string>

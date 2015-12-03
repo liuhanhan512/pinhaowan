@@ -39,8 +39,6 @@
 
         <RelativeLayout
             android:id="@+id/bottom_layout"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
             android:layout_below="@+id/address"
             android:layout_width="160dp"
             android:layout_height="40dp">
@@ -64,6 +62,7 @@
                 android:paddingRight="6dp"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
+                android:text="@string/free"
                 android:background="@drawable/fine_list_text_bg"
                 android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
