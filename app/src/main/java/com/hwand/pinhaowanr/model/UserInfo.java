@@ -1,4 +1,4 @@
-package com.hwand.pinhaowanr.entity;
+package com.hwand.pinhaowanr.model;
 
 import com.hwand.pinhaowanr.utils.NonProguard;
 

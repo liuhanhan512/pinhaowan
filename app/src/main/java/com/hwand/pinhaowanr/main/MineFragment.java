@@ -8,12 +8,9 @@ import android.support.v4.app.FragmentTransaction;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
-import com.hwand.pinhaowanr.event.TitleChangeEvent;
 import com.hwand.pinhaowanr.mine.LoginFragment;
 import com.hwand.pinhaowanr.mine.MineNaviFragment;
 import com.hwand.pinhaowanr.mine.RegisterFragment;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by hanhanliu on 15/11/20.
@@ -39,7 +36,6 @@ public class MineFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -75,35 +71,7 @@ public class MineFragment extends BaseFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        FragmentTransaction tx = mFragmentManager.beginTransaction();
-        if (!MainApplication.getInstance().isLogin()) {
-            mLoginFragment = LoginFragment.newInstance();
-            if (mCurFragment != null && mCurFragment.isVisible()) {
-                tx.hide(mCurFragment);
-            }
-            tx.add(R.id.fragment_content, mLoginFragment, "LoginFragment");
-            mCurFragment = mLoginFragment;
-            tx.commit();
-        } else {
-            mMineNaviFragment = MineNaviFragment.newInstance();
-            if (mCurFragment != null && mCurFragment.isVisible()) {
-                tx.hide(mCurFragment);
-            }
-            tx.add(R.id.fragment_content, mMineNaviFragment, "MineNaviFragment");
-            mCurFragment = mMineNaviFragment;
-            tx.commit();
-        }
-    }
-
-    public void onEventMainThread(TitleChangeEvent event) {
-        title = event.mTitle;
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 }

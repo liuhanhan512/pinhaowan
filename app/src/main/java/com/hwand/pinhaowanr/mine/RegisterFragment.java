@@ -13,6 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.event.CancelBackToMainEvent;
 import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.StrUtils;
@@ -21,6 +22,8 @@ import com.hwand.pinhaowanr.widget.DDAlertDialog;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by hanhanliu on 15/11/20.
@@ -48,6 +51,8 @@ public class RegisterFragment extends BaseFragment {
     protected void initViews() {
         super.initViews();
         initView();
+        setTitleBarTtile("注册");
+        EventBus.getDefault().post(new CancelBackToMainEvent(true));
     }
 
     private void initView() {
@@ -80,7 +85,6 @@ public class RegisterFragment extends BaseFragment {
                     NetworkRequest.get(url, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            // TODO:
                             LogUtil.d("dxz", response);
                             if (!TextUtils.isEmpty(response) && response.contains("1")) {
                                 VerifyFragment verifyFragment = VerifyFragment.newInstance();
@@ -97,7 +101,7 @@ public class RegisterFragment extends BaseFragment {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.dismiss();
-                                                getActivity().finish();
+                                                getFragmentManager().popBackStack();
                                             }
                                         }).show();
                             }

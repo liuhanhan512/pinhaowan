@@ -36,6 +36,7 @@ public class VerifyFragment extends BaseFragment implements View.OnClickListener
     protected void initViews() {
         super.initViews();
         initView();
+        setTitleBarTtile("注册");
     }
 
     private void initView() {

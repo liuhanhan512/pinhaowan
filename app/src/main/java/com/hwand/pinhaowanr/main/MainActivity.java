@@ -7,18 +7,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.R;
-import com.hwand.pinhaowanr.event.TitleChangeEvent;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
@@ -29,8 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.greenrobot.event.EventBus;
-
 /**
  * Created by hanhanliu on 15/11/20.
  */
@@ -40,7 +35,6 @@ public class MainActivity extends FragmentActivity {
 
     private CustomViewPager mPager;
     private MainPagerAdapter mPageAdapter;
-    private TextView mTitle;
 
     private static final int FINE = 0;
     private static final int COMMUNITY = 1;
@@ -67,7 +61,7 @@ public class MainActivity extends FragmentActivity {
         mCurrentIndex = getIntent().getIntExtra(INTENT_KEY_TAB, FINE);
         initTitle();
         initViews();
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
 
         getConfig();
 
@@ -101,7 +95,6 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void initViews() {
-        mTitle = (TextView) findViewById(R.id.title);
 
         mPager = (CustomViewPager) findViewById(R.id.view_pager);
         mPager.setPagingEnabled(false);
@@ -152,7 +145,6 @@ public class MainActivity extends FragmentActivity {
 
             }
             mCurrentIndex = position;
-            mTitle.setText(getString(FRAGMENT_TITLES[position]));
             changeTabLayoutState();
         }
 
@@ -255,13 +247,9 @@ public class MainActivity extends FragmentActivity {
 
     }
 
-    public void onEventMainThread(TitleChangeEvent event) {
-        mTitle.setText(event.mTitle);
-    }
-
     @Override
     protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 }

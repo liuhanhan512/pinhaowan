@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.StrUtils;
 import com.hwand.pinhaowanr.utils.UrlConfig;
@@ -59,6 +60,7 @@ public class ForgetPwdActivity extends BaseActivity {
                     Map<String, String> params = new HashMap<String, String>();
                     params.put("telephone", phone);
                     String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_GET_PWD, params);
+                    LogUtil.d("dxz",url);
                     NetworkRequest.get(url, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {

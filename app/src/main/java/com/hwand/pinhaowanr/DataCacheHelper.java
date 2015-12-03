@@ -2,7 +2,7 @@
 package com.hwand.pinhaowanr;
 
 import com.google.gson.Gson;
-import com.hwand.pinhaowanr.entity.UserInfo;
+import com.hwand.pinhaowanr.model.UserInfo;
 import com.hwand.pinhaowanr.model.ConfigModel;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NonProguard;

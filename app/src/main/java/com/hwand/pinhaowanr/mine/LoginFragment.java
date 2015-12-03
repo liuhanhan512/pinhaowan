@@ -19,9 +19,8 @@ import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.ForgetPwdActivity;
 import com.hwand.pinhaowanr.R;
-import com.hwand.pinhaowanr.entity.UserInfo;
-import com.hwand.pinhaowanr.event.TitleChangeEvent;
 import com.hwand.pinhaowanr.main.MainActivity;
+import com.hwand.pinhaowanr.model.UserInfo;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.StrUtils;
@@ -31,8 +30,6 @@ import com.hwand.pinhaowanr.widget.DDProgressDialog;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by hanhanliu on 15/11/20.
@@ -55,6 +52,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
     private TextView mForgetPwd;
     private TextView mRegister;
 
+    private DDProgressDialog mDialog;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_login;
@@ -69,7 +67,6 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
     @Override
     public void onResume() {
         super.onResume();
-        EventBus.getDefault().post(new TitleChangeEvent(""));
     }
 
     private void initView() {
@@ -95,7 +92,6 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         mBtnLogin.setOnClickListener(this);
         mForgetPwd.setOnClickListener(this);
         mRegister.setOnClickListener(this);
-        showRegister(true);
 //        controlKeyboardLayout(mRootView, mRootView);
     }
 
@@ -146,7 +142,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            DDProgressDialog.show(getActivity(), "登录中", "正在努力加载...", true);
+            mDialog = DDProgressDialog.show(getActivity(), "登录中", "正在努力加载...", true);
             Map<String, String> params = new HashMap<String, String>();
             params.put("telephone", phone);
             params.put("passward", password);
@@ -154,6 +150,9 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
             NetworkRequest.get(url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+                    if (mDialog != null) {
+                        mDialog.dismiss();
+                    }
 
                     if (!TextUtils.isEmpty(response)) {
                         Gson gson = new Gson();
@@ -235,32 +234,4 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         }
     }
 
-//    /**
-//     * @param root 最外层布局，需要调整的布局
-//     * @param scrollToView 被键盘遮挡的scrollToView，滚动root,使scrollToView在root可视区域的底部
-//     */
-//    private void controlKeyboardLayout(final View root, final View scrollToView) {
-//        root.getViewTreeObserver().addOnGlobalLayoutListener( new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                Rect rect = new Rect();
-//                //获取root在窗体的可视区域
-//                root.getWindowVisibleDisplayFrame(rect);
-//                //获取root在窗体的不可视区域高度(被其他View遮挡的区域高度)
-//                int rootInvisibleHeight = root.getRootView().getHeight() - rect.bottom;
-//                //若不可视区域高度大于100，则键盘显示
-//                if (rootInvisibleHeight > 50) {
-//                    int[] location = new int[2];
-//                    //获取scrollToView在窗体的坐标
-//                    scrollToView.getLocationInWindow(location);
-//                    //计算root滚动高度，使scrollToView在可见区域的底部
-//                    int srollHeight = (location[1] + scrollToView.getHeight()) - rect.bottom;
-//                    root.scrollTo(0, 70);
-//                } else {
-//                    //键盘隐藏
-//                    root.scrollTo(0, 0);
-//                }
-//            }
-//        });
-//    }
 }

@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
-import com.hwand.pinhaowanr.entity.UserInfo;
+import com.hwand.pinhaowanr.model.UserInfo;
 import com.hwand.pinhaowanr.main.MainActivity;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;

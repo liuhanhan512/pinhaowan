@@ -7,17 +7,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.lang.reflect.Field;
 
 /**
  * Created by hanhanliu on 15/5/13.
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements View.OnClickListener {
     public Bundle mFragmentArgs;
 
     public View mFragmentView;
     public ActionBar mActionBar;
+    private RelativeLayout mBack;
+    private TextView mTitle;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,7 +46,26 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected void initViews() {
+        mBack = (RelativeLayout) mFragmentView.findViewById(R.id.back);
+        mTitle = (TextView) mFragmentView.findViewById(R.id.tv_title);
+        if (mBack != null) {
+            mBack.setOnClickListener(this);
+        }
+    }
 
+    protected void setTitleBarTtile(String title) {
+        if (mTitle != null) {
+            mTitle.setText(title);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.back:
+                getActivity().onBackPressed();
+                break;
+        }
     }
 
     @Override

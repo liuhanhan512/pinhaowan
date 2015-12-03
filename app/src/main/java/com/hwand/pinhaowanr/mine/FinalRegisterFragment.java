@@ -18,7 +18,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.R;
-import com.hwand.pinhaowanr.event.TitleChangeEvent;
 import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
@@ -28,8 +27,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by hanhanliu on 15/11/20.
@@ -80,7 +77,7 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
     protected void initViews() {
         super.initViews();
         initView();
-        EventBus.getDefault().post(new TitleChangeEvent("注册"));
+        setTitleBarTtile("注册");
     }
 
     private void initView() {
@@ -209,23 +206,21 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
                     // TODO:
                     LogUtil.d("dxz", response);
                     if (!TextUtils.isEmpty(response) && response.contains("1")) {
-                        VerifyFragment verifyFragment = VerifyFragment.newInstance();
+                        MineNaviFragment fragment = MineNaviFragment.newInstance();
                         FragmentManager fm = getFragmentManager();
                         FragmentTransaction tx = fm.beginTransaction();
                         tx.hide(FinalRegisterFragment.this);
-                        tx.add(R.id.fragment_content, verifyFragment, "VerifyFragment");
-                        tx.addToBackStack(null);
+                        tx.add(R.id.fragment_content, fragment, "MineNaviFragment");
+                        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                         tx.commit();
                     } else {
-                        new DDAlertDialog.Builder(getActivity())
-                                .setTitle("提示").setMessage("该手机号已注册，请直接登录！")
-                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        getActivity().finish();
-                                    }
-                                }).show();
+                        MineNaviFragment fragment = MineNaviFragment.newInstance();
+                        FragmentManager fm = getFragmentManager();
+                        FragmentTransaction tx = fm.beginTransaction();
+                        tx.hide(FinalRegisterFragment.this);
+                        tx.add(R.id.fragment_content, fragment, "MineNaviFragment");
+                        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                        tx.commit();
                     }
 
 
