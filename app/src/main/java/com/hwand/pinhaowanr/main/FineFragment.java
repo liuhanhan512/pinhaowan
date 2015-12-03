@@ -360,10 +360,13 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             }
             HomePageModel homePageModel = homePageModels.get(i);
             ImageView imageView = CommonViewHolder.get(convertView , R.id.image);
-            AndTools.displayImage(null  ,UrlConfig.HOST_PATH+homePageModel.getPictureUrl() ,imageView);
+            AndTools.displayImage(null ,homePageModel.getPictureUrl() ,imageView);
             TextView title = CommonViewHolder.get(convertView , R.id.title);
+            title.setText(homePageModel.getTitle());
             TextView address = CommonViewHolder.get(convertView , R.id.address);
+            address.setText(homePageModel.getDetailAddress());
             TextView ticket = CommonViewHolder.get(convertView , R.id.tickets);
+            ticket.setText(homePageModel.getRemainTicket());
             TextView payment = CommonViewHolder.get(convertView , R.id.payment);
             return convertView;
         }
