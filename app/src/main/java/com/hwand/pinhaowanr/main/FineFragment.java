@@ -18,7 +18,9 @@ import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.CommonViewHolder;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.model.HomePageEntity;
 import com.hwand.pinhaowanr.model.HomePageModel;
+import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
@@ -32,7 +34,7 @@ import java.util.Map;
 /**
  * Created by hanhanliu on 15/11/20.
  */
-public class FineFragment<T> extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener{
+public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -40,9 +42,11 @@ public class FineFragment<T> extends BaseFragment implements SwipeRefreshLayout.
 
     private ExpandAdapter mExpandAdapter;
 
-    private List<T> mListData = new ArrayList<T>();
+    private List<HomePageEntity> mListData = new ArrayList<HomePageEntity>();
 
-    private List<HomePageModel> mHomePageModel;
+    private List<HomePageModel> topList = new ArrayList<HomePageModel>();
+
+    private String[] fineCategorys;
 
     public static FineFragment newInstance(){
         FineFragment fragment = new FineFragment();
@@ -60,6 +64,7 @@ public class FineFragment<T> extends BaseFragment implements SwipeRefreshLayout.
     protected void initViews() {
         super.initViews();
         initView();
+        fineCategorys = getResources().getStringArray(R.array.fine_array);
         fetchData();
     }
 
@@ -87,8 +92,10 @@ public class FineFragment<T> extends BaseFragment implements SwipeRefreshLayout.
         mExpandableListView.setAdapter(mExpandAdapter);
     }
 
+    private View headerView;
+
     private View initHeaderView(){
-        View headerView = View.inflate(getActivity() , R.layout.fine_expandlistview_header_layout2, null);
+        headerView = View.inflate(getActivity() , R.layout.fine_expandlistview_header_layout2, null);
 
         return headerView;
     }
@@ -115,7 +122,8 @@ public class FineFragment<T> extends BaseFragment implements SwipeRefreshLayout.
             public void onResponse(String response) {
 
                 if(!TextUtils.isEmpty(response)){
-                    mHomePageModel = HomePageModel.arrayHomePageModelFromData(response);
+                    List<HomePageModel> homePageModels  = HomePageModel.arrayHomePageModelFromData(response);
+                    wrapperData(homePageModels);
                 }
 
             }
@@ -125,6 +133,60 @@ public class FineFragment<T> extends BaseFragment implements SwipeRefreshLayout.
 
             }
         });
+    }
+
+    private static final int INTEREST_TYPE = 1;
+    private static final int SHOW_TYPE = 2;
+    private static final int PLEASURE_TYPE = 3;
+
+    private void wrapperData(List<HomePageModel> homePageModels){
+        if(homePageModels != null && homePageModels.size() > 0){
+            for(HomePageModel homePageModel : homePageModels){
+                if(homePageModel.getIsStick() == 1){//1置顶，0不置顶
+                    topList.add(homePageModel);
+                }
+                int type = homePageModel.getViewType();
+                int dataSize = mListData.size();
+                if(dataSize <= 0){
+                    addHomePageModel(homePageModel, type);
+                } else {
+                    boolean isAdd = false;
+                    for (int i = 0 ; i < dataSize ; i++){
+                        HomePageEntity homePageEntity = mListData.get(i);
+                        if(homePageEntity.getType() == type){
+                            homePageEntity.getHomePageModelList().add(homePageModel);
+                            isAdd = true;
+                            break;
+                        }
+                    }
+                    addHomePageModel(homePageModel ,type);
+
+                }
+            }
+            mExpandAdapter.notifyDataSetChanged();
+            expandView();
+
+            if(topList.size() <= 0){
+                headerView.setVisibility(View.GONE);
+            } else {
+                headerView.setVisibility(View.VISIBLE);
+                updateHeaderView();
+            }
+        }
+    }
+
+    private void updateHeaderView(){
+
+    }
+
+    private void addHomePageModel(HomePageModel homePageModel , int type){
+        HomePageEntity homePageEntity = new HomePageEntity();
+        homePageEntity.setType(type);
+        homePageEntity.setCategory(fineCategorys[type - 1]);
+        List<HomePageModel> models = new ArrayList<HomePageModel>();
+        models.add(homePageModel);
+        homePageEntity.setHomePageModelList(models);
+        mListData.add(homePageEntity);
     }
 
 
@@ -153,7 +215,7 @@ public class FineFragment<T> extends BaseFragment implements SwipeRefreshLayout.
         public int getChildrenCount(int groupPosition) {
             // TODO Auto-generated method stub
 //            return mListData.get(groupPosition).getTopic().size();
-            return 0;
+            return 1;
         }
 
         @Override
@@ -165,8 +227,7 @@ public class FineFragment<T> extends BaseFragment implements SwipeRefreshLayout.
         @Override
         public Object getChild(int groupPosition, int childPosition) {
             // TODO Auto-generated method stub
-//            return mListData.get(groupPosition).getTopic().get(childPosition);
-            return null;
+            return mListData.get(groupPosition).getHomePageModelList().get(childPosition);
         }
 
         @Override
@@ -207,6 +268,7 @@ public class FineFragment<T> extends BaseFragment implements SwipeRefreshLayout.
 
         private void bindGroupView(final int groupPosition, View groupView) {
             TextView title = (TextView)groupView.findViewById(R.id.title);
+            title.setText(mListData.get(groupPosition).getCategory());
             ImageView more = (ImageView)groupView.findViewById(R.id.image_more);
             more.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -243,7 +305,7 @@ public class FineFragment<T> extends BaseFragment implements SwipeRefreshLayout.
 
             HListView listView = (HListView) groupView.findViewById(R.id.listview);
 
-            final FineItemAdpater adapter  = new FineItemAdpater();
+            final FineItemAdpater adapter  = new FineItemAdpater(groupPosition);
 
             listView.setOnItemClickListener(new com.hwand.pinhaowanr.widget.hlistview.AdapterView.OnItemClickListener() {
                 @Override
@@ -266,9 +328,18 @@ public class FineFragment<T> extends BaseFragment implements SwipeRefreshLayout.
 
     class FineItemAdpater extends BaseAdapter{
 
+        List<HomePageModel> homePageModels = new ArrayList<HomePageModel>();
+
+        public FineItemAdpater(int groupPosition ){
+            List<HomePageModel> models = mListData.get(groupPosition).getHomePageModelList();
+            if(models != null){
+                homePageModels.addAll(models);
+            }
+        }
+
         @Override
         public int getCount() {
-            return 0;
+            return homePageModels.size();
         }
 
         @Override
@@ -287,7 +358,9 @@ public class FineFragment<T> extends BaseFragment implements SwipeRefreshLayout.
                 convertView = LayoutInflater.from(FineFragment.this.getActivity())
                         .inflate(R.layout.fine_list_item_layout, viewGroup, false);
             }
+            HomePageModel homePageModel = homePageModels.get(i);
             ImageView imageView = CommonViewHolder.get(convertView , R.id.image);
+            AndTools.displayImage(null  ,UrlConfig.HOST_PATH+homePageModel.getPictureUrl() ,imageView);
             TextView title = CommonViewHolder.get(convertView , R.id.title);
             TextView address = CommonViewHolder.get(convertView , R.id.address);
             TextView ticket = CommonViewHolder.get(convertView , R.id.tickets);

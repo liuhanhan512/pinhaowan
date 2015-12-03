@@ -10,4 +10,10 @@
         <item> 秒前</item>
         <item> 刚刚</item>
     </string-array>
+
+    <string-array name="fine_array">
+        <item>兴趣益教</item>
+        <item>演出展览</item>
+        <item>游乐</item>
+    </string-array>
 </resources>

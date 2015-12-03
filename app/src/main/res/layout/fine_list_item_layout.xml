@@ -5,19 +5,19 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:layout_width="160dp"
+        android:layout_width="166dp"
         android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/image"
-            android:layout_width="match_parent"
+            android:layout_width="160dp"
             android:layout_height="120dp"
             android:scaleType="fitXY"
             />
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="match_parent"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/image"
             android:textColor="@color/black"
@@ -28,7 +28,7 @@
 
         <TextView
             android:id="@+id/address"
-            android:layout_width="match_parent"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/title"
             android:textColor="@color/gray"
@@ -42,7 +42,7 @@
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:layout_below="@+id/address"
-            android:layout_width="match_parent"
+            android:layout_width="160dp"
             android:layout_height="40dp">
 
             <TextView
@@ -71,6 +71,15 @@
                 android:layout_centerVertical="true"
                 />
         </RelativeLayout>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="6dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@color/white">
+
+        </View>
 
     </RelativeLayout>
 
