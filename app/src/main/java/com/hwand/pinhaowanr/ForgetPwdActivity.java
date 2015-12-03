@@ -60,28 +60,61 @@ public class ForgetPwdActivity extends BaseActivity {
                     Map<String, String> params = new HashMap<String, String>();
                     params.put("telephone", phone);
                     String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_GET_PWD, params);
-                    LogUtil.d("dxz",url);
+                    LogUtil.d("dxz", url);
                     NetworkRequest.get(url, new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            // do nothing
-
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            // do nothing
-                        }
-                    });
-                    new DDAlertDialog.Builder(ForgetPwdActivity.this)
-                            .setTitle("提示").setMessage("新的密码已发送到您的手机，请注意查收")
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    ForgetPwdActivity.this.finish();
+                                public void onResponse(String response) {
+
+                                    // 0 没有对应的角色 1 手机号不合法 2 发送短信失败 3 成功
+                                    if (!TextUtils.isEmpty(response) && response.contains("3")) {
+                                        new DDAlertDialog.Builder(ForgetPwdActivity.this)
+                                                .setTitle("提示")
+                                                .setMessage("新的密码已发送到您的手机，请注意查收")
+                                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                dialog.dismiss();
+                                                                ForgetPwdActivity.this.finish();
+                                                            }
+                                                        }
+                                                ).show();
+                                    } else {
+                                        String msg = "网络问题请重试！";
+                                        if (TextUtils.isEmpty(response)) {
+
+                                        } else if (response.contains("0")) {
+                                            msg = "没有对应的角色！";
+                                        } else if (response.contains("1")) {
+                                            msg = "手机号不合法！";
+                                        } else if (response.contains("2")) {
+                                            msg = "发送短信失败！";
+                                        }
+                                        new DDAlertDialog.Builder(ForgetPwdActivity.this)
+                                                .setTitle("提示").setMessage(msg)
+                                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                }).show();
+                                    }
                                 }
-                            }).show();
+                            }, new Response.ErrorListener()
+                            {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    new DDAlertDialog.Builder(ForgetPwdActivity.this)
+                                            .setTitle("提示").setMessage("网络问题请重试！")
+                                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                }
+                            }
+
+                    );
                 }
             }
         });
