@@ -38,10 +38,10 @@ public class MainActivity extends BaseActivity {
 
     private static final int FINE = 0;
     private static final int COMMUNITY = 1;
-    private static final int STAR_MOM = 2;
-    public static final int MINE = 3;
+//    private static final int STAR_MOM = 2;
+    public static final int MINE = 2;
 
-    private static final int TAB_COUNT = 4;
+    private static final int TAB_COUNT = 3;
 
     private int mCurrentIndex = FINE;
 
@@ -51,7 +51,7 @@ public class MainActivity extends BaseActivity {
 
     private BaseFragment mCurrentFragment;
 
-    private final int[] FRAGMENT_TITLES = {R.string.fine_text, R.string.community_text, R.string.star_mom_text, R.string.mine_text};
+    private final int[] FRAGMENT_TITLES = {R.string.fine_text, R.string.community_text, /**R.string.star_mom_text,*/ R.string.mine_text};
 
 
     @Override
@@ -137,8 +137,8 @@ public class MainActivity extends BaseActivity {
                 case COMMUNITY:
                     break;
 
-                case STAR_MOM:
-                    break;
+//                case STAR_MOM:
+//                    break;
 
                 case MINE:
                     break;
@@ -161,15 +161,15 @@ public class MainActivity extends BaseActivity {
         RelativeLayout communityTab = (RelativeLayout) findViewById(R.id.community_layout);
         communityTab.setTag(Integer.valueOf(COMMUNITY));
 
-        RelativeLayout starTab = (RelativeLayout) findViewById(R.id.star_mom_layout);
-        starTab.setTag(Integer.valueOf(STAR_MOM));
+//        RelativeLayout starTab = (RelativeLayout) findViewById(R.id.star_mom_layout);
+//        starTab.setTag(Integer.valueOf(STAR_MOM));
 
         RelativeLayout mineTab = (RelativeLayout) findViewById(R.id.mine_layout);
         mineTab.setTag(Integer.valueOf(MINE));
 
         mTabLayouts.add(fineTab);
         mTabLayouts.add(communityTab);
-        mTabLayouts.add(starTab);
+//        mTabLayouts.add(starTab);
         mTabLayouts.add(mineTab);
 
     }
@@ -222,9 +222,9 @@ public class MainActivity extends BaseActivity {
                 case COMMUNITY:
                     mCurrentFragment = CommunityFragment.newInstance();
                     break;
-                case STAR_MOM:
-                    mCurrentFragment = StarMomFragment.newInstance();
-                    break;
+//                case STAR_MOM:
+//                    mCurrentFragment = StarMomFragment.newInstance();
+//                    break;
                 case MINE:
                     mCurrentFragment = MineFragment.newInstance();
                     break;
