@@ -9,8 +9,8 @@ import com.hwand.pinhaowanr.utils.NonProguard;
 
 public class DataCacheHelper implements NonProguard {
 
-    private static final String KEY_USER_INFO = "USER_INFO";
-    private static final String KEY_CONFIG = "CONFIG";
+    public static final String KEY_USER_INFO = "USER_INFO";
+    public static final String KEY_CONFIG = "CONFIG";
 
     private UserInfo mUserInfo;
 
@@ -42,7 +42,6 @@ public class DataCacheHelper implements NonProguard {
 
     public void saveUserInfo(String info) {
         AndTools.saveCurrentData2Cache(MainApplication.getInstance(), KEY_USER_INFO, info);
-
     }
 
     public void saveConfig(String config){

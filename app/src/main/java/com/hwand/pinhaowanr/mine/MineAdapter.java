@@ -26,14 +26,14 @@ import java.util.List;
 
 public class MineAdapter extends BaseAdapter {
 
-    private LayoutInflater inflater;
+    private Context mContext;
 
     private List<NaviEntity> mList;
 
     private Handler mHandler;
 
     public MineAdapter(Context context, Handler handler, List<NaviEntity> list) {
-        inflater = LayoutInflater.from(context);
+        mContext = context;
         mHandler = handler;
         this.mList = list;
     }
@@ -56,12 +56,27 @@ public class MineAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         try {
-            if (convertView == null) {
-                convertView = inflater.inflate(R.layout.item_mine, null);
-            }
             final NaviEntity navi = mList.get(position);
-            TextView text = (TextView) convertView.findViewById(R.id.tip);
-            text.setText(navi.content);
+            ViewHolder holder;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_navi, null);
+                holder = new ViewHolder();
+                holder.tip = (TextView) convertView.findViewById(R.id.tip);
+                holder.divider = convertView.findViewById(R.id.divider);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            if (holder == null) {
+                return convertView;
+            }
+
+            holder.tip.setText(navi.content);
+            if (position == mList.size() -1) {
+                holder.divider.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+            } else {
+                holder.divider.setBackgroundColor(mContext.getResources().getColor(R.color.item_divider));
+            }
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -69,10 +84,9 @@ public class MineAdapter extends BaseAdapter {
                 }
             });
         } catch (Exception e) {
+            e.printStackTrace();
 
         }
-
-
         return convertView;
     }
 
@@ -85,5 +99,11 @@ public class MineAdapter extends BaseAdapter {
             this.msg = what;
 
         }
+    }
+
+    public static class ViewHolder {
+        public TextView tip;
+        public View divider;
+
     }
 }

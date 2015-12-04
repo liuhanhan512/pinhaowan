@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="35dp"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
+        android:layout_centerVertical="true"
+        android:paddingLeft="30dp"
         android:text="我的安排"
         android:textColor="@color/black"
         android:textSize="14sp" />
 
-    <view
+    <View
+        android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="1px"
+        android:layout_height="1dp"
+        android:layout_marginTop="34dp"
         android:layout_marginLeft="7dp"
         android:layout_marginRight="7dp"
-        android:background="#eeeeee"></view>
-</LinearLayout>
+        android:background="#eeeeee" />
+</RelativeLayout>

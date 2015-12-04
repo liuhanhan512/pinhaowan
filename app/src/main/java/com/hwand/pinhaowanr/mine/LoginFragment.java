@@ -19,7 +19,6 @@ import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.ForgetPwdActivity;
 import com.hwand.pinhaowanr.R;
-import com.hwand.pinhaowanr.main.MainActivity;
 import com.hwand.pinhaowanr.model.UserInfo;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
@@ -172,8 +171,13 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
                             case 2:
                                 AndTools.showToast("登陆成功");
                                 DataCacheHelper.getInstance().saveUserInfo(response);
-                                Intent intent = new Intent(getActivity(), MainActivity.class);
-                                startActivity(intent);
+                                MineNaviFragment fragment = MineNaviFragment.newInstance();
+                                FragmentManager fm = getFragmentManager();
+                                FragmentTransaction tx = fm.beginTransaction();
+                                tx.hide(LoginFragment.this);
+                                tx.add(R.id.fragment_content, fragment, "MineNaviFragment");
+                                fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                tx.commit();
                         }
 
                     } else {

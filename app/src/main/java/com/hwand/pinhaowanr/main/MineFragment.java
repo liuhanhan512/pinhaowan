@@ -10,7 +10,6 @@ import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.mine.LoginFragment;
 import com.hwand.pinhaowanr.mine.MineNaviFragment;
-import com.hwand.pinhaowanr.mine.RegisterFragment;
 
 /**
  * Created by hanhanliu on 15/11/20.
@@ -29,9 +28,6 @@ public class MineFragment extends BaseFragment {
     private FragmentManager mFragmentManager;
     private MineNaviFragment mMineNaviFragment;
     private LoginFragment mLoginFragment;
-    private RegisterFragment mRegisterFragment;
-
-    private String title = "我的";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,7 +51,6 @@ public class MineFragment extends BaseFragment {
             }
             tx.add(R.id.fragment_content, mLoginFragment, "LoginFragment");
             mCurFragment = mLoginFragment;
-            title = "";
             tx.commit();
         } else {
             mMineNaviFragment = MineNaviFragment.newInstance();
@@ -64,7 +59,6 @@ public class MineFragment extends BaseFragment {
             }
             tx.add(R.id.fragment_content, mMineNaviFragment, "MineNaviFragment");
             mCurFragment = mMineNaviFragment;
-            title = "我的";
             tx.commit();
         }
 

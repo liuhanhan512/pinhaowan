@@ -15,8 +15,12 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.hwand.pinhaowanr.BaseFragment;
+import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.model.UserInfo;
+import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
@@ -146,11 +150,11 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
     }
 
     private void register() {
-        String name = mName.getText().toString();
-        String childName = mChildName.getText().toString();
+        final String name = mName.getText().toString();
+        final String childName = mChildName.getText().toString();
         String pwd = mPwd.getText().toString();
         String cPwd = mCommitPwd.getText().toString();
-        int childSex = mCheckBoxMan.isChecked() ? 1 : 0;
+        final int childSex = mCheckBoxMan.isChecked() ? 1 : 0;
         int relation = 1;
         if (mCheckBoxMommy.isChecked()) {
             relation = 2;
@@ -161,7 +165,7 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
         sb.append(mSpinnerYear.getSelectedItem().toString() + "-");
         sb.append(mSpinnerMonth.getSelectedItem().toString() + "-");
         sb.append(mSpinnerDay.getSelectedItem().toString());
-        String birthday = sb.toString();
+        final String birthday = sb.toString();
         boolean cancel = false;
         View focusView = null;
         if (TextUtils.isEmpty(name)) {
@@ -190,12 +194,13 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
             // form field with an error.
             focusView.requestFocus();
         } else {
+            final int rela = relation;
             Map<String, String> params = new HashMap<String, String>();
             params.put("name", name);
             params.put("childName", childName);
             params.put("childSex", childSex + "");
             params.put("birthday", birthday);
-            params.put("relation", relation + "");
+            params.put("relation", rela + "");
             params.put("passward", pwd);
             String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_REGISTER, params);
             LogUtil.d("dxz", url);
@@ -205,6 +210,16 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
                     // TODO:
                     LogUtil.d("dxz", response);
                     if (!TextUtils.isEmpty(response) && response.contains("1")) {
+                        Gson gson = new Gson();
+                        UserInfo info = gson.fromJson(response, UserInfo.class);
+                        info.setName(name);
+                        info.setChildName(childName);
+                        info.setChildSex(childSex);
+                        info.setBirthday(birthday);
+                        info.setRelation(rela);
+                        String str = gson.toJson(info, UserInfo.class);
+                        DataCacheHelper.getInstance().saveUserInfo(str);
+                        AndTools.showToast("注册成功");
                         MineNaviFragment fragment = MineNaviFragment.newInstance();
                         FragmentManager fm = getFragmentManager();
                         FragmentTransaction tx = fm.beginTransaction();

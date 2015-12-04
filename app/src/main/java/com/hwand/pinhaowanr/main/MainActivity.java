@@ -2,7 +2,6 @@ package com.hwand.pinhaowanr.main;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -13,6 +12,7 @@ import android.widget.RelativeLayout;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.R;
@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * Created by hanhanliu on 15/11/20.
  */
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends BaseActivity {
 
     public static final String INTENT_KEY_TAB = "intent_key_tab";
 
@@ -101,7 +101,7 @@ public class MainActivity extends FragmentActivity {
         mPager.setPageMargin(AndTools.dp2px(this, 1f));
         mPager.setPageMarginDrawable(getResources().getDrawable(R.drawable.default_divider));
         mPager.setOnPageChangeListener(mOnPageChangeListener);
-        mPager.setOffscreenPageLimit(4);
+        mPager.setOffscreenPageLimit(2);
         if (mPageAdapter == null) {
             mPageAdapter = new MainPagerAdapter(getSupportFragmentManager());
         }

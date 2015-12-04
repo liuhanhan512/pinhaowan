@@ -2,15 +2,16 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="139dp"
+    android:layout_height="125dp"
     android:background="@color/white">
 
     <com.hwand.pinhaowanr.widget.CircleImageView
         android:id="@+id/head"
         android:layout_width="83dp"
         android:layout_height="83dp"
+        android:layout_alignParentRight="true"
         android:layout_marginRight="146dp"
-        android:layout_marginTop="17dp"></com.hwand.pinhaowanr.widget.CircleImageView>
+        android:layout_marginTop="3dp"></com.hwand.pinhaowanr.widget.CircleImageView>
 
     <TextView
         android:id="@+id/user_name"
@@ -21,4 +22,24 @@
         android:text="徐熙娣001"
         android:textColor="@color/black"
         android:textSize="15sp" />
+
+    <View
+        android:id="@+id/divider1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="108dp"
+        android:background="#eeeeee" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="14dp"
+        android:layout_below="@+id/divider1"
+        android:background="#fbfbfa" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/divider"
+        android:background="#eeeeee" />
 </RelativeLayout>
