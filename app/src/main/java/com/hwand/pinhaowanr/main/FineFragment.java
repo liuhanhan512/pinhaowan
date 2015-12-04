@@ -18,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.CommonViewHolder;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.fine.FineDetailActivity;
 import com.hwand.pinhaowanr.model.HomePageEntity;
 import com.hwand.pinhaowanr.model.HomePageModel;
 import com.hwand.pinhaowanr.utils.AndTools;
@@ -105,6 +106,13 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         headerTickets = (TextView)headerView.findViewById(R.id.tickets);
 
         headerImage = (ImageView)headerView.findViewById(R.id.image);
+
+        headerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FineDetailActivity.launch(getActivity() , topList.get(0));
+            }
+        });
         return headerView;
     }
 
@@ -327,7 +335,8 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             listView.setOnItemClickListener(new com.hwand.pinhaowanr.widget.hlistview.AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(com.hwand.pinhaowanr.widget.hlistview.AdapterView<?> parent, View view, int position, long id) {
-
+                    HomePageModel homePageModel = mListData.get(groupPosition).getHomePageModelList().get(position);
+                    FineDetailActivity.launch(getActivity() , homePageModel);
                 }
             });
 

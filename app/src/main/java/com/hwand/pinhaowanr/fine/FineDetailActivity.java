@@ -3,6 +3,7 @@ package com.hwand.pinhaowanr.fine;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,21 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.CommonViewHolder;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.model.ClassDetailModel;
+import com.hwand.pinhaowanr.model.HomePageModel;
+import com.hwand.pinhaowanr.utils.NetworkRequest;
+import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 好玩详情页
@@ -29,9 +41,22 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
 
     private Adapter mAdapter;
 
+    private static final String HOME_PAGE_MODEL_KEY = "HOME_PAGE_MODEL_KEY";
+
+    private HomePageModel mHomePageModel;
+
+    private ClassDetailModel mClassDetailModel;
+
     public static void launch(Context context){
         Intent intent = new Intent();
         intent.setClass(context , FineDetailActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void launch(Context context , HomePageModel homePageModel){
+        Intent intent = new Intent();
+        intent.setClass(context , FineDetailActivity.class);
+        intent.putExtra(HOME_PAGE_MODEL_KEY, homePageModel);
         context.startActivity(intent);
     }
 
@@ -39,10 +64,14 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fine_detail_layout);
-
+        initIntentValues();
         initTitle();
         initViews();
         fetchData();
+    }
+
+    private void initIntentValues(){
+        mHomePageModel = (HomePageModel) getIntent().getSerializableExtra(HOME_PAGE_MODEL_KEY);
     }
 
     private void initTitle(){
@@ -83,12 +112,35 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
     }
 
     private void fetchData(){
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("id" , mHomePageModel.getId()+"");
+        String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_CLASS_DETAIL, params);
+        NetworkRequest.get(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                mSwipeRefreshLayout.setRefreshing(false);
+                if (!TextUtils.isEmpty(response)) {
+                    Gson gson = new Gson();
+                    mClassDetailModel = gson.fromJson(response , ClassDetailModel.class);
+                    updateViews();
+                }
 
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
+    private void updateViews(){
+        setActionBarTtile(mClassDetailModel.getInstitutionName());
     }
 
     @Override
     public void onRefresh() {
-
+        fetchData();
     }
 
     @Override
