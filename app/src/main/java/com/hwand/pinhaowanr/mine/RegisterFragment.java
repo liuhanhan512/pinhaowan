@@ -95,6 +95,7 @@ public class RegisterFragment extends BaseFragment {
                                 tx.add(R.id.fragment_content, verifyFragment, "VerifyFragment");
                                 tx.addToBackStack(null);
                                 tx.commit();
+
                             } else {
                                 String msg = "网络问题请重试！";
                                 if (TextUtils.isEmpty(response)) {

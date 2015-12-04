@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -31,7 +30,7 @@ import java.util.Map;
 /**
  * Created by hanhanliu on 15/11/20.
  */
-public class FinalRegisterFragment extends BaseFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class FinalRegisterFragment extends BaseFragment implements View.OnClickListener {
 
     public static FinalRegisterFragment newInstance() {
         FinalRegisterFragment fragment = new FinalRegisterFragment();
@@ -214,13 +213,21 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
                         fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                         tx.commit();
                     } else {
-                        MineNaviFragment fragment = MineNaviFragment.newInstance();
-                        FragmentManager fm = getFragmentManager();
-                        FragmentTransaction tx = fm.beginTransaction();
-                        tx.hide(FinalRegisterFragment.this);
-                        tx.add(R.id.fragment_content, fragment, "MineNaviFragment");
-                        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                        tx.commit();
+                        String msg = "网络问题请重试！";
+                        if (TextUtils.isEmpty(response)) {
+
+                        } else if (response.contains("0")) {
+                            msg = "验证码验证失败！";
+                        }
+                        new DDAlertDialog.Builder(getActivity())
+                                .setTitle("提示").setMessage(msg)
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        getFragmentManager().popBackStack();
+                                    }
+                                }).show();
                     }
 
 
@@ -235,38 +242,11 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-//                                            VerifyFragment verifyFragment = VerifyFragment.newInstance();
-//                                            FragmentManager fm = getFragmentManager();
-//                                            FragmentTransaction tx = fm.beginTransaction();
-//                                            tx.hide(RegisterFragment.this);
-//                                            tx.add(R.id.fragment_content , verifyFragment, "VerifyFragment");
-//                                            tx.addToBackStack(null);
-//                                            tx.commit();
                                 }
                             }).show();
                 }
             });
         }
-    }
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        switch (buttonView.getId()) {
-            case R.id.checkbox_man:
-
-                break;
-            case R.id.checkbox_woman:
-                break;
-            case R.id.checkbox_daddy:
-                break;
-            case R.id.checkbox_mommy:
-                break;
-            case R.id.checkbox_else:
-                break;
-
-
-        }
-
     }
 
 }

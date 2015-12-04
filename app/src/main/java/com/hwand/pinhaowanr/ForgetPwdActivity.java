@@ -65,6 +65,7 @@ public class ForgetPwdActivity extends BaseActivity {
                                 @Override
                                 public void onResponse(String response) {
 
+                                    LogUtil.d("dxz", response);
                                     // 0 没有对应的角色 1 手机号不合法 2 发送短信失败 3 成功
                                     if (!TextUtils.isEmpty(response) && response.contains("3")) {
                                         new DDAlertDialog.Builder(ForgetPwdActivity.this)
