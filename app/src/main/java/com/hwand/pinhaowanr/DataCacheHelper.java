@@ -1,20 +1,29 @@
 
 package com.hwand.pinhaowanr;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.hwand.pinhaowanr.model.UserInfo;
 import com.hwand.pinhaowanr.model.ConfigModel;
 import com.hwand.pinhaowanr.utils.AndTools;
+import com.hwand.pinhaowanr.utils.GsonUtil;
 import com.hwand.pinhaowanr.utils.NonProguard;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DataCacheHelper implements NonProguard {
 
     public static final String KEY_USER_INFO = "USER_INFO";
     public static final String KEY_CONFIG = "CONFIG";
+    public static final String KEY_CURRENT_CITY_CODE = "KEY_CURRENT_CITY_CODE";
 
     private UserInfo mUserInfo;
 
-    private ConfigModel mConfigModel;
+    private String cityType;
+
+    private List<ConfigModel> mConfigModels = new ArrayList<ConfigModel>();
 
     private static class SingletonHolder {
         public final static DataCacheHelper instance = new DataCacheHelper();
@@ -48,16 +57,26 @@ public class DataCacheHelper implements NonProguard {
         AndTools.saveCurrentData2Cache(MainApplication.getInstance(), KEY_CONFIG, config);
     }
 
-    public ConfigModel getConfigModel(){
-        if (mConfigModel == null) {
-            try {
-                String config = AndTools.getCurrentData(MainApplication.getInstance(), KEY_CONFIG);
-                Gson gson = new Gson();
-                mConfigModel = gson.fromJson(config, ConfigModel.class);
-            } catch (Exception e) {
-                mConfigModel = null;
+    public List<ConfigModel> getConfigModel(){
+        try {
+            String config = AndTools.getCurrentData(MainApplication.getInstance(), KEY_CONFIG);
+            Gson gson = new Gson();
+            List<ConfigModel> configModels = ConfigModel.arrayHomePageModelFromData(config);
+            if(configModels != null){
+                mConfigModels.clear();
+                mConfigModels.addAll(configModels);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return mConfigModel;
+        return mConfigModels;
+    }
+
+    public String getCityType(){
+        return cityType;
+    }
+
+    public void setCityType(String cityType){
+        this.cityType = cityType;
     }
 }

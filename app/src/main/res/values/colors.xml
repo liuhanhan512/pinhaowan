@@ -29,6 +29,8 @@
     <color name="text_color_light">#a1a1a1</color>
     <color name="text_color_red">#f86150</color>
     <color name="item_divider">#eeeeee</color>
+    <color name="divider_light_gray">#ecedee</color>
+    <color name="ding_audio_fore_color">#2fa9ff</color>
 
     <drawable name="default_divider">#d9d9d9</drawable>
 </resources>

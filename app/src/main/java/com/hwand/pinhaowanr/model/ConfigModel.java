@@ -1,22 +1,33 @@
 package com.hwand.pinhaowanr.model;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by hanhanliu on 15/12/2.
  */
 public class ConfigModel  implements Serializable{
-    private String cityType;
+    private int cityType;
     private String cityName;
     private List<RegionModel> regionMap;
 
+    public static  List<ConfigModel> arrayHomePageModelFromData(String str) {
 
-    public String getCityType() {
+        Type listType = new TypeToken<List<ConfigModel>>() {}.getType();
+
+        return new Gson().fromJson(str, listType);
+    }
+
+    public int getCityType() {
         return cityType;
     }
 
-    public void setCityType(String cityType) {
+    public void setCityType(int cityType) {
         this.cityType = cityType;
     }
 

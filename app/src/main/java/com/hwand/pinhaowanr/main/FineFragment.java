@@ -18,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.CommonViewHolder;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.fine.FineCategoryListActivity;
 import com.hwand.pinhaowanr.fine.FineDetailActivity;
 import com.hwand.pinhaowanr.model.HomePageEntity;
 import com.hwand.pinhaowanr.model.HomePageModel;
@@ -298,7 +299,7 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    FineCategoryListActivity.launch(getActivity() , mListData.get(groupPosition).getType());
                 }
             });
         }
