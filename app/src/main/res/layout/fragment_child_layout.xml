@@ -7,16 +7,17 @@
 
     <include
         layout="@layout/titlebar_nor_layout"></include>
+
     <EditText
-        android:id="@+id/code_input"
+        android:id="@+id/name_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="24dp"
         android:paddingLeft="9dp"
         android:background="@mipmap/bg_input"
-        android:hint="请输入验证码"
-        android:inputType="phone"
+        android:hint="宝宝名"
+        android:inputType="textNoSuggestions"
         android:singleLine="true"
         android:textSize="17sp" />
 
@@ -33,16 +34,4 @@
         android:textColor="@color/text_color_black"
         android:background="@drawable/btn_yellow_nor" />
 
-
-    <TextView
-        android:id="@+id/text_tip"
-        android:layout_width="330dp"
-        android:layout_height="33dp"
-        android:layout_marginTop="24dp"
-        android:text="60s后重新获取验证码"
-        android:singleLine="true"
-        android:layout_gravity="center_horizontal"
-        android:textSize="17sp"
-        android:gravity="center"
-        android:textColor="@color/text_color_black" />
 </LinearLayout>

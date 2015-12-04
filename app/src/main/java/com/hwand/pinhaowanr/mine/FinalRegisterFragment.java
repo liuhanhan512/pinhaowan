@@ -26,6 +26,7 @@ import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.DDAlertDialog;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -196,8 +197,8 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
         } else {
             final int rela = relation;
             Map<String, String> params = new HashMap<String, String>();
-            params.put("name", name);
-            params.put("childName", childName);
+            params.put("name", URLEncoder.encode(name));
+            params.put("childName", URLEncoder.encode(childName));
             params.put("childSex", childSex + "");
             params.put("birthday", birthday);
             params.put("relation", rela + "");
