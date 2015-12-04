@@ -2,8 +2,6 @@ package com.hwand.pinhaowanr.mine;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -14,24 +12,25 @@ import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.event.CancelBackToMainEvent;
+import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
-import com.hwand.pinhaowanr.utils.StrUtils;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.DDAlertDialog;
 
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
 /**
- * Created by dxz on 15/11/20.
+ * Created by dxz on 15/12/01.
  */
-public class RegisterFragment extends BaseFragment {
+public class ChildNameFragment extends BaseFragment {
 
-    public static RegisterFragment newInstance() {
-        RegisterFragment fragment = new RegisterFragment();
+    public static ChildNameFragment newInstance() {
+        ChildNameFragment fragment = new ChildNameFragment();
         Bundle bundle = new Bundle();
         fragment.setArguments(bundle);
         return fragment;
@@ -44,33 +43,29 @@ public class RegisterFragment extends BaseFragment {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_register_layout;
+        return R.layout.fragment_child_layout;
     }
 
     @Override
     protected void initViews() {
         super.initViews();
         initView();
-        setTitleBarTtile("注册");
+        setTitleBarTtile("填写宝宝名");
         EventBus.getDefault().post(new CancelBackToMainEvent(true));
     }
 
     private void initView() {
-        mUserName = (EditText) mFragmentView.findViewById(R.id.phone_input);
+        mUserName = (EditText) mFragmentView.findViewById(R.id.name_input);
         mUserName.requestFocus();
         mNext = (TextView) mFragmentView.findViewById(R.id.btn_next);
         mNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String phone = mUserName.getText().toString();
+                final String childName = mUserName.getText().toString();
                 boolean cancel = false;
                 View focusView = null;
-                if (TextUtils.isEmpty(phone)) {
+                if (TextUtils.isEmpty(childName)) {
                     mUserName.setError(getString(R.string.error_field_required));
-                    focusView = mUserName;
-                    cancel = true;
-                } else if (!StrUtils.isPhone(phone)) {
-                    mUserName.setError(getString(R.string.error_invalid_phone));
                     focusView = mUserName;
                     cancel = true;
                 }
@@ -80,42 +75,25 @@ public class RegisterFragment extends BaseFragment {
                     focusView.requestFocus();
                 } else {
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put("telephone", phone);
-                    String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_GET_CODE, params);
+                    params.put("type", "2");
+                    params.put("value", URLEncoder.encode(childName));
+                    String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_MODIFY_USER_INFO, params);
                     LogUtil.d("dxz", url);
                     NetworkRequest.get(url, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             LogUtil.d("dxz", response);
-                            // 0 手机号已经注册过了 1 手机号不合法 2 发送短信失败 3 成功
-                            if (!TextUtils.isEmpty(response) && response.contains("3")) {
-                                VerifyFragment verifyFragment = VerifyFragment.newInstance();
-                                verifyFragment.setPhone(phone);
-                                FragmentManager fm = getFragmentManager();
-                                FragmentTransaction tx = fm.beginTransaction();
-                                tx.hide(RegisterFragment.this);
-                                tx.add(R.id.fragment_content, verifyFragment, "VerifyFragment");
-                                tx.addToBackStack(null);
-                                tx.commit();
-
+                            // 结果（result）0 失败 1 成功
+                            if (!TextUtils.isEmpty(response) && response.contains("1")) {
+                                AndTools.showToast("修改成功！");
+                                getFragmentManager().popBackStack();
                             } else {
-                                String msg = "网络问题请重试！";
-                                if (TextUtils.isEmpty(response)) {
-
-                                } else if (response.contains("0")) {
-                                    msg = "该手机号已注册，请直接登录！";
-                                } else if (response.contains("1")) {
-                                    msg = "手机号不合法！";
-                                } else if (response.contains("2")) {
-                                    msg = "发送短信失败！";
-                                }
                                 new DDAlertDialog.Builder(getActivity())
-                                        .setTitle("提示").setMessage(msg)
+                                        .setTitle("提示").setMessage("网络问题请重试！")
                                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.dismiss();
-                                                getFragmentManager().popBackStack();
                                             }
                                         }).show();
                             }
