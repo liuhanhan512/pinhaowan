@@ -38,6 +38,7 @@
     <color name="photo_pressed">@color/act_bar_btn_bg_disabled</color>
     <color name="cancel_normal">#cccccc</color>
     <color name="cancel_pressed">@color/act_bar_btn_bg_disabled</color>
+    <color name="act_bar_btn_bg_disabled">#52b1f3</color>
 
     <drawable name="default_divider">#d9d9d9</drawable>
 </resources>
