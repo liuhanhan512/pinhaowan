@@ -11,6 +11,7 @@ import android.util.Log;
 import com.amap.api.location.AMapLocation;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.hwand.pinhaowanr.event.LocationEvent;
 import com.hwand.pinhaowanr.location.LocationDataFeedbackListener;
 import com.hwand.pinhaowanr.location.LocationManager;
 import com.hwand.pinhaowanr.model.ConfigModel;
@@ -24,6 +25,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 public class MainApplication extends Application {
 
@@ -128,13 +131,17 @@ public class MainApplication extends Application {
         locationManager.setLocationDataFeedbackListener(new LocationDataFeedbackListener() {
             @Override
             public void onReceiver(AMapLocation amapLocation) {
+                Log.d("lzc" , "amapLocation======>"+amapLocation.getAddress());
                 mAMapLocation = amapLocation;
                 calcCityType();
                 locationManager.stopLocation();
+                EventBus.getDefault().post(new LocationEvent());
             }
 
             @Override
             public void onError(AMapLocation aMapLocation) {
+                Log.d("lzc" , "amapLocation======>"+aMapLocation.getAMapException().getErrorMessage());
+                Log.d("lzc" , "amapLocation======>"+aMapLocation.getAMapException().getErrorCode());
                 locationManager.stopLocation();
                 if(mMaxLocation > 0){
                     locationManager.startLocation();

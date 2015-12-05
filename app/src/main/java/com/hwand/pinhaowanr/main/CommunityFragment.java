@@ -18,10 +18,13 @@ import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.community.SmallPartnerFragment;
 import com.hwand.pinhaowanr.community.SpellDFragment;
+import com.hwand.pinhaowanr.event.LocationEvent;
 import com.hwand.pinhaowanr.utils.AndTools;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by hanhanliu on 15/11/20.
@@ -44,6 +47,8 @@ public class CommunityFragment extends BaseFragment {
 
     private List<RelativeLayout> mTabLayouts = new ArrayList<RelativeLayout>();
 
+    private TextView mCity, mRegion;
+
     public static CommunityFragment newInstance(){
         CommunityFragment fragment = new CommunityFragment();
         Bundle bundle = new Bundle();
@@ -65,10 +70,31 @@ public class CommunityFragment extends BaseFragment {
 
         AMapLocation aMapLocation = MainApplication.getInstance().getAmapLocation();
         if(aMapLocation != null){
-            city.setText(aMapLocation.getCity());
-            region.setText(aMapLocation.getDistrict());
+            mCity.setText(aMapLocation.getCity());
+            mRegion.setText(aMapLocation.getDistrict());
         }
 
+        initViewPager();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onEventMainThread(LocationEvent event) {
+        AMapLocation aMapLocation = MainApplication.getInstance().getAmapLocation();
+        if(aMapLocation != null){
+            mCity.setText(aMapLocation.getCity());
+            mRegion.setText(aMapLocation.getDistrict());
+        }
     }
 
     @Override
@@ -80,12 +106,10 @@ public class CommunityFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initViewPager();
+
     }
 
     private void initViewPager(){
-        Log.d("lzc" ,"initViewPager==========>");
-
         mPager = (ViewPager) mFragmentView.findViewById(R.id.view_pager);
         mPager.setPageMargin(AndTools.dp2px(getActivity(), 1f));
         mPager.setPageMarginDrawable(getResources().getDrawable(R.drawable.default_divider));

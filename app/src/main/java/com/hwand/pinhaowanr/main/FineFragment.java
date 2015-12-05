@@ -20,6 +20,7 @@ import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.CommonViewHolder;
 import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.event.LocationEvent;
 import com.hwand.pinhaowanr.fine.FineCategoryListActivity;
 import com.hwand.pinhaowanr.fine.FineDetailActivity;
 import com.hwand.pinhaowanr.model.HomePageEntity;
@@ -34,6 +35,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by hanhanliu on 15/11/20.
@@ -72,6 +75,28 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         fetchData();
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onEventMainThread(LocationEvent event) {
+        AMapLocation aMapLocation = MainApplication.getInstance().getAmapLocation();
+        if(aMapLocation != null){
+            mCity.setText(aMapLocation.getCity());
+            mRegion.setText(aMapLocation.getDistrict());
+        }
+    }
+
+    private TextView mCity , mRegion;
+
     private void initView(){
         mSwipeRefreshLayout = (SwipeRefreshLayout)mFragmentView.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -96,13 +121,13 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         mExpandableListView.setAdapter(mExpandAdapter);
 
 
-        TextView city = (TextView)mFragmentView.findViewById(R.id.city);
-        TextView region = (TextView)mFragmentView.findViewById(R.id.region);
+        mCity = (TextView)mFragmentView.findViewById(R.id.city);
+        mRegion = (TextView)mFragmentView.findViewById(R.id.region);
 
         AMapLocation aMapLocation = MainApplication.getInstance().getAmapLocation();
         if(aMapLocation != null){
-            city.setText(aMapLocation.getCity());
-            region.setText(aMapLocation.getDistrict());
+            mCity.setText(aMapLocation.getCity());
+            mRegion.setText(aMapLocation.getDistrict());
         }
     }
 
