@@ -18,10 +18,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.hwand.pinhaowanr.BaseFragment;
+import com.hwand.pinhaowanr.CommonViewHolder;
 import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.model.FleaActivityModel;
 import com.hwand.pinhaowanr.model.HomePageModel;
 import com.hwand.pinhaowanr.model.NewActivityModel;
+import com.hwand.pinhaowanr.model.RoleModel;
 import com.hwand.pinhaowanr.model.SmallPartnerModel;
 import com.hwand.pinhaowanr.model.SuperMomModel;
 import com.hwand.pinhaowanr.model.TheCommunityActivityModel;
@@ -55,6 +58,8 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
     private List<SuperMomModel> superMomModels;
 
     private List<NewActivityModel> newActivityModels;
+
+    private List<FleaActivityModel> fleaActivityModels;
 
     public static BaseFragment newInstance(){
         SmallPartnerFragment fragment = new SmallPartnerFragment();
@@ -96,6 +101,9 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
     private RelativeLayout playLayout1, playLayout2;
     private ImageView playImage1 , playImage2;
     private TextView playContent1 , playContent2;
+
+    private RelativeLayout fleaLayout;
+    private ImageView fleaImage;
 
     final AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
@@ -146,6 +154,9 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
         playContent1 = (TextView) headerView.findViewById(R.id.play_text1);
         playContent2 = (TextView) headerView.findViewById(R.id.play_text2);
 
+        fleaLayout = (RelativeLayout) headerView.findViewById(R.id.flea_market_layout);
+        fleaImage = (ImageView) headerView.findViewById(R.id.flea_market_image);
+
         return headerView;
     }
 
@@ -189,6 +200,8 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
             //update new play
             updateNewPlay();
 
+            //update Flea
+            updateFleaView();
         }
 
     }
@@ -277,10 +290,36 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
         if(newActivityModels != null && newActivityModels.size() > 0){
             newPlayLayout.setVisibility(View.VISIBLE);
             int size = newActivityModels.size();
+            if(size >= 1){
+                playLayout1.setVisibility(View.VISIBLE);
+                playLayout2.setVisibility(View.INVISIBLE);
 
+                NewActivityModel newActivityModel = newActivityModels.get(0);
+                AndTools.displayImage(null , newActivityModel.getUrl() , playImage1);
+                playContent1.setText(newActivityModel.getTitle());
+            }
+            if(size >= 2){
+                playLayout1.setVisibility(View.VISIBLE);
+                playLayout2.setVisibility(View.VISIBLE);
+
+                NewActivityModel newActivityModel = newActivityModels.get(1);
+                AndTools.displayImage(null, newActivityModel.getUrl(), playImage2);
+                playContent2.setText(newActivityModel.getTitle());
+            }
 
         } else {
             newPlayLayout.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateFleaView(){
+        fleaActivityModels = mSmallPartnerModel.gettActivityList();
+        if(fleaActivityModels != null && fleaActivityModels.size() > 0){
+            FleaActivityModel fleaActivityModel = fleaActivityModels.get(0);
+            fleaLayout.setVisibility(View.VISIBLE);
+            AndTools.displayImage(null , fleaActivityModel.getUrl() , fleaImage);
+        } else {
+            fleaLayout.setVisibility(View.GONE);
         }
     }
 
@@ -379,6 +418,131 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
             if(convertView == null){
                 convertView = View.inflate(getActivity() , R.layout.small_partner_list_item_layout , null);
             }
+
+            TheCommunityActivityModel theCommunityActivityModel = theCommunityActivityModels.get(position);
+            ImageView imageView = CommonViewHolder.get(convertView , R.id.image);
+            AndTools.displayImage(null, theCommunityActivityModel.getUrl(), imageView);
+
+            TextView signUpStatus = CommonViewHolder.get(convertView , R.id.sign_up_status);
+
+            TextView description = CommonViewHolder.get(convertView , R.id.description);
+            description.setText(theCommunityActivityModel.getTitle());
+
+            TextView price = CommonViewHolder.get(convertView , R.id.price);
+            price.setText(getString(R.string.price, theCommunityActivityModel.getMoney()));
+
+            TextView topic = CommonViewHolder.get(convertView , R.id.topic);
+            topic.setText(theCommunityActivityModel.getName());
+
+            TextView address = CommonViewHolder.get(convertView , R.id.address);
+            address.setText(theCommunityActivityModel.getDetailAddress());
+
+            TextView distance = CommonViewHolder.get(convertView , R.id.distance);
+            distance.setText(getString(R.string.distance, theCommunityActivityModel.getDistance()));
+
+            TextView signUp = CommonViewHolder.get(convertView , R.id.sign_up);
+            signUp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            TextView time = CommonViewHolder.get(convertView, R.id.time);
+            String startTime = theCommunityActivityModel.getStratTime();
+            String endTime = theCommunityActivityModel.getEndTime();
+            time.setText(getString(R.string.small_partner_time , startTime , endTime));
+
+            TextView peopleCount = CommonViewHolder.get(convertView , R.id.people_count);
+            peopleCount.setText(getString(R.string.people_count , theCommunityActivityModel.getMaxRoles()));
+
+            TextView signUoPeople = CommonViewHolder.get(convertView , R.id.sign_up_count);
+            LinearLayout avatarLayout = CommonViewHolder.get(convertView , R.id.avatar_layout);
+            CircleImageView avatar1 = CommonViewHolder.get(convertView , R.id.avatar1);
+            CircleImageView avatar2 = CommonViewHolder.get(convertView , R.id.avatar2);
+            CircleImageView avatar3 = CommonViewHolder.get(convertView , R.id.avatar3);
+            CircleImageView avatar4 = CommonViewHolder.get(convertView , R.id.avatar4);
+            CircleImageView avatar5 = CommonViewHolder.get(convertView , R.id.avatar5);
+            CircleImageView avatar6 = CommonViewHolder.get(convertView , R.id.avatar6);
+            avatar6.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            List<RoleModel> roleModels = theCommunityActivityModel.getRoleList();
+            if(roleModels != null){
+                int size = roleModels.size();
+                signUoPeople.setText(getString(R.string.sign_up_people_count , size));
+                if(size >= 1){
+                    avatar1.setVisibility(View.VISIBLE);
+                    avatar2.setVisibility(View.GONE);
+                    avatar3.setVisibility(View.GONE);
+                    avatar4.setVisibility(View.GONE);
+                    avatar5.setVisibility(View.GONE);
+                    avatar6.setVisibility(View.VISIBLE);
+
+                    AndTools.displayImage(null , roleModels.get(0).getUrl() , avatar1);
+                }
+                if(size >= 2){
+                    avatar1.setVisibility(View.VISIBLE);
+                    avatar2.setVisibility(View.VISIBLE);
+                    avatar3.setVisibility(View.GONE);
+                    avatar4.setVisibility(View.GONE);
+                    avatar5.setVisibility(View.GONE);
+                    avatar6.setVisibility(View.VISIBLE);
+
+                    AndTools.displayImage(null, roleModels.get(1).getUrl(), avatar2);
+                }
+
+                if(size >= 3){
+                    avatar1.setVisibility(View.VISIBLE);
+                    avatar2.setVisibility(View.VISIBLE);
+                    avatar3.setVisibility(View.VISIBLE);
+                    avatar4.setVisibility(View.GONE);
+                    avatar5.setVisibility(View.GONE);
+                    avatar6.setVisibility(View.VISIBLE);
+
+                    AndTools.displayImage(null, roleModels.get(2).getUrl(), avatar3);
+                }
+
+                if(size >= 4){
+                    avatar1.setVisibility(View.VISIBLE);
+                    avatar2.setVisibility(View.VISIBLE);
+                    avatar3.setVisibility(View.VISIBLE);
+                    avatar4.setVisibility(View.VISIBLE);
+                    avatar5.setVisibility(View.GONE);
+                    avatar6.setVisibility(View.VISIBLE);
+
+                    AndTools.displayImage(null, roleModels.get(3).getUrl(), avatar4);
+                }
+
+                if(size >= 4){
+                    avatar1.setVisibility(View.VISIBLE);
+                    avatar2.setVisibility(View.VISIBLE);
+                    avatar3.setVisibility(View.VISIBLE);
+                    avatar4.setVisibility(View.VISIBLE);
+                    avatar5.setVisibility(View.VISIBLE);
+                    avatar6.setVisibility(View.VISIBLE);
+
+                    AndTools.displayImage(null, roleModels.get(4).getUrl(), avatar5);
+                }
+
+            } else {
+                signUoPeople.setText(getString(R.string.sign_up_people_count, 0));
+
+                avatar1.setVisibility(View.GONE);
+                avatar2.setVisibility(View.GONE);
+                avatar3.setVisibility(View.GONE);
+                avatar4.setVisibility(View.GONE);
+                avatar5.setVisibility(View.GONE);
+                avatar6.setVisibility(View.VISIBLE);
+
+            }
+
+
+
             return convertView;
         }
     }

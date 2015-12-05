@@ -47,6 +47,12 @@
     <string name="free">免费</string>
     <string name="starting">首发</string>
     <string name="back_out">再按一次退出程序</string>
+    <string name="price">￥ %d</string>
+    <string name="distance">距离 %dm</string>
+    <string name="sign_up">报名</string>
+    <string name="small_partner_time">时间: %s 至 %s</string>
+    <string name="people_count">人数: %d人</string>
+    <string name="sign_up_people_count">已报名 %d人</string>
 
 
     <string name="calendar_sunday">日</string>
