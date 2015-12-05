@@ -2,16 +2,16 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="125dp"
+    android:layout_height="155dp"
     android:background="@color/white">
 
     <com.hwand.pinhaowanr.widget.CircleImageView
         android:id="@+id/head"
-        android:layout_width="83dp"
-        android:layout_height="83dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="146dp"
-        android:layout_marginTop="3dp"></com.hwand.pinhaowanr.widget.CircleImageView>
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/btn_txbig"
+        android:layout_marginTop="24dp"></com.hwand.pinhaowanr.widget.CircleImageView>
 
     <TextView
         android:id="@+id/user_name"
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/head"
         android:layout_centerHorizontal="true"
-        android:text="徐熙娣001"
+        android:text="徐熙娣"
         android:textColor="@color/black"
         android:textSize="15sp" />
 
@@ -27,7 +27,7 @@
         android:id="@+id/divider1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="108dp"
+        android:layout_marginTop="138dp"
         android:background="#eeeeee" />
 
     <View

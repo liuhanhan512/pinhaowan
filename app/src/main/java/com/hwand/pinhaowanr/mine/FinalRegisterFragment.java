@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.main.MineFragment;
 import com.hwand.pinhaowanr.model.UserInfo;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.LogUtil;
@@ -82,6 +83,12 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
         super.initViews();
         initView();
         setTitleBarTtile("注册");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MineFragment.setNoExit(true);
     }
 
     private void initView() {

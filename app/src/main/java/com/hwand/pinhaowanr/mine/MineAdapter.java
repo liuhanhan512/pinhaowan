@@ -62,6 +62,7 @@ public class MineAdapter extends BaseAdapter {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item_navi, null);
                 holder = new ViewHolder();
                 holder.tip = (TextView) convertView.findViewById(R.id.tip);
+                holder.desc = (TextView) convertView.findViewById(R.id.desc);
                 holder.divider = convertView.findViewById(R.id.divider);
                 convertView.setTag(holder);
             } else {
@@ -72,6 +73,7 @@ public class MineAdapter extends BaseAdapter {
             }
 
             holder.tip.setText(navi.content);
+            holder.desc.setText(navi.desc);
             if (position == mList.size() -1) {
                 holder.divider.setBackgroundColor(mContext.getResources().getColor(R.color.white));
             } else {
@@ -93,6 +95,7 @@ public class MineAdapter extends BaseAdapter {
     public static class NaviEntity {
         public String content;
         public int msg;
+        public String desc;
 
         public NaviEntity(String str, int what) {
             this.content = str;
@@ -103,6 +106,7 @@ public class MineAdapter extends BaseAdapter {
 
     public static class ViewHolder {
         public TextView tip;
+        public TextView desc;
         public View divider;
 
     }

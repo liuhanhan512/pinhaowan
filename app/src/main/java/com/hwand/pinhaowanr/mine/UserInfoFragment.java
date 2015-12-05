@@ -1,33 +1,24 @@
 package com.hwand.pinhaowanr.mine;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ListView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.DataCacheHelper;
-import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
-import com.hwand.pinhaowanr.utils.AndTools;
+import com.hwand.pinhaowanr.main.MineFragment;
 import com.hwand.pinhaowanr.utils.LogUtil;
-import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.CircleImageView;
-import com.hwand.pinhaowanr.widget.DDAlertDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by dxz on 15/12/01.
@@ -41,12 +32,13 @@ public class UserInfoFragment extends BaseFragment {
         return fragment;
     }
 
-    private static final int MSG_LOGOUT = 4;
 
-    private static final int MSG_INTENT_PLAN = 10;
-    private static final int MSG_INTENT_MSG = 11;
-    private static final int MSG_INTENT_PWD = 12;
-    private static final int MSG_INTENT_ABOUT = 13;
+    private static final int MSG_INTENT_HEAD = 20;
+    private static final int MSG_INTENT_CHILD_NAME = 21;
+    private static final int MSG_INTENT_CHILD_SEX = 22;
+    private static final int MSG_INTENT_CHILD_BIRTH = 23;
+    private static final int MSG_INTENT_ADD = 24;
+    private static final int MSG_INTENT_CONTENT = 25;
 
 
     protected Handler mHandler = new Handler() {
@@ -55,24 +47,48 @@ public class UserInfoFragment extends BaseFragment {
             if (!isAdded()) {
                 return;
             }
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction tx = fm.beginTransaction();
             switch (msg.what) {
-                case MSG_INTENT_PLAN:
-                case MSG_INTENT_MSG:
-                case MSG_INTENT_PWD:
-
+                case MSG_INTENT_HEAD:
                     break;
-                case MSG_INTENT_ABOUT:
-                    AboutFragment fragment = AboutFragment.newInstance();
-                    FragmentManager fm = getFragmentManager();
-                    FragmentTransaction tx = fm.beginTransaction();
+                case MSG_INTENT_CHILD_NAME:
+                    ChildNameFragment fragment = ChildNameFragment.newInstance();
                     tx.hide(UserInfoFragment.this);
-                    tx.add(R.id.fragment_container, fragment, "AboutFragment");
+                    tx.add(R.id.fragment_container, fragment, "ChildNameFragment");
                     tx.addToBackStack(null);
                     tx.commit();
                     break;
-                case MSG_LOGOUT:
-                    logout();
+                case MSG_INTENT_CHILD_SEX:
+                    SexModifyFragment fragmentSex = SexModifyFragment.newInstance();
+                    tx.hide(UserInfoFragment.this);
+                    tx.add(R.id.fragment_container, fragmentSex, "SexModifyFragment");
+                    tx.addToBackStack(null);
+                    tx.commit();
+                    break;
+                case MSG_INTENT_CHILD_BIRTH:
+                    BirthdayModifyFragment fragmentBirth = BirthdayModifyFragment.newInstance();
+                    tx.hide(UserInfoFragment.this);
+                    tx.add(R.id.fragment_container, fragmentBirth, "BirthdayModifyFragment");
+                    tx.addToBackStack(null);
+                    tx.commit();
+                    break;
+                case MSG_INTENT_ADD:
+                    AddressFragment fragmentAdd = AddressFragment.newInstance();
+                    tx.hide(UserInfoFragment.this);
+                    tx.add(R.id.fragment_container, fragmentAdd, "AddressFragment");
+                    tx.addToBackStack(null);
+                    tx.commit();
+                    break;
+                case MSG_INTENT_CONTENT:
+                    ContentFragment fragmentCon = ContentFragment.newInstance();
+                    tx.hide(UserInfoFragment.this);
+                    tx.add(R.id.fragment_container, fragmentCon, "ContentFragment");
+                    tx.addToBackStack(null);
+                    tx.commit();
+                    break;
                 default:
+                    break;
 
             }
 
@@ -81,97 +97,55 @@ public class UserInfoFragment extends BaseFragment {
 
     private ListView mListView;
     private View mHeader;
-    private View mFooter;
     private CircleImageView mHeadImageView;
 
     private MineAdapter mAdapter;
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_mine_navi_layout;
+        return R.layout.fragment_mine_info_layout;
     }
 
     @Override
     protected void initViews() {
         super.initViews();
 
-        setTitleBarTtile("我的");
+        setTitleBarTtile("个人信息");
         mListView = (ListView) mFragmentView.findViewById(R.id.nv_list);
-        mHeader = getActivity().getLayoutInflater().inflate(R.layout.mine_header_layout, null);
-        mHeadImageView = (CircleImageView)mHeader.findViewById(R.id.head);
-        mFooter = getActivity().getLayoutInflater().inflate(R.layout.mine_footer_layout, null);
+        mHeader = getActivity().getLayoutInflater().inflate(R.layout.info_header_layout, null);
+        mHeadImageView = (CircleImageView) mHeader.findViewById(R.id.head);
 
         List<MineAdapter.NaviEntity> list = new ArrayList<MineAdapter.NaviEntity>();
-        list.add(new MineAdapter.NaviEntity("我的安排", MSG_INTENT_PLAN));
-        list.add(new MineAdapter.NaviEntity("消息", MSG_INTENT_MSG));
-        list.add(new MineAdapter.NaviEntity("修改密码", MSG_INTENT_PWD));
-        list.add(new MineAdapter.NaviEntity("反馈", -1));
-        list.add(new MineAdapter.NaviEntity("给个评价", -1));
-        list.add(new MineAdapter.NaviEntity("清除缓存", -1));
-        list.add(new MineAdapter.NaviEntity("联系我们", -1));
-        list.add(new MineAdapter.NaviEntity("关于", MSG_INTENT_ABOUT));
+        list.add(new MineAdapter.NaviEntity("宝宝名", MSG_INTENT_CHILD_NAME));
+        list.add(new MineAdapter.NaviEntity("宝宝性别", MSG_INTENT_CHILD_SEX));
+        list.add(new MineAdapter.NaviEntity("宝宝出生", MSG_INTENT_CHILD_BIRTH));
+        list.add(new MineAdapter.NaviEntity("家庭地址", MSG_INTENT_ADD));
+        list.add(new MineAdapter.NaviEntity("个人介绍", MSG_INTENT_CONTENT));
         mAdapter = new MineAdapter(getActivity(), mHandler, list);
         mListView.addHeaderView(mHeader);
-        mListView.addFooterView(mFooter);
         mListView.setAdapter(mAdapter);
-        mFooter.setOnClickListener(new View.OnClickListener() {
+        mHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                logout();
+                modifyHeadPic();
             }
         });
         try {
             String url = UrlConfig.PIC_URL + DataCacheHelper.getInstance().getUserInfo().getUrl();
-            LogUtil.d("dxz",url);
+            LogUtil.d("dxz", url);
             ImageLoader.getInstance().displayImage(url, mHeadImageView);
-        } catch (Exception e){
+        } catch (Exception e) {
         }
 
     }
 
-    private void logout() {
-        Map<String, String> params = new HashMap<String, String>();
-        String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_LOGOUT, params);
-        LogUtil.d("dxz", url);
-        NetworkRequest.get(url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                LogUtil.d("dxz", response);
-                if (!TextUtils.isEmpty(response) && response.contains("1")) {
-                    AndTools.saveCurrentData2Cache(MainApplication.getInstance(), DataCacheHelper.KEY_USER_INFO, "");
-                    AndTools.saveCurrentData2Cache(MainApplication.getInstance(), NetworkRequest.SESSION_COOKIE, "");
-                    LoginFragment fragment = LoginFragment.newInstance();
-                    FragmentManager fm = getFragmentManager();
-                    FragmentTransaction tx = fm.beginTransaction();
-                    tx.hide(UserInfoFragment.this);
-                    tx.add(R.id.fragment_container, fragment, "LoginFragment");
-                    tx.commit();
-                    AndTools.showToast("已退出登录");
-                } else {
-                    new DDAlertDialog.Builder(getActivity())
-                            .setTitle("提示").setMessage("退出登录失败！")
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
-                }
+    @Override
+    public void onResume() {
+        super.onResume();
+        MineFragment.setNoExit(true);
+    }
+    
+    private void modifyHeadPic() {
 
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                new DDAlertDialog.Builder(getActivity())
-                        .setTitle("提示").setMessage("网络问题请重试！")
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
-            }
-        });
     }
 }

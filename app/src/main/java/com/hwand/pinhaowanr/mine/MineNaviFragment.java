@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -16,6 +17,7 @@ import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.main.MineFragment;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
@@ -83,6 +85,7 @@ public class MineNaviFragment extends BaseFragment {
     private View mHeader;
     private View mFooter;
     private CircleImageView mHeadImageView;
+    private TextView mUserName;
 
     private MineAdapter mAdapter;
 
@@ -99,6 +102,7 @@ public class MineNaviFragment extends BaseFragment {
         mListView = (ListView) mFragmentView.findViewById(R.id.nv_list);
         mHeader = getActivity().getLayoutInflater().inflate(R.layout.mine_header_layout, null);
         mHeadImageView = (CircleImageView)mHeader.findViewById(R.id.head);
+        mUserName = (TextView) mHeader.findViewById(R.id.user_name);
         mFooter = getActivity().getLayoutInflater().inflate(R.layout.mine_footer_layout, null);
 
         List<MineAdapter.NaviEntity> list = new ArrayList<MineAdapter.NaviEntity>();
@@ -120,13 +124,33 @@ public class MineNaviFragment extends BaseFragment {
                 logout();
             }
         });
+
         try {
+            mUserName.setText(DataCacheHelper.getInstance().getUserInfo().getName());
             String url = UrlConfig.PIC_URL + DataCacheHelper.getInstance().getUserInfo().getUrl();
             LogUtil.d("dxz",url);
             ImageLoader.getInstance().displayImage(url, mHeadImageView);
+            mHeader.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UserInfoFragment fragment = UserInfoFragment.newInstance();
+                    FragmentManager fm = getFragmentManager();
+                    FragmentTransaction tx = fm.beginTransaction();
+                    tx.hide(MineNaviFragment.this);
+                    tx.add(R.id.fragment_container, fragment, "UserInfoFragment");
+                    tx.addToBackStack(null);
+                    tx.commit();
+                }
+            });
         } catch (Exception e){
         }
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MineFragment.setNoExit(false);
     }
 
     private void logout() {
@@ -148,14 +172,15 @@ public class MineNaviFragment extends BaseFragment {
                     tx.commit();
                     AndTools.showToast("已退出登录");
                 } else {
-                    new DDAlertDialog.Builder(getActivity())
-                            .setTitle("提示").setMessage("退出登录失败！")
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
+                    AndTools.saveCurrentData2Cache(MainApplication.getInstance(), DataCacheHelper.KEY_USER_INFO, "");
+                    AndTools.saveCurrentData2Cache(MainApplication.getInstance(), NetworkRequest.SESSION_COOKIE, "");
+                    LoginFragment fragment = LoginFragment.newInstance();
+                    FragmentManager fm = getFragmentManager();
+                    FragmentTransaction tx = fm.beginTransaction();
+                    tx.hide(MineNaviFragment.this);
+                    tx.add(R.id.fragment_container, fragment, "LoginFragment");
+                    tx.commit();
+                    AndTools.showToast("已退出登录");
                 }
 
 

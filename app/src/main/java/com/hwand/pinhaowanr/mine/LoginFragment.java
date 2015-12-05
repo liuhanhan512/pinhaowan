@@ -19,6 +19,7 @@ import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.ForgetPwdActivity;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.main.MineFragment;
 import com.hwand.pinhaowanr.model.UserInfo;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
@@ -66,6 +67,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
     @Override
     public void onResume() {
         super.onResume();
+        MineFragment.setNoExit(false);
     }
 
     private void initView() {

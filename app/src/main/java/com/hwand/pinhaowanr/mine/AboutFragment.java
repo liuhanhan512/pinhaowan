@@ -4,9 +4,7 @@ import android.os.Bundle;
 
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.R;
-import com.hwand.pinhaowanr.event.CancelBackToMainEvent;
-
-import de.greenrobot.event.EventBus;
+import com.hwand.pinhaowanr.main.MineFragment;
 
 /**
  * Created by hanhanliu on 15/11/20.
@@ -29,7 +27,11 @@ public class AboutFragment extends BaseFragment {
     protected void initViews() {
         super.initViews();
         setTitleBarTtile("关于");
-        EventBus.getDefault().post(new CancelBackToMainEvent(true));
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        MineFragment.setNoExit(true);
+    }
 }
