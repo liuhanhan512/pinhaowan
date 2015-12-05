@@ -32,6 +32,7 @@
     <color name="divider_light_gray">#ecedee</color>
     <color name="ding_audio_fore_color">#2fa9ff</color>
     <color name="text_black_new">#333333</color>
+    <color name="divider_light_yellow">#f5edbc</color>
 
     <drawable name="default_divider">#d9d9d9</drawable>
 </resources>

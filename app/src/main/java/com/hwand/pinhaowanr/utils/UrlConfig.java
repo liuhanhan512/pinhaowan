@@ -40,7 +40,6 @@ public class UrlConfig {
     public static final String URL_QUERY_MSGS = HOST_PATH + "CheckMyAllMessage?";
     public static final String URL_QUERY_MSG_DETAIL = HOST_PATH + "CheckMessageDetail?";
     public static final String URL_DEL_MSG = HOST_PATH + "DeleteMessage?";
-    public static final String URL_ACCOUNT_INFO = HOST_PATH + "GetMyInfo?";
     public static final String URL_MODIFY_USER_INFO = HOST_PATH + "ChangeMyInfo?";
     public static final String URL_QUERY_MY_PIN_CLASSES = HOST_PATH + "CheckMyPinClass?";
     public static final String URL_MODIFY_HEAD = HOST_PATH + "ChangeHeadPicture?";

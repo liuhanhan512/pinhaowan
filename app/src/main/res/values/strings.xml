@@ -65,4 +65,6 @@
     <string name="calendar_wednesday">三</string>
     <string name="calendar_friday">五</string>
 
+    <string name="title_order">预约</string>
+    <string name="title_class">拼课</string>
 </resources>

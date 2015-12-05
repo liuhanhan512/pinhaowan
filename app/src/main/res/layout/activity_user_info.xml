@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_fragment_white"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true">
+
+    <com.hwand.pinhaowanr.widget.CircleImageView
+        android:id="@+id/head"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:src="@mipmap/btn_txbig"></com.hwand.pinhaowanr.widget.CircleImageView>
+
+    <RelativeLayout
+        android:id="@+id/rl_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_below="@+id/head">
+
+        <TextView
+            android:id="@+id/btn_msg"
+            android:layout_width="140dp"
+            android:layout_height="18dp"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/white_corner_btn_bg"
+            android:gravity="center"
+            android:text="发私信"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/btn_focus"
+            android:layout_width="140dp"
+            android:layout_height="18dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/white_corner_btn_bg"
+            android:gravity="center"
+            android:text="加关注"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/focus_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="50dp"
+        android:layout_below="@+id/rl_btn"
+        android:layout_marginTop="36dp"
+        android:gravity="center"
+        android:text="761人"
+        android:textSize="14sp" />
+    <TextView
+        android:id="@+id/tv_focus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/focus_count"
+        android:layout_below="@+id/focus_count"
+        android:gravity="center"
+        android:text="关注"
+        android:textSize="13sp"
+        android:textColor="@color/text_color_light"/>
+    
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tv_focus"
+        android:layout_marginTop="6dp"
+        android:background="@color/divider_light_yellow"/>
+
+    <ImageView
+        android:id="@+id/tip"
+        android:layout_below="@+id/divider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginLeft="12dp"
+        android:src="@mipmap/fine_group_item_image_divider"
+        />
+    <TextView
+        android:id="@+id/tv_about"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider"
+        android:layout_marginTop="21dp"
+        android:layout_marginLeft="12dp"
+        android:layout_toRightOf="@+id/tip"
+        android:gravity="center"
+        android:text="关于他"
+        android:textSize="15sp"/>
+    <TextView
+        android:id="@+id/about"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_about"
+        android:layout_marginTop="21dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:text="        关于他20140204101202012010他关于他关于0140204101202012010他他关于他关于他关于他关于他关于他关于他关于他关于他"
+        android:textSize="13sp"
+        android:textColor="@color/text_color_light"/>
+</RelativeLayout>

@@ -29,7 +29,16 @@ public class MineFragment extends BaseFragment {
     private static Boolean noExit = false;
 
     public static boolean noExit() {
+        if (noExit) {
+            onBackPressed();
+        }
         return noExit;
+    }
+
+    private static void onBackPressed() {
+        if (mFragmentManager != null && mFragmentManager.getBackStackEntryCount() > 1) {
+            mFragmentManager.popBackStack();
+        }
     }
 
     public static void setNoExit(boolean no) {
@@ -38,7 +47,7 @@ public class MineFragment extends BaseFragment {
 
     private Fragment mCurFragment;
 
-    private FragmentManager mFragmentManager;
+    private static FragmentManager mFragmentManager;
     private MineNaviFragment mMineNaviFragment;
     private LoginFragment mLoginFragment;
 
