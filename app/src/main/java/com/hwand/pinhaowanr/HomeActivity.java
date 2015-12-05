@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.hwand.pinhaowanr.main.MineFragment;
 import com.hwand.pinhaowanr.utils.AndTools;
 
 import java.util.Timer;
@@ -164,6 +165,9 @@ public class HomeActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(mSelectedIndex == FRAGMENT_TITLES.length - 1){
+
+            }
             exitBy2Click();      //调用双击退出函数
         }
         return false;

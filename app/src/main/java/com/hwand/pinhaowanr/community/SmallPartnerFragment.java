@@ -7,7 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.android.volley.Response;
@@ -17,11 +21,14 @@ import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.HomePageModel;
+import com.hwand.pinhaowanr.model.NewActivityModel;
 import com.hwand.pinhaowanr.model.SmallPartnerModel;
 import com.hwand.pinhaowanr.model.SuperMomModel;
 import com.hwand.pinhaowanr.model.TheCommunityActivityModel;
+import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
+import com.hwand.pinhaowanr.widget.CircleImageView;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
@@ -33,7 +40,7 @@ import java.util.Map;
  * 社区--小伙伴页面
  * Created by hanhanliu on 15/11/30.
  */
-public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener{
+public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -44,6 +51,10 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
     private SmallPartnerModel mSmallPartnerModel;
 
     private List<TheCommunityActivityModel> theCommunityActivityModels = new ArrayList<TheCommunityActivityModel>();
+
+    private List<SuperMomModel> superMomModels;
+
+    private List<NewActivityModel> newActivityModels;
 
     public static BaseFragment newInstance(){
         SmallPartnerFragment fragment = new SmallPartnerFragment();
@@ -76,6 +87,16 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
         fetchData();
     }
 
+    private LinearLayout superMomLayout;
+    private RelativeLayout avatarLayout1 ,avatarLayout2,avatarLayout3,avatarLayout4,avatarLayout5,avatarLayout6;
+    private CircleImageView avatar1, avatar2, avatar3, avatar4, avatar5, avatar6;
+    private TextView name1, name2, name3, name4, name5, name6;
+
+    private LinearLayout newPlayLayout;
+    private RelativeLayout playLayout1, playLayout2;
+    private ImageView playImage1 , playImage2;
+    private TextView playContent1 , playContent2;
+
     final AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -86,6 +107,44 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
     private View initHeaderView(){
 
         View headerView = View.inflate(getActivity() , R.layout.small_partner_list_header_layout , null);
+        superMomLayout = (LinearLayout)headerView.findViewById(R.id.super_mom_layout);
+        avatarLayout1 = (RelativeLayout) headerView.findViewById(R.id.avatar_layout1);
+        avatarLayout2 = (RelativeLayout) headerView.findViewById(R.id.avatar_layout2);
+        avatarLayout3 = (RelativeLayout) headerView.findViewById(R.id.avatar_layout3);
+        avatarLayout4 = (RelativeLayout) headerView.findViewById(R.id.avatar_layout4);
+        avatarLayout5 = (RelativeLayout) headerView.findViewById(R.id.avatar_layout5);
+        avatarLayout6 = (RelativeLayout) headerView.findViewById(R.id.avatar_layout6);
+
+        avatarLayout1.setOnClickListener(this);
+        avatarLayout2.setOnClickListener(this);
+        avatarLayout3.setOnClickListener(this);
+        avatarLayout4.setOnClickListener(this);
+        avatarLayout5.setOnClickListener(this);
+        avatarLayout6.setOnClickListener(this);
+
+
+        avatar1 = (CircleImageView) headerView.findViewById(R.id.avatar1);
+        avatar2 = (CircleImageView) headerView.findViewById(R.id.avatar2);
+        avatar3 = (CircleImageView) headerView.findViewById(R.id.avatar3);
+        avatar4 = (CircleImageView) headerView.findViewById(R.id.avatar4);
+        avatar5 = (CircleImageView) headerView.findViewById(R.id.avatar5);
+        avatar6 = (CircleImageView) headerView.findViewById(R.id.avatar6);
+
+        name1 = (TextView) headerView.findViewById(R.id.name1);
+        name2 = (TextView) headerView.findViewById(R.id.name2);
+        name3 = (TextView) headerView.findViewById(R.id.name3);
+        name4 = (TextView) headerView.findViewById(R.id.name4);
+        name5 = (TextView) headerView.findViewById(R.id.name5);
+        name6 = (TextView) headerView.findViewById(R.id.name6);
+
+
+        newPlayLayout = (LinearLayout) headerView.findViewById(R.id.new_play_layout);
+        playLayout1 = (RelativeLayout) headerView.findViewById(R.id.play_layout1);
+        playLayout2 = (RelativeLayout) headerView.findViewById(R.id.play_layout2);
+        playImage1 = (ImageView) headerView.findViewById(R.id.play_jmage1);
+        playImage2 = (ImageView) headerView.findViewById(R.id.play_jmage2);
+        playContent1 = (TextView) headerView.findViewById(R.id.play_text1);
+        playContent2 = (TextView) headerView.findViewById(R.id.play_text2);
 
         return headerView;
     }
@@ -123,21 +182,174 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
     private void updateViews(){
         if(mSmallPartnerModel != null){
             // update listview
-            List<TheCommunityActivityModel> theCommunityActivityModels = mSmallPartnerModel.getNaActivityList();
-            if(theCommunityActivityModels != null){
-                this.theCommunityActivityModels.clear();
-                this.theCommunityActivityModels.addAll(theCommunityActivityModels);
-                mAdapter.notifyDataSetChanged();
-            }
+            updateListView();
             //update super mom
-            List<SuperMomModel> superMomModels = mSmallPartnerModel.getRoleList();
-            if(superMomModels.size() >= 5){
+            updateSuperMom();
 
-            } else {
+            //update new play
+            updateNewPlay();
 
-            }
         }
 
+    }
+
+    private void updateListView(){
+        List<TheCommunityActivityModel> theCommunityActivityModels = mSmallPartnerModel.getNaActivityList();
+        if(theCommunityActivityModels != null){
+            this.theCommunityActivityModels.clear();
+            this.theCommunityActivityModels.addAll(theCommunityActivityModels);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void updateSuperMom(){
+        superMomModels = mSmallPartnerModel.getRoleList();
+        if(superMomModels != null){
+            int size = superMomModels.size();
+            if(size > 0){
+                superMomLayout.setVisibility(View.VISIBLE);
+                if(size >= 1){
+                    avatarLayout1.setVisibility(View.VISIBLE);
+                    avatarLayout2.setVisibility(View.INVISIBLE);
+                    avatarLayout3.setVisibility(View.INVISIBLE);
+                    avatarLayout4.setVisibility(View.INVISIBLE);
+                    avatarLayout5.setVisibility(View.INVISIBLE);
+                    avatarLayout6.setVisibility(View.INVISIBLE);
+
+                    SuperMomModel superMomModel = superMomModels.get(0);
+                    AndTools.displayImage(null, superMomModel.getUrl(), avatar1);
+                    name1.setText(superMomModel.getName());
+                }
+
+                if(size >= 2){
+                    avatarLayout2.setVisibility(View.VISIBLE);
+                    avatarLayout3.setVisibility(View.INVISIBLE);
+                    avatarLayout4.setVisibility(View.INVISIBLE);
+                    avatarLayout5.setVisibility(View.INVISIBLE);
+                    avatarLayout6.setVisibility(View.INVISIBLE);
+                    SuperMomModel superMomModel = superMomModels.get(1);
+                    AndTools.displayImage(null, superMomModel.getUrl(), avatar2);
+                    name2.setText(superMomModel.getName());
+                }
+
+                if(size >= 3){
+                    avatarLayout3.setVisibility(View.VISIBLE);
+                    avatarLayout4.setVisibility(View.INVISIBLE);
+                    avatarLayout5.setVisibility(View.INVISIBLE);
+                    avatarLayout6.setVisibility(View.INVISIBLE);
+
+                    SuperMomModel superMomModel = superMomModels.get(2);
+                    AndTools.displayImage(null, superMomModel.getUrl(), avatar3);
+                    name3.setText(superMomModel.getName());
+                }
+
+                if(size >= 4){
+                    avatarLayout4.setVisibility(View.VISIBLE);
+                    avatarLayout5.setVisibility(View.INVISIBLE);
+                    avatarLayout6.setVisibility(View.INVISIBLE);
+
+                    SuperMomModel superMomModel = superMomModels.get(3);
+                    AndTools.displayImage(null, superMomModel.getUrl(), avatar4);
+                    name4.setText(superMomModel.getName());
+                }
+
+                if(size >= 5){
+                    avatarLayout5.setVisibility(View.VISIBLE);
+                    avatarLayout6.setVisibility(View.INVISIBLE);
+
+                    SuperMomModel superMomModel = superMomModels.get(3);
+                    AndTools.displayImage(null, superMomModel.getUrl(), avatar5);
+                    name5.setText(superMomModel.getName());
+                }
+
+                if(size > 5){
+                    avatarLayout6.setVisibility(View.VISIBLE);
+                }
+            } else {
+                superMomLayout.setVisibility(View.GONE);
+            }
+
+        }
+    }
+
+    private void updateNewPlay(){
+        newActivityModels = mSmallPartnerModel.getNewActivityList();
+        if(newActivityModels != null && newActivityModels.size() > 0){
+            newPlayLayout.setVisibility(View.VISIBLE);
+            int size = newActivityModels.size();
+
+
+        } else {
+            newPlayLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        switch (v.getId()){
+            case R.id.avatar_layout1:
+                onAvatar1Click();
+                break;
+            case R.id.avatar_layout2:
+                onAvatar2Click();
+                break;
+            case R.id.avatar_layout3:
+                onAvatar3Click();
+                break;
+            case R.id.avatar_layout4:
+                onAvatar4Click();
+                break;
+            case R.id.avatar_layout5:
+                onAvatar5Click();
+                break;
+            case R.id.avatar_layout6:
+                onAvatar6Click();
+                break;
+
+        }
+    }
+
+    private void onAvatar1Click(){
+        if(superMomModels != null && superMomModels.size() > 0){
+            SuperMomModel superMomModel = superMomModels.get(0);
+
+        }
+    }
+
+    private void onAvatar2Click(){
+        if(superMomModels != null && superMomModels.size() > 1){
+            SuperMomModel superMomModel = superMomModels.get(1);
+
+        }
+    }
+
+    private void onAvatar3Click(){
+        if(superMomModels != null && superMomModels.size() > 2){
+            SuperMomModel superMomModel = superMomModels.get(0);
+
+        }
+    }
+
+    private void onAvatar4Click(){
+        if(superMomModels != null && superMomModels.size() > 3){
+            SuperMomModel superMomModel = superMomModels.get(3);
+
+        }
+    }
+
+    private void onAvatar5Click(){
+        if(superMomModels != null && superMomModels.size() > 4){
+            SuperMomModel superMomModel = superMomModels.get(4);
+
+        }
+    }
+
+    private void onAvatar6Click(){
+        if(superMomModels != null && superMomModels.size() > 5){
+
+
+        }
     }
 
     @Override
