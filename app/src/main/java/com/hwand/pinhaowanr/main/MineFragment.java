@@ -65,6 +65,14 @@ public class MineFragment extends BaseFragment {
     protected void initViews() {
         super.initViews();
         mFragmentManager = getChildFragmentManager();
+        mFragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                if (mFragmentManager != null && mFragmentManager.getBackStackEntryCount() <= 1) {
+                    setNoExit(false);
+                }
+            }
+        });
         FragmentTransaction tx = mFragmentManager.beginTransaction();
 
         if (!MainApplication.getInstance().isLogin()) {
@@ -73,6 +81,7 @@ public class MineFragment extends BaseFragment {
                 tx.hide(mCurFragment);
             }
             tx.add(R.id.fragment_container, mLoginFragment, "LoginFragment");
+            tx.addToBackStack("LoginFragment");
             mCurFragment = mLoginFragment;
             tx.commit();
         } else {
@@ -81,6 +90,7 @@ public class MineFragment extends BaseFragment {
                 tx.hide(mCurFragment);
             }
             tx.add(R.id.fragment_container, mMineNaviFragment, "MineNaviFragment");
+            tx.addToBackStack("MineNaviFragment");
             mCurFragment = mMineNaviFragment;
             tx.commit();
         }
