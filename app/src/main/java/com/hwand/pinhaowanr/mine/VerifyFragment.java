@@ -16,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.main.MineFragment;
 import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
@@ -81,6 +82,12 @@ public class VerifyFragment extends BaseFragment {
         super.initViews();
         initView();
         setTitleBarTtile("注册");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MineFragment.setNoExit(true);
     }
 
     @Override

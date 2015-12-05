@@ -13,7 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.R;
-import com.hwand.pinhaowanr.event.CancelBackToMainEvent;
+import com.hwand.pinhaowanr.main.MineFragment;
 import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.StrUtils;
@@ -22,8 +22,6 @@ import com.hwand.pinhaowanr.widget.DDAlertDialog;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by dxz on 15/11/20.
@@ -52,7 +50,12 @@ public class RegisterFragment extends BaseFragment {
         super.initViews();
         initView();
         setTitleBarTtile("注册");
-        EventBus.getDefault().post(new CancelBackToMainEvent(true));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MineFragment.setNoExit(true);
     }
 
     private void initView() {

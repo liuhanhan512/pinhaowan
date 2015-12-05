@@ -13,6 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.main.MineFragment;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
@@ -62,12 +63,18 @@ public class BirthdayModifyFragment extends BaseFragment implements View.OnClick
         setTitleBarTtile("选择宝宝出生");
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        MineFragment.setNoExit(true);
+    }
+
     private void initView() {
         mSpinnerYear = (Spinner) mFragmentView.findViewById(R.id.spinner_year);
         mSpinnerMonth = (Spinner) mFragmentView.findViewById(R.id.spinner_month);
         mSpinnerDay = (Spinner) mFragmentView.findViewById(R.id.spinner_day);
 
-        // 年份设定为当年的前后20年
+        // 年份设定为当年的前后16年
         Calendar cal = Calendar.getInstance();
         for (int i = 0; i < 32; i++) {
             dataYear.add("" + (cal.get(Calendar.YEAR) - 16 + i));
@@ -75,7 +82,7 @@ public class BirthdayModifyFragment extends BaseFragment implements View.OnClick
         adapterSpinnerYear = new ArrayAdapter<String>(this.getActivity(), R.layout.spinner_item_layout, dataYear);
         adapterSpinnerYear.setDropDownViewResource(R.layout.spinner_item_layout);
         mSpinnerYear.setAdapter(adapterSpinnerYear);
-        mSpinnerYear.setSelection(12);// 默认选中今年
+        mSpinnerYear.setSelection(12);// 默认选中4年前
 
         // 12个月
         for (int i = 1; i <= 12; i++) {
@@ -109,15 +116,15 @@ public class BirthdayModifyFragment extends BaseFragment implements View.OnClick
             }
         });
         mNext = (TextView) mFragmentView.findViewById(R.id.btn_next);
-        mNext.setOnClickListener(this);
+        mNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                modify();
+            }
+        });
     }
 
-    @Override
-    public void onClick(View v) {
-        register();
-    }
-
-    private void register() {
+    private void modify() {
         StringBuilder sb = new StringBuilder("");
         sb.append(mSpinnerYear.getSelectedItem().toString() + "-");
         sb.append(mSpinnerMonth.getSelectedItem().toString() + "-");

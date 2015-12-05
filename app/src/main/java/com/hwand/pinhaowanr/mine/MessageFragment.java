@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.main.MineFragment;
 import com.hwand.pinhaowanr.widget.SlidingAdapter;
 
 /**
@@ -54,6 +55,12 @@ public class MessageFragment extends BaseFragment {
 
         mRecyclerView.setAdapter(mAdapter);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MineFragment.setNoExit(true);
     }
 
 }

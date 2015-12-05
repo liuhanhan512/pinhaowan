@@ -25,10 +25,10 @@ import java.util.Map;
 /**
  * Created by dxz on 15/12/01.
  */
-public class ChildNameFragment extends BaseFragment {
+public class AddressFragment extends BaseFragment {
 
-    public static ChildNameFragment newInstance() {
-        ChildNameFragment fragment = new ChildNameFragment();
+    public static AddressFragment newInstance() {
+        AddressFragment fragment = new AddressFragment();
         Bundle bundle = new Bundle();
         fragment.setArguments(bundle);
         return fragment;
@@ -36,19 +36,19 @@ public class ChildNameFragment extends BaseFragment {
 
 
     // UI references.
-    private EditText mUserName;
+    private EditText mAddress;
     private TextView mNext;
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_child_layout;
+        return R.layout.fragment_content_layout;
     }
 
     @Override
     protected void initViews() {
         super.initViews();
         initView();
-        setTitleBarTtile("填写宝宝名");
+        setTitleBarTtile("家庭地址");
     }
 
     @Override
@@ -58,18 +58,19 @@ public class ChildNameFragment extends BaseFragment {
     }
 
     private void initView() {
-        mUserName = (EditText) mFragmentView.findViewById(R.id.name_input);
-        mUserName.requestFocus();
+        mAddress = (EditText) mFragmentView.findViewById(R.id.content_input);
+        mAddress.setHint("请填写家庭地址");
+        mAddress.requestFocus();
         mNext = (TextView) mFragmentView.findViewById(R.id.btn_next);
         mNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String childName = mUserName.getText().toString();
+                final String address = mAddress.getText().toString();
                 boolean cancel = false;
                 View focusView = null;
-                if (TextUtils.isEmpty(childName)) {
-                    mUserName.setError(getString(R.string.error_field_required));
-                    focusView = mUserName;
+                if (TextUtils.isEmpty(address)) {
+                    mAddress.setError(getString(R.string.error_field_required));
+                    focusView = mAddress;
                     cancel = true;
                 }
                 if (cancel) {
@@ -78,8 +79,8 @@ public class ChildNameFragment extends BaseFragment {
                     focusView.requestFocus();
                 } else {
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put("type", "2");
-                    params.put("value", URLEncoder.encode(childName));
+                    params.put("type", "6");
+                    params.put("value", URLEncoder.encode(address));
                     String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_MODIFY_USER_INFO, params);
                     LogUtil.d("dxz", url);
                     NetworkRequest.get(url, new Response.Listener<String>() {

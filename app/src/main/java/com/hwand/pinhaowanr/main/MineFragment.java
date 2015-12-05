@@ -23,6 +23,19 @@ public class MineFragment extends BaseFragment {
         return fragment;
     }
 
+    /**
+     * 双击退出
+     */
+    private static Boolean noExit = false;
+
+    public static boolean noExit() {
+        return noExit;
+    }
+
+    public static void setNoExit(boolean no) {
+        noExit = no;
+    }
+
     private Fragment mCurFragment;
 
     private FragmentManager mFragmentManager;
