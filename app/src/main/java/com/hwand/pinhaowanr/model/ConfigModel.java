@@ -14,7 +14,7 @@ import java.util.List;
 public class ConfigModel  implements Serializable{
     private int cityType;
     private String cityName;
-    private List<RegionModel> regionMap;
+    private List<RegionModel> regions;
 
     public static  List<ConfigModel> arrayHomePageModelFromData(String str) {
 
@@ -40,10 +40,10 @@ public class ConfigModel  implements Serializable{
     }
 
     public List<RegionModel> getRegionMap() {
-        return regionMap;
+        return regions;
     }
 
-    public void setRegionMap(List<RegionModel> regionMap) {
-        this.regionMap = regionMap;
+    public void setRegionMap(List<RegionModel> regions) {
+        this.regions = regions;
     }
 }

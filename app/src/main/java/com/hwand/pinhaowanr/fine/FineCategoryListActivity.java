@@ -21,6 +21,7 @@ import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.adapter.RegionFilterAdpter;
 import com.hwand.pinhaowanr.model.ConfigModel;
 import com.hwand.pinhaowanr.model.RegionModel;
+import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.widget.FilterListView;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
 
@@ -173,7 +174,7 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
             });
         }
         if(!mRegionFilterListView.isShowing()){
-            mRegionFilterListView.showAsDropDown(mIndicatorView,0,0);
+            mRegionFilterListView.showAsDropDown(mIndicatorView,0, AndTools.dp2px(this , 1));
         } else {
             mRegionFilterListView.dismiss();
         }

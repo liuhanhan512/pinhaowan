@@ -17,6 +17,6 @@ public class RegionFilterAdpter extends FilterListAdapter<RegionModel> {
 
     @Override
     protected void bindData(RegionModel object, ViewHolder viewHolder) {
-        viewHolder.mFilterText.setText(object.getValue());
+        viewHolder.mFilterText.setText(object.getTypeName());
     }
 }

@@ -6,22 +6,22 @@ import java.io.Serializable;
  * Created by hanhanliu on 15/12/2.
  */
 public class RegionModel implements Serializable{
-    private String key;
-    private String value;
+    private String type;
+    private String typeName;
 
-    public String getKey() {
-        return key;
+    public String getType() {
+        return type;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getValue() {
-        return value;
+    public String getTypeName() {
+        return typeName;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 }
