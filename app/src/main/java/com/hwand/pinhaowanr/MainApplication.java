@@ -13,6 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.location.LocationDataFeedbackListener;
 import com.hwand.pinhaowanr.location.LocationManager;
+import com.hwand.pinhaowanr.model.ConfigModel;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
@@ -38,6 +39,10 @@ public class MainApplication extends Application {
     private List<Activity> mActivityStack = new LinkedList<Activity>();
 
     private AMapLocation mAMapLocation;
+
+    private int mCityType = 1;
+
+    private int mMaxLocation = 3;//最多进行三次定位
 
     @Override
     public void onCreate() {
@@ -124,19 +129,44 @@ public class MainApplication extends Application {
             @Override
             public void onReceiver(AMapLocation amapLocation) {
                 mAMapLocation = amapLocation;
+                calcCityType();
                 locationManager.stopLocation();
             }
 
             @Override
             public void onError(AMapLocation aMapLocation) {
                 locationManager.stopLocation();
+                if(mMaxLocation > 0){
+                    locationManager.startLocation();
+                    mMaxLocation --;
+                }
             }
         });
         locationManager.startLocation();
     }
 
+    /**
+     * 匹配服务端的cityType
+     */
+    private void calcCityType(){
+        if(mAMapLocation != null){
+            List<ConfigModel> configModels = DataCacheHelper.getInstance().getConfigModel();
+            for(ConfigModel configModel : configModels){
+                if(TextUtils.equals(configModel.getCityName() , mAMapLocation.getCity())){
+                    mCityType = configModel.getCityType();
+                    break;
+                }
+            }
+        }
+
+    }
+
     public AMapLocation getAmapLocation(){
         return mAMapLocation;
+    }
+
+    public int getCityType(){
+        return mCityType;
     }
 
     @Override

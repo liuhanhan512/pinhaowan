@@ -225,7 +225,7 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
                         FragmentManager fm = getFragmentManager();
                         FragmentTransaction tx = fm.beginTransaction();
                         tx.hide(FinalRegisterFragment.this);
-                        tx.add(R.id.fragment_content, fragment, "MineNaviFragment");
+                        tx.add(R.id.fragment_container, fragment, "MineNaviFragment");
                         fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                         tx.commit();
                     } else {

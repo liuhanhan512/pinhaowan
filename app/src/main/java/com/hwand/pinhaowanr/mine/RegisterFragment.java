@@ -94,7 +94,7 @@ public class RegisterFragment extends BaseFragment {
                                 FragmentManager fm = getFragmentManager();
                                 FragmentTransaction tx = fm.beginTransaction();
                                 tx.hide(RegisterFragment.this);
-                                tx.add(R.id.fragment_content, verifyFragment, "VerifyFragment");
+                                tx.add(R.id.fragment_container, verifyFragment, "VerifyFragment");
                                 tx.addToBackStack(null);
                                 tx.commit();
 

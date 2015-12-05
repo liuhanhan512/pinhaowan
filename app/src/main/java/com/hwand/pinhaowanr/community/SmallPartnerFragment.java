@@ -1,15 +1,28 @@
 package com.hwand.pinhaowanr.community;
 
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.amap.api.location.AMapLocation;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
+import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.model.HomePageModel;
+import com.hwand.pinhaowanr.utils.NetworkRequest;
+import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 社区--小伙伴页面
@@ -50,6 +63,8 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
         mAdapter = new Adapter();
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(mOnItemClickListener);
+
+        fetchData();
     }
 
     final AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
@@ -67,12 +82,37 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
     }
 
     private void fetchData(){
+        Log.d("lzc", "fetchData in SmallPartner=============>");
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("cityType" , MainApplication.getInstance().getCityType() + "");
+        AMapLocation mapLocation = MainApplication.getInstance().getAmapLocation();
+        if(mapLocation != null){
+            params.put("lng" , mapLocation.getLongitude() + "");
+            params.put("lat" , mapLocation.getLatitude() + "");
+        }
 
+        String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_BUDDY_INFO, params);
+
+        NetworkRequest.get(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                mSwipeRefreshLayout.setRefreshing(false);
+                if (!TextUtils.isEmpty(response)) {
+
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override
     public void onRefresh() {
-
+        fetchData();
     }
 
     class Adapter extends BaseAdapter{

@@ -66,7 +66,7 @@ public class MineNaviFragment extends BaseFragment {
                     FragmentManager fm = getFragmentManager();
                     FragmentTransaction tx = fm.beginTransaction();
                     tx.hide(MineNaviFragment.this);
-                    tx.add(R.id.fragment_content, fragment, "AboutFragment");
+                    tx.add(R.id.fragment_container, fragment, "AboutFragment");
                     tx.addToBackStack(null);
                     tx.commit();
                     break;
@@ -144,7 +144,7 @@ public class MineNaviFragment extends BaseFragment {
                     FragmentManager fm = getFragmentManager();
                     FragmentTransaction tx = fm.beginTransaction();
                     tx.hide(MineNaviFragment.this);
-                    tx.add(R.id.fragment_content, fragment, "LoginFragment");
+                    tx.add(R.id.fragment_container, fragment, "LoginFragment");
                     tx.commit();
                     AndTools.showToast("已退出登录");
                 } else {

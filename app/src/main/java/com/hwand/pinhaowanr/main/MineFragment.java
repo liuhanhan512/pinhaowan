@@ -42,14 +42,15 @@ public class MineFragment extends BaseFragment {
     @Override
     protected void initViews() {
         super.initViews();
-        mFragmentManager = getFragmentManager();
+        mFragmentManager = getChildFragmentManager();
         FragmentTransaction tx = mFragmentManager.beginTransaction();
+
         if (!MainApplication.getInstance().isLogin()) {
             mLoginFragment = LoginFragment.newInstance();
             if (mCurFragment != null && mCurFragment.isVisible()) {
                 tx.hide(mCurFragment);
             }
-            tx.add(R.id.fragment_content, mLoginFragment, "LoginFragment");
+            tx.add(R.id.fragment_container, mLoginFragment, "LoginFragment");
             mCurFragment = mLoginFragment;
             tx.commit();
         } else {
@@ -57,10 +58,11 @@ public class MineFragment extends BaseFragment {
             if (mCurFragment != null && mCurFragment.isVisible()) {
                 tx.hide(mCurFragment);
             }
-            tx.add(R.id.fragment_content, mMineNaviFragment, "MineNaviFragment");
+            tx.add(R.id.fragment_container, mMineNaviFragment, "MineNaviFragment");
             mCurFragment = mMineNaviFragment;
             tx.commit();
         }
+
 
     }
 

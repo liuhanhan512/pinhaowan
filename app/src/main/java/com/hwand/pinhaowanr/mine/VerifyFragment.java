@@ -215,7 +215,7 @@ public class VerifyFragment extends BaseFragment {
                         FragmentManager fm = getFragmentManager();
                         FragmentTransaction tx = fm.beginTransaction();
                         tx.hide(VerifyFragment.this);
-                        tx.add(R.id.fragment_content, finalRegisterFragment, "FinalRegisterFragment");
+                        tx.add(R.id.fragment_container, finalRegisterFragment, "FinalRegisterFragment");
                         tx.commit();
 
                     } else {

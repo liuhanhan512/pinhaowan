@@ -5,12 +5,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
 import com.hwand.pinhaowanr.BaseFragment;
+import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.community.SmallPartnerFragment;
 import com.hwand.pinhaowanr.community.SpellDFragment;
@@ -56,6 +60,32 @@ public class CommunityFragment extends BaseFragment {
     protected void initViews() {
         super.initViews();
 
+        TextView city = (TextView)mFragmentView.findViewById(R.id.city);
+        TextView region = (TextView)mFragmentView.findViewById(R.id.region);
+
+        AMapLocation aMapLocation = MainApplication.getInstance().getAmapLocation();
+        if(aMapLocation != null){
+            city.setText(aMapLocation.getCity());
+            region.setText(aMapLocation.getDistrict());
+        }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        initViewPager();
+    }
+
+    private void initViewPager(){
+        Log.d("lzc" ,"initViewPager==========>");
+
         mPager = (ViewPager) mFragmentView.findViewById(R.id.view_pager);
         mPager.setPageMargin(AndTools.dp2px(getActivity(), 1f));
         mPager.setPageMarginDrawable(getResources().getDrawable(R.drawable.default_divider));
@@ -67,6 +97,7 @@ public class CommunityFragment extends BaseFragment {
         mPager.setAdapter(mPageAdapter);
 
         mPager.setCurrentItem(mCurrentIndex);
+
         initTabLayouts();
         changeTabLayoutState();
         setTabLayoutListener();
@@ -155,7 +186,7 @@ public class CommunityFragment extends BaseFragment {
 
         @Override
         public Fragment getItem(int position) {
-
+            Log.d("lzc", "getItem=============>");
             if (mListFragments == null) {
                 mListFragments = new SparseArray<BaseFragment>(2);
             }

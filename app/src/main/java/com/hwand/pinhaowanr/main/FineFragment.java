@@ -13,10 +13,12 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.CommonViewHolder;
+import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.fine.FineCategoryListActivity;
 import com.hwand.pinhaowanr.fine.FineDetailActivity;
@@ -92,6 +94,16 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
         mExpandAdapter = new ExpandAdapter(getActivity());
         mExpandableListView.setAdapter(mExpandAdapter);
+
+
+        TextView city = (TextView)mFragmentView.findViewById(R.id.city);
+        TextView region = (TextView)mFragmentView.findViewById(R.id.region);
+
+        AMapLocation aMapLocation = MainApplication.getInstance().getAmapLocation();
+        if(aMapLocation != null){
+            city.setText(aMapLocation.getCity());
+            region.setText(aMapLocation.getDistrict());
+        }
     }
 
     private View headerView;
@@ -132,7 +144,7 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     private void fetchData(){
         Map<String, String> params = new HashMap<String, String>();
-        params.put("cityType" , "1");
+        params.put("cityType" , MainApplication.getInstance().getCityType() + "");
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_HOME_PAGE, params);
         NetworkRequest.get(url, new Response.Listener<String>() {
             @Override

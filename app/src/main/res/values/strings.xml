@@ -46,6 +46,7 @@
     <string name="remainder_tickets">剩余%d张票</string>
     <string name="free">免费</string>
     <string name="starting">首发</string>
+    <string name="back_out">再按一次退出程序</string>
 
 
     <string name="calendar_sunday">日</string>

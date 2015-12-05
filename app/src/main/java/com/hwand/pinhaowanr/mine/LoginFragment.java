@@ -175,7 +175,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
                                 FragmentManager fm = getFragmentManager();
                                 FragmentTransaction tx = fm.beginTransaction();
                                 tx.hide(LoginFragment.this);
-                                tx.add(R.id.fragment_content, fragment, "MineNaviFragment");
+                                tx.add(R.id.fragment_container, fragment, "MineNaviFragment");
                                 fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                                 tx.commit();
                         }
@@ -231,7 +231,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction tx = fm.beginTransaction();
                 tx.hide(LoginFragment.this);
-                tx.add(R.id.fragment_content , fragment, "RegisterFragment");
+                tx.add(R.id.fragment_container , fragment, "RegisterFragment");
                 tx.addToBackStack(null);
                 tx.commit();
                 break;
