@@ -11,9 +11,37 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    signingConfigs {
+        Debug {
+            storeFile file('./tools/dev/debug.keystore')
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storePassword 'android'
+
+
+        }
+    }
+
     buildTypes {
-        release {
+        debug {
+
+            signingConfig signingConfigs.Debug
+
             minifyEnabled false
+            shrinkResources false
+
+            manifestPlaceholders = [AmapKey: "f91c84f07042257dc7f746b9055031bc"]
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            minifyEnabled true
+            shrinkResources false
+
+            manifestPlaceholders = [AmapKey: "a7b36a7f85e739a06af70d06be5ece20"]
+
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

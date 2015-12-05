@@ -6,16 +6,21 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.amap.api.location.AMapLocation;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.DataCacheHelper;
+import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.location.LocationDataFeedbackListener;
+import com.hwand.pinhaowanr.location.LocationManager;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
@@ -53,7 +58,6 @@ public class MainActivity extends BaseActivity {
 
     private final int[] FRAGMENT_TITLES = {R.string.fine_text, R.string.community_text, /**R.string.star_mom_text,*/ R.string.mine_text};
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,37 +66,19 @@ public class MainActivity extends BaseActivity {
         initTitle();
         initViews();
 //        EventBus.getDefault().register(this);
-
-        getConfig();
-
     }
 
-
+    @Override
+    protected void onDestroy() {
+//        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
 
     private void initTitle() {
 
     }
 
-    private void getConfig(){
-        Map<String, String> params = new HashMap<String, String>();
 
-        String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_CONFIG, params);
-        NetworkRequest.get(url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-                if(!TextUtils.isEmpty(response)){
-                    DataCacheHelper.getInstance().saveConfig(response);
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-    }
 
     private void initViews() {
 
@@ -247,9 +233,5 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected void onDestroy() {
-//        EventBus.getDefault().unregister(this);
-        super.onDestroy();
-    }
+
 }

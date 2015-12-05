@@ -6,14 +6,23 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.amap.api.location.AMapLocation;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.hwand.pinhaowanr.location.LocationDataFeedbackListener;
+import com.hwand.pinhaowanr.location.LocationManager;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
+import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MainApplication extends Application {
 
@@ -28,6 +37,8 @@ public class MainApplication extends Application {
 
     private List<Activity> mActivityStack = new LinkedList<Activity>();
 
+    private AMapLocation mAMapLocation;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -37,6 +48,8 @@ public class MainApplication extends Application {
         initImageLoader();
         initVolley();
 
+        getConfig();
+        getLocation();
     }
 
     private void initImageLoader() {
@@ -84,6 +97,48 @@ public class MainApplication extends Application {
         return versionName;
     }
 
+    private void getConfig(){
+        Map<String, String> params = new HashMap<String, String>();
+
+        String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_CONFIG, params);
+        NetworkRequest.get(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                if (!TextUtils.isEmpty(response)) {
+                    DataCacheHelper.getInstance().saveConfig(response);
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+    }
+
+    private void getLocation(){
+        final LocationManager locationManager = LocationManager.newInstance(this);
+        locationManager.setLocationDataFeedbackListener(new LocationDataFeedbackListener() {
+            @Override
+            public void onReceiver(AMapLocation amapLocation) {
+                mAMapLocation = amapLocation;
+                locationManager.stopLocation();
+            }
+
+            @Override
+            public void onError(AMapLocation aMapLocation) {
+                locationManager.stopLocation();
+            }
+        });
+        locationManager.startLocation();
+    }
+
+    public AMapLocation getAmapLocation(){
+        return mAMapLocation;
+    }
+
     @Override
     public void onTerminate() {
         super.onTerminate();
@@ -99,6 +154,7 @@ public class MainApplication extends Application {
             sMainApplication.startActivity(intent);
         }
     }
+
 
     public static void setMainActivityQuitTime(long aTime) {
         mLastTimeStamp = aTime;
