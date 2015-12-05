@@ -1,4 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">拼好玩</string>
     
     <!-- Strings related to login -->
@@ -50,7 +52,7 @@
     <string name="price">￥ %d</string>
     <string name="distance">距离 %dm</string>
     <string name="sign_up">报名</string>
-    <string name="small_partner_time">时间: %s 至 %s</string>
+    <string name="small_partner_time">时间: %1$s 至 %2$s</string>
     <string name="people_count">人数: %d人</string>
     <string name="sign_up_people_count">已报名 %d人</string>
 

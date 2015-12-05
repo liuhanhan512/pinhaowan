@@ -154,7 +154,7 @@ public class BaseActivity extends FragmentActivity implements View.OnClickListen
         mActivityStatck.add(this);
 
         MainApplication.getInstance().addActivity(this);
-//        setupStatuBar(this);
+        setupStatuBar(this);
 
         initActionBar();
 
