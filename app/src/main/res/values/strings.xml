@@ -55,6 +55,10 @@
     <string name="small_partner_time">时间: %1$s 至 %2$s</string>
     <string name="people_count">人数: %d人</string>
     <string name="sign_up_people_count">已报名 %d人</string>
+    <string name="fetch_from_ablum">从相册选择</string>
+    <string name="fetch_from_camera">拍照</string>
+    <string name="cancel">取消</string>
+    <string name="sdcard_unavailable">SD卡不可用</string>
 
 
     <string name="calendar_sunday">日</string>

@@ -1,12 +1,20 @@
 package com.hwand.pinhaowanr.mine;
 
+import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.DataCacheHelper;
@@ -15,15 +23,33 @@ import com.hwand.pinhaowanr.main.MineFragment;
 import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.CircleImageView;
+import com.hwand.pinhaowanr.widget.FetchPhotoDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by dxz on 15/12/01.
  */
 public class UserInfoFragment extends BaseFragment {
+
+    private FetchPhotoDialog mFetchPhotoDialog;
+
+    /**
+     * 请求相机.
+     */
+    public static final int REQUEST_IMAGE_CAPTURE = 10008;
+
+    /**
+     * 请求相册.
+     */
+    public static final int REQUEST_PHOTO_LIBRARY = 10009;
+
+    private Uri mImageUri;
 
     public static UserInfoFragment newInstance() {
         UserInfoFragment fragment = new UserInfoFragment();
@@ -146,6 +172,116 @@ public class UserInfoFragment extends BaseFragment {
     }
     
     private void modifyHeadPic() {
+        if(mFetchPhotoDialog == null){
+            mFetchPhotoDialog = new FetchPhotoDialog(getActivity());
+            mFetchPhotoDialog.setFetchPhoteClickListener(mFetchPhotoClickListener);
+        }
+        mFetchPhotoDialog.show();
+    }
 
+    private final FetchPhotoDialog.FetchPhotoClickListener mFetchPhotoClickListener = new FetchPhotoDialog.FetchPhotoClickListener() {
+        @Override
+        public void fetchFromAblumClick() {
+            openPhotoLibrary(REQUEST_PHOTO_LIBRARY);
+
+        }
+
+        @Override
+        public void fetchFromCameraClick() {
+            mImageUri = openCapture(REQUEST_IMAGE_CAPTURE);
+        }
+
+        @Override
+        public void cancelClick() {
+
+        }
+    };
+
+    private Uri openCapture(int requestCode){
+
+        if(!isCanUseSDCard()){
+            Toast.makeText(getActivity(), R.string.sdcard_unavailable, Toast.LENGTH_SHORT).show();
+            return null;
+        }
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+        String filename = timeStampFormat.format(new Date());
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, filename);
+        Uri uri = null;
+        try {
+            uri = getActivity().getContentResolver()
+                    .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        }catch(Throwable ex){
+            // 红米手机会出现无法创建文件的crash，做一个保护
+            File file = new File(getImageCacheDir(getActivity()).getAbsolutePath(),filename + ".jpg");
+            uri = Uri.fromFile(file);
+        }
+
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        startActivityForResult(intent, requestCode);
+        return uri;
+    }
+    private boolean isCanUseSDCard() {
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
+    }
+    private File getImageCacheDir(Context context) {
+        return getCacheDirByType("uil-images");
+    }
+    private  File getCacheDirByType(String type) {
+        File cacheDir = getActivity().getCacheDir();
+        File typeCacheDir = new File(cacheDir, type);
+        if (typeCacheDir!=null && !typeCacheDir.exists()) {
+            typeCacheDir.mkdirs();
+        }
+        return typeCacheDir;
+    }
+    private void openPhotoLibrary( int requestCode){
+        try{
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            startActivityForResult(intent, requestCode);
+        }catch(Throwable e){
+            e.printStackTrace();
+        }
+    }
+
+
+    private static final int ASPECT_X = 100;
+    private static final int ASPECT_Y = 100;
+
+    private static final String PIC_FORMAT = ".jpg";
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (Activity.RESULT_OK == resultCode) {
+            String tempFileName = System.currentTimeMillis() + PIC_FORMAT; // 图片剪裁的时候存储的临时文件的名称
+            switch (requestCode) {
+                case REQUEST_IMAGE_CAPTURE:
+                    // 设置头像使用图片剪裁
+                    if (mImageUri != null) {
+//                        startCropImageActivityForResult(mImageUri, false, REQUEST_CODE_IMAGE_CROP, PIC_FORMAT, ASPECT_X, ASPECT_Y);
+                    }
+                    break;
+                case REQUEST_PHOTO_LIBRARY:
+                    if (data == null)
+                        return;
+                    Uri uri = data.getData();
+                    if (uri == null) {
+                        return;
+                    }
+//                    startCropImageActivityForResult(uri, false, REQUEST_CODE_IMAGE_CROP, PIC_FORMAT, ASPECT_X, ASPECT_Y);
+                    break;
+//                case REQUEST_CODE_IMAGE_CROP:
+//                    uploadAvatarFile(data);
+//                    break;
+//
+//                    break;
+
+            }
+        }
     }
 }
