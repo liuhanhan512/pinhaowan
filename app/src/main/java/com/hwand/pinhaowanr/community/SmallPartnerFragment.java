@@ -12,14 +12,19 @@ import android.widget.ListView;
 import com.amap.api.location.AMapLocation;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.HomePageModel;
+import com.hwand.pinhaowanr.model.SmallPartnerModel;
+import com.hwand.pinhaowanr.model.SuperMomModel;
+import com.hwand.pinhaowanr.model.TheCommunityActivityModel;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +40,10 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
     private ListView mListView;
 
     private Adapter mAdapter;
+
+    private SmallPartnerModel mSmallPartnerModel;
+
+    private List<TheCommunityActivityModel> theCommunityActivityModels = new ArrayList<TheCommunityActivityModel>();
 
     public static BaseFragment newInstance(){
         SmallPartnerFragment fragment = new SmallPartnerFragment();
@@ -82,7 +91,6 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
     }
 
     private void fetchData(){
-        Log.d("lzc", "fetchData in SmallPartner=============>");
         Map<String, String> params = new HashMap<String, String>();
         params.put("cityType" , MainApplication.getInstance().getCityType() + "");
         AMapLocation mapLocation = MainApplication.getInstance().getAmapLocation();
@@ -98,7 +106,9 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
             public void onResponse(String response) {
                 mSwipeRefreshLayout.setRefreshing(false);
                 if (!TextUtils.isEmpty(response)) {
-
+                    Gson gson = new Gson();
+                    mSmallPartnerModel = gson.fromJson(response , SmallPartnerModel.class);
+                    updateViews();
                 }
 
             }
@@ -110,6 +120,26 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
         });
     }
 
+    private void updateViews(){
+        if(mSmallPartnerModel != null){
+            // update listview
+            List<TheCommunityActivityModel> theCommunityActivityModels = mSmallPartnerModel.getNaActivityList();
+            if(theCommunityActivityModels != null){
+                this.theCommunityActivityModels.clear();
+                this.theCommunityActivityModels.addAll(theCommunityActivityModels);
+                mAdapter.notifyDataSetChanged();
+            }
+            //update super mom
+            List<SuperMomModel> superMomModels = mSmallPartnerModel.getRoleList();
+            if(superMomModels.size() >= 5){
+
+            } else {
+
+            }
+        }
+
+    }
+
     @Override
     public void onRefresh() {
         fetchData();
@@ -119,7 +149,7 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
 
         @Override
         public int getCount() {
-            return 0;
+            return theCommunityActivityModels.size();
         }
 
         @Override

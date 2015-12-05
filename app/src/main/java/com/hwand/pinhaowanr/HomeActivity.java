@@ -4,32 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-import com.amap.api.location.AMapLocation;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.hwand.pinhaowanr.event.LocationEvent;
-import com.hwand.pinhaowanr.location.LocationDataFeedbackListener;
-import com.hwand.pinhaowanr.location.LocationManager;
-import com.hwand.pinhaowanr.model.ConfigModel;
 import com.hwand.pinhaowanr.utils.AndTools;
-import com.hwand.pinhaowanr.utils.NetworkRequest;
-import com.hwand.pinhaowanr.utils.UrlConfig;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * 首页界面
