@@ -60,6 +60,9 @@
     <string name="cancel">取消</string>
     <string name="sdcard_unavailable">SD卡不可用</string>
     <string name="category">类型</string>
+    <string name="organization">机构</string>
+    <string name="all">全部</string>
+    <string name="view_pin_class">查看已有拼课</string>
 
 
     <string name="calendar_sunday">日</string>
