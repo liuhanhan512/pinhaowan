@@ -1,15 +1,26 @@
 package com.hwand.pinhaowanr.community;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
+import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.model.HomePageModel;
+import com.hwand.pinhaowanr.utils.NetworkRequest;
+import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 社区--拼拼页面
@@ -50,6 +61,8 @@ public class SpellDFragment extends BaseFragment implements SwipeRefreshLayout.O
         mAdapter = new Adapter();
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(mOnItemClickListener);
+
+        fetchData();
     }
 
     final AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
@@ -65,9 +78,30 @@ public class SpellDFragment extends BaseFragment implements SwipeRefreshLayout.O
         return headerView;
     }
 
+    private void fetchData(){
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("cityType" , MainApplication.getInstance().getCityType() + "");
+        String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_PINPIN_INFO, params);
+        NetworkRequest.get(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                mSwipeRefreshLayout.setRefreshing(false);
+                if (!TextUtils.isEmpty(response)) {
+
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
     @Override
     public void onRefresh() {
-
+        fetchData();
     }
 
     class Adapter extends BaseAdapter {

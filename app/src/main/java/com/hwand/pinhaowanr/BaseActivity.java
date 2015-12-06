@@ -1,6 +1,7 @@
 package com.hwand.pinhaowanr;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -13,13 +14,19 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.hwand.pinhaowanr.utils.SystemBarTintManager;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
@@ -354,11 +361,22 @@ public class BaseActivity extends FragmentActivity implements View.OnClickListen
 
     @SuppressLint("NewApi")
     protected void setupStatuBar(Activity activity) {
+
         if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.statuBar_color));
-        }else if (Build.VERSION.SDK_INT >= 19) {
+        } else {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//                setTranslucentStatus(true);
+//            }
+//
+//            SystemBarTintManager tintManager = new SystemBarTintManager(this);
+//            tintManager.setStatusBarTintEnabled(true);
+//            tintManager.setStatusBarTintResource(R.color.statuBar_color);
+        }
+        /**
+        else if (Build.VERSION.SDK_INT >= 19) {
             Window window = activity.getWindow();
             int flags = window.getAttributes().flags;
             if ((flags | WindowManager.LayoutParams.FLAG_FULLSCREEN) != flags) {
@@ -378,7 +396,41 @@ public class BaseActivity extends FragmentActivity implements View.OnClickListen
                 contentView.setPadding(0, 0, 0, 0);
             }
         }
+         */
     }
+
+    @TargetApi(19)
+    private void setTranslucentStatus(boolean on) {
+        Window win = getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
+
+    public int getActionBarHeight() {
+        int actionBarHeight = 0;
+        TypedValue tv = new TypedValue();
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+        {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        }
+        return actionBarHeight;
+    }
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
 
     protected int getStatusbarHeight(Context context) {
 

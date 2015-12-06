@@ -59,6 +59,7 @@
     <string name="fetch_from_camera">拍照</string>
     <string name="cancel">取消</string>
     <string name="sdcard_unavailable">SD卡不可用</string>
+    <string name="category">类型</string>
 
 
     <string name="calendar_sunday">日</string>

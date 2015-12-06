@@ -65,8 +65,8 @@ public class CommunityFragment extends BaseFragment {
     protected void initViews() {
         super.initViews();
 
-        TextView city = (TextView)mFragmentView.findViewById(R.id.city);
-        TextView region = (TextView)mFragmentView.findViewById(R.id.region);
+        mCity = (TextView)mFragmentView.findViewById(R.id.city);
+        mRegion = (TextView)mFragmentView.findViewById(R.id.region);
 
         AMapLocation aMapLocation = MainApplication.getInstance().getAmapLocation();
         if(aMapLocation != null){

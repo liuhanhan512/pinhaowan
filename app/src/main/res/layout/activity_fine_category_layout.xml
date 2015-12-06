@@ -22,10 +22,8 @@
             <TextView
                 android:id="@+id/area_text"
                 android:textSize="15sp"
-                android:padding="0dp"
                 android:singleLine="true"
                 android:ellipsize="end"
-                android:includeFontPadding="true"
                 android:gravity="center"
                 android:text="@string/area"
                 android:layout_centerInParent="true"
@@ -60,10 +58,8 @@
             <TextView
                 android:id="@+id/age_text"
                 android:textSize="15sp"
-                android:padding="0dp"
                 android:singleLine="true"
                 android:ellipsize="end"
-                android:includeFontPadding="true"
                 android:gravity="center"
                 android:text="@string/age"
                 android:layout_centerInParent="true"
