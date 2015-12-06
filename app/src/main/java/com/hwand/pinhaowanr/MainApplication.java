@@ -131,7 +131,6 @@ public class MainApplication extends Application {
         locationManager.setLocationDataFeedbackListener(new LocationDataFeedbackListener() {
             @Override
             public void onReceiver(AMapLocation amapLocation) {
-                Log.d("lzc" , "amapLocation======>"+amapLocation.getAddress());
                 mAMapLocation = amapLocation;
                 calcCityType();
                 locationManager.stopLocation();
@@ -140,8 +139,6 @@ public class MainApplication extends Application {
 
             @Override
             public void onError(AMapLocation aMapLocation) {
-                Log.d("lzc" , "amapLocation======>"+aMapLocation.getAMapException().getErrorMessage());
-                Log.d("lzc" , "amapLocation======>"+aMapLocation.getAMapException().getErrorCode());
                 locationManager.stopLocation();
                 if(mMaxLocation > 0){
                     locationManager.startLocation();
