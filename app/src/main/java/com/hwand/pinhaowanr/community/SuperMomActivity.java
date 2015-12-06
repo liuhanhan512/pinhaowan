@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,24 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.CommonViewHolder;
+import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.model.SmallPartnerModel;
+import com.hwand.pinhaowanr.model.SuperMomModel;
+import com.hwand.pinhaowanr.utils.NetworkRequest;
+import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.CircleImageView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 超级妈咪页面
@@ -28,6 +43,11 @@ public class SuperMomActivity extends BaseActivity implements SwipeRefreshLayout
     private ListView mListView;
 
     private Adapter mAdapter;
+
+    private List<SuperMomModel> superMomModelList = new ArrayList<SuperMomModel>();
+
+    private int startIndex = 0 ;
+    private int endIndex = 20;
 
     public static void launch(Context context){
         Intent intent = new Intent();
@@ -42,6 +62,7 @@ public class SuperMomActivity extends BaseActivity implements SwipeRefreshLayout
 
         initTitle();
         initViews();
+        fetchData();
     }
 
     private void initTitle(){
@@ -60,9 +81,38 @@ public class SuperMomActivity extends BaseActivity implements SwipeRefreshLayout
         mAdapter = new Adapter();
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(mOnItemClickListener);
-
-
     }
+
+    private void fetchData(){
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("startIndex" , "" +startIndex);
+        params.put("endIndex" , "" + endIndex);
+
+        String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_BUDDY_INFO, params);
+
+        NetworkRequest.get(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                mSwipeRefreshLayout.setRefreshing(false);
+                if (!TextUtils.isEmpty(response)) {
+                    Gson gson = new Gson();
+                    List<SuperMomModel> superMomModels = SuperMomModel.arrayHomePageModelFromData(response);
+                    if(superMomModels != null){
+                        superMomModelList.clear();
+                        superMomModelList.addAll(superMomModels);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
     final AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -72,14 +122,14 @@ public class SuperMomActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
-
+        fetchData();
     }
 
     class Adapter extends BaseAdapter {
 
         @Override
         public int getCount() {
-            return 0;
+            return superMomModelList.size();
         }
 
         @Override

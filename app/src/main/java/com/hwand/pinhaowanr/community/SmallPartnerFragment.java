@@ -387,7 +387,7 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
     private void onAvatar6Click(){
         if(superMomModels != null && superMomModels.size() > 5){
 
-
+            SuperMomActivity.launch(getActivity());
         }
     }
 

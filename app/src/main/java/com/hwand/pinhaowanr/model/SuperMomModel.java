@@ -1,5 +1,11 @@
 package com.hwand.pinhaowanr.model;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.List;
+
 /**
  * Created by hanhanliu on 15/12/5.
  */
@@ -8,6 +14,13 @@ public class SuperMomModel {
     private String name;
     private long time;
     private String url;
+
+    public static List<SuperMomModel> arrayHomePageModelFromData(String str) {
+
+        Type listType = new TypeToken<List<SuperMomModel>>() {}.getType();
+
+        return new Gson().fromJson(str, listType);
+    }
 
     public int getId() {
         return id;
