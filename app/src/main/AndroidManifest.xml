@@ -126,6 +126,15 @@
 
         </activity>
 
+        <activity android:name=".location.CityChooseActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity android:name=".location.RegionChooseActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
 
     </application>
 

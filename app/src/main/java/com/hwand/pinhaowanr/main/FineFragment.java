@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -18,13 +19,20 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.CommonViewHolder;
+import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.event.CityChooseEvent;
 import com.hwand.pinhaowanr.event.LocationEvent;
+import com.hwand.pinhaowanr.event.RegionChooseEvent;
 import com.hwand.pinhaowanr.fine.FineCategoryListActivity;
 import com.hwand.pinhaowanr.fine.FineDetailActivity;
+import com.hwand.pinhaowanr.location.CityChooseActivity;
+import com.hwand.pinhaowanr.location.RegionChooseActivity;
+import com.hwand.pinhaowanr.model.ConfigModel;
 import com.hwand.pinhaowanr.model.HomePageEntity;
 import com.hwand.pinhaowanr.model.HomePageModel;
+import com.hwand.pinhaowanr.model.RegionModel;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
@@ -55,6 +63,10 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     private String[] fineCategorys;
 
+    private int mCityType = -1;
+
+    private View mEmptyView;
+
     public static FineFragment newInstance(){
         FineFragment fragment = new FineFragment();
         Bundle bundle = new Bundle();
@@ -72,6 +84,8 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         super.initViews();
         initView();
         fineCategorys = getResources().getStringArray(R.array.fine_array);
+        mCityType = MainApplication.getInstance().getCityType();
+        mSwipeRefreshLayout.setRefreshing(true);
         fetchData();
     }
 
@@ -92,6 +106,36 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         if(aMapLocation != null){
             mCity.setText(aMapLocation.getCity());
             mRegion.setText(aMapLocation.getDistrict());
+
+            List<ConfigModel> configModels = DataCacheHelper.getInstance().getConfigModel();
+            for(ConfigModel configModel : configModels){
+                if(TextUtils.equals(configModel.getCityName() , aMapLocation.getCity())){
+                    mCityType = configModel.getCityType();
+                    fetchData();
+                    break;
+                }
+            }
+        }
+    }
+
+    public void onEventMainThread(CityChooseEvent event) {
+        ConfigModel configModel = event.configModel;
+        if(configModel != null){
+            mCityType = configModel.getCityType();
+            fetchData();
+
+            mCity.setText(configModel.getCityName());
+            List<RegionModel> regionModels = configModel.getRegionMap();
+            if(regionModels != null && regionModels.size() > 0){
+                mRegion.setText(regionModels.get(0).getTypeName());
+            }
+        }
+    }
+
+    public void onEventMainThread(RegionChooseEvent event) {
+        RegionModel regionModel = event.regionModel;
+        if(regionModel != null){
+            mRegion.setText(regionModel.getTypeName());
         }
     }
 
@@ -104,7 +148,11 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         mSwipeRefreshLayout.setColorScheme(android.R.color.white, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
+        mEmptyView = mFragmentView.findViewById(R.id.empty_layout);
+        mFragmentView.findViewById(R.id.empty_text).setOnClickListener(this);
+
         mExpandableListView = (ExpandableListView) mFragmentView.findViewById(R.id.listview);
+
         mExpandableListView.addHeaderView(initHeaderView());
         mExpandableListView.setOnGroupClickListener(new GroupClickListener());
 
@@ -124,10 +172,31 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         mCity = (TextView)mFragmentView.findViewById(R.id.city);
         mRegion = (TextView)mFragmentView.findViewById(R.id.region);
 
+        mCity.setOnClickListener(this);
+        mRegion.setOnClickListener(this);
+
         AMapLocation aMapLocation = MainApplication.getInstance().getAmapLocation();
         if(aMapLocation != null){
             mCity.setText(aMapLocation.getCity());
             mRegion.setText(aMapLocation.getDistrict());
+        }
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        switch (v.getId()){
+            case R.id.city:
+                CityChooseActivity.launch(getActivity());
+                break;
+            case R.id.region:
+                RegionChooseActivity.launch(getActivity() , mCityType);
+                break;
+            case R.id.empty_text:
+                mSwipeRefreshLayout.setRefreshing(true);
+                fetchData();
+                break;
         }
     }
 
@@ -168,8 +237,9 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     }
 
     private void fetchData(){
+
         Map<String, String> params = new HashMap<String, String>();
-        params.put("cityType" , MainApplication.getInstance().getCityType() + "");
+        params.put("cityType" , mCityType + "");
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_HOME_PAGE, params);
         NetworkRequest.get(url, new Response.Listener<String>() {
             @Override
@@ -177,7 +247,18 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                 mSwipeRefreshLayout.setRefreshing(false);
                 if(!TextUtils.isEmpty(response)){
                     List<HomePageModel> homePageModels  = HomePageModel.arrayHomePageModelFromData(response);
-                    wrapperData(homePageModels);
+                    if(homePageModels != null && homePageModels.size() > 0){
+                        mEmptyView.setVisibility(View.GONE);
+                        mExpandableListView.setVisibility(View.VISIBLE);
+                        wrapperData(homePageModels);
+                    }  else {
+                        mEmptyView.setVisibility(View.VISIBLE);
+                        mExpandableListView.setVisibility(View.GONE);
+                    }
+                } else {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    mExpandableListView.setVisibility(View.GONE);
+
                 }
 
             }
@@ -185,6 +266,8 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             @Override
             public void onErrorResponse(VolleyError error) {
                 mSwipeRefreshLayout.setRefreshing(false);
+                mEmptyView.setVisibility(View.VISIBLE);
+                mExpandableListView.setVisibility(View.GONE);
             }
         });
     }

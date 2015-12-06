@@ -63,6 +63,8 @@
     <string name="organization">机构</string>
     <string name="all">全部</string>
     <string name="view_pin_class">查看已有拼课</string>
+    <string name="city_choose_title">地区选择</string>
+    <string name="empty_content">内容为空,点击刷新</string>
 
 
     <string name="calendar_sunday">日</string>
