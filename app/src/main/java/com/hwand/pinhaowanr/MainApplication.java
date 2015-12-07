@@ -173,6 +173,10 @@ public class MainApplication extends Application {
         return mCityType;
     }
 
+    public void setCityType(int cityType){
+        mCityType = cityType;
+    }
+
     @Override
     public void onTerminate() {
         super.onTerminate();

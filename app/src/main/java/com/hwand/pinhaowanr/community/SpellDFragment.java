@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -42,9 +43,10 @@ import java.util.Map;
  * 社区--拼拼页面
  * Created by hanhanliu on 15/11/30.
  */
-public class SpellDFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener{
+public class SpellDFragment extends BaseCommunityFragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ScrollView mScrollView;
 
     private SubListView mListView;
 
@@ -56,10 +58,12 @@ public class SpellDFragment extends BaseFragment implements SwipeRefreshLayout.O
 
     private GridAdapter mGridAdapter;
 
+    private View mEmptyView;
+
     private List<SpellDCategoryModel> spellDCategoryModels = new ArrayList<SpellDCategoryModel>();
     private List<SpellDModel> spellDModels = new ArrayList<SpellDModel>();
 
-    public static BaseFragment newInstance(){
+    public static BaseCommunityFragment newInstance(){
         SpellDFragment fragment = new SpellDFragment();
         Bundle bundle = new Bundle();
         fragment.setArguments(bundle);
@@ -79,6 +83,8 @@ public class SpellDFragment extends BaseFragment implements SwipeRefreshLayout.O
         //加载颜色是循环播放的，只要没有完成刷新就会一直循环，color1>color2>color3>color4
         mSwipeRefreshLayout.setColorScheme(android.R.color.white, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
+
+        mScrollView = (ScrollView)mFragmentView.findViewById(R.id.scrollview);
 
         mListView = (SubListView)mFragmentView . findViewById(R.id.listview);
 //        mListView.addHeaderView(initHeaderView());
@@ -106,6 +112,9 @@ public class SpellDFragment extends BaseFragment implements SwipeRefreshLayout.O
         mGridAdapter = new GridAdapter();
         mGridView.setAdapter(mGridAdapter);
 
+        mEmptyView = mFragmentView.findViewById(R.id.empty_layout);
+        mFragmentView.findViewById(R.id.empty_text).setOnClickListener(this);
+
         fetchData();
     }
 
@@ -122,7 +131,20 @@ public class SpellDFragment extends BaseFragment implements SwipeRefreshLayout.O
         return headerView;
     }
 
-    private void fetchData(){
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        switch (v.getId()){
+            case R.id.empty_text:
+                mSwipeRefreshLayout.setRefreshing(true);
+                fetchData();
+                break;
+        }
+
+    }
+
+    @Override
+    public void fetchData(){
         Map<String, String> params = new HashMap<String, String>();
         params.put("cityType" , MainApplication.getInstance().getCityType() + "");
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_PINPIN_INFO, params);
@@ -140,8 +162,19 @@ public class SpellDFragment extends BaseFragment implements SwipeRefreshLayout.O
 
                         List<SpellDModel> spellDModels = spellDEntity.getPinClassList();
                         updatePinView(spellDModels);
+
+                        if((spellDCategoryModels != null && spellDCategoryModels.size() > 0) || (spellDModels != null && spellDModels.size() > 0) ){
+                            mEmptyView.setVisibility(View.GONE);
+                            mScrollView.setVisibility(View.VISIBLE);
+                        } else {
+                            mEmptyView.setVisibility(View.VISIBLE);
+                            mScrollView.setVisibility(View.GONE);
+                        }
                     }
 
+                } else {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    mScrollView.setVisibility(View.GONE);
                 }
 
             }
@@ -149,6 +182,8 @@ public class SpellDFragment extends BaseFragment implements SwipeRefreshLayout.O
             @Override
             public void onErrorResponse(VolleyError error) {
                 mSwipeRefreshLayout.setRefreshing(false);
+                mEmptyView.setVisibility(View.VISIBLE);
+                mScrollView.setVisibility(View.GONE);
             }
         });
     }

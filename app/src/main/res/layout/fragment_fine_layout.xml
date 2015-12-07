@@ -22,7 +22,7 @@
             android:drawablePadding="8dp"
             android:drawableRight="@mipmap/down_arrow"
             android:gravity="center"
-            android:text="北京" />
+            android:text="上海市" />
 
         <TextView
             android:id="@+id/region"
@@ -32,7 +32,7 @@
             android:drawablePadding="8dp"
             android:drawableRight="@mipmap/down_arrow"
             android:gravity="center"
-            android:text="朝阳区" />
+            android:text="崇明岛" />
     </RelativeLayout>
 
     <RelativeLayout

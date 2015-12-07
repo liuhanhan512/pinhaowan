@@ -43,11 +43,13 @@ import java.util.Map;
  * 社区--小伙伴页面
  * Created by hanhanliu on 15/11/30.
  */
-public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class SmallPartnerFragment extends BaseCommunityFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private ListView mListView;
+
+    private View mEmptyView;
 
     private Adapter mAdapter;
 
@@ -61,7 +63,7 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
 
     private List<FleaActivityModel> fleaActivityModels;
 
-    public static BaseFragment newInstance(){
+    public static BaseCommunityFragment newInstance(){
         SmallPartnerFragment fragment = new SmallPartnerFragment();
         Bundle bundle = new Bundle();
         fragment.setArguments(bundle);
@@ -89,8 +91,13 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(mOnItemClickListener);
 
+        mEmptyView = mFragmentView.findViewById(R.id.empty_layout);
+        mFragmentView.findViewById(R.id.empty_text).setOnClickListener(this);
+
         fetchData();
     }
+
+
 
     private LinearLayout superMomLayout;
     private RelativeLayout avatarLayout1 ,avatarLayout2,avatarLayout3,avatarLayout4,avatarLayout5,avatarLayout6;
@@ -160,7 +167,8 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
         return headerView;
     }
 
-    private void fetchData(){
+    @Override
+    public void fetchData(){
         Map<String, String> params = new HashMap<String, String>();
         params.put("cityType" , MainApplication.getInstance().getCityType() + "");
         AMapLocation mapLocation = MainApplication.getInstance().getAmapLocation();
@@ -176,9 +184,16 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
             public void onResponse(String response) {
                 mSwipeRefreshLayout.setRefreshing(false);
                 if (!TextUtils.isEmpty(response)) {
+
+                    mEmptyView.setVisibility(View.GONE);
+                    mListView.setVisibility(View.VISIBLE);
+
                     Gson gson = new Gson();
                     mSmallPartnerModel = gson.fromJson(response , SmallPartnerModel.class);
                     updateViews();
+                } else {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    mListView.setVisibility(View.GONE);
                 }
 
             }
@@ -186,6 +201,8 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
             @Override
             public void onErrorResponse(VolleyError error) {
                 mSwipeRefreshLayout.setRefreshing(false);
+                mEmptyView.setVisibility(View.VISIBLE);
+                mListView.setVisibility(View.GONE);
             }
         });
     }
@@ -344,6 +361,10 @@ public class SmallPartnerFragment extends BaseFragment implements SwipeRefreshLa
                 break;
             case R.id.avatar_layout6:
                 onAvatar6Click();
+                break;
+            case R.id.empty_text:
+                mSwipeRefreshLayout.setRefreshing(true);
+                fetchData();
                 break;
 
         }

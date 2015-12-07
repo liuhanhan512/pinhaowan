@@ -16,9 +16,16 @@ import com.amap.api.location.AMapLocation;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.community.BaseCommunityFragment;
 import com.hwand.pinhaowanr.community.SmallPartnerFragment;
 import com.hwand.pinhaowanr.community.SpellDFragment;
+import com.hwand.pinhaowanr.event.CityChooseEvent;
 import com.hwand.pinhaowanr.event.LocationEvent;
+import com.hwand.pinhaowanr.event.RegionChooseEvent;
+import com.hwand.pinhaowanr.location.CityChooseActivity;
+import com.hwand.pinhaowanr.location.RegionChooseActivity;
+import com.hwand.pinhaowanr.model.ConfigModel;
+import com.hwand.pinhaowanr.model.RegionModel;
 import com.hwand.pinhaowanr.utils.AndTools;
 
 import java.util.ArrayList;
@@ -41,9 +48,9 @@ public class CommunityFragment extends BaseFragment {
 
     private final int[] FRAGMENT_TITLES = {R.string.small_partner, R.string.spell_d};
 
-    private SparseArray<BaseFragment> mListFragments;
+    private SparseArray<BaseCommunityFragment> mListFragments;
 
-    private BaseFragment mCurrentFragment;
+    private BaseCommunityFragment mCurrentFragment;
 
     private List<RelativeLayout> mTabLayouts = new ArrayList<RelativeLayout>();
 
@@ -68,6 +75,9 @@ public class CommunityFragment extends BaseFragment {
         mCity = (TextView)mFragmentView.findViewById(R.id.city);
         mRegion = (TextView)mFragmentView.findViewById(R.id.region);
 
+        mCity.setOnClickListener(this);
+        mRegion.setOnClickListener(this);
+
         AMapLocation aMapLocation = MainApplication.getInstance().getAmapLocation();
         if(aMapLocation != null){
             mCity.setText(aMapLocation.getCity());
@@ -89,11 +99,56 @@ public class CommunityFragment extends BaseFragment {
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        switch (v.getId()){
+            case R.id.city:
+                CityChooseActivity.launch(getActivity());
+                break;
+            case R.id.region:
+                RegionChooseActivity.launch(getActivity(), MainApplication.getInstance().getCityType());
+                break;
+        }
+    }
+
     public void onEventMainThread(LocationEvent event) {
         AMapLocation aMapLocation = MainApplication.getInstance().getAmapLocation();
         if(aMapLocation != null){
             mCity.setText(aMapLocation.getCity());
             mRegion.setText(aMapLocation.getDistrict());
+        }
+    }
+
+    public void onEventMainThread(CityChooseEvent event) {
+        ConfigModel configModel = event.configModel;
+        if(configModel != null){
+            int cityType = configModel.getCityType();
+            MainApplication.getInstance().setCityType(cityType);
+            fetchData();
+
+            mCity.setText(configModel.getCityName());
+            List<RegionModel> regionModels = configModel.getRegionMap();
+            if(regionModels != null && regionModels.size() > 0){
+                mRegion.setText(regionModels.get(0).getTypeName());
+            }
+        }
+    }
+
+    public void onEventMainThread(RegionChooseEvent event) {
+        RegionModel regionModel = event.regionModel;
+        if(regionModel != null){
+            mRegion.setText(regionModel.getTypeName());
+        }
+    }
+
+    private void fetchData(){
+        int fragmentSize = mListFragments.size();
+        for(int i = 0 ; i < fragmentSize ; i++){
+            BaseCommunityFragment baseCommunityFragment = mListFragments.get(i);
+            if(baseCommunityFragment != null){
+                baseCommunityFragment.fetchData();
+            }
         }
     }
 
@@ -108,6 +163,8 @@ public class CommunityFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
 
     }
+
+
 
     private void initViewPager(){
         mPager = (ViewPager) mFragmentView.findViewById(R.id.view_pager);
@@ -210,9 +267,8 @@ public class CommunityFragment extends BaseFragment {
 
         @Override
         public Fragment getItem(int position) {
-            Log.d("lzc", "getItem=============>");
             if (mListFragments == null) {
-                mListFragments = new SparseArray<BaseFragment>(2);
+                mListFragments = new SparseArray<BaseCommunityFragment>(2);
             }
             switch (position) {
                 case SMALL_PARTNER:
