@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by hanhanliu on 15/11/20.
+ * Created by dxz on 15/11/20.
  */
 public class VerifyFragment extends BaseFragment {
 

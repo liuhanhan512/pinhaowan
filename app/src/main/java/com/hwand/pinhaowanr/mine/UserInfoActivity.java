@@ -25,6 +25,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Created by dxz on 15/12/01.
+ */
 public class UserInfoActivity extends BaseActivity {
 
     public static final String KEY_INTENT_ID = "key_id";

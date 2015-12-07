@@ -3,7 +3,7 @@ package com.hwand.pinhaowanr.model;
 import com.hwand.pinhaowanr.utils.NonProguard;
 
 /**
- * Created by duanjunlei on 2015/12/2.
+ * Created by dxz on 2015/12/2.
  */
 public class MsgInfo implements NonProguard {
 

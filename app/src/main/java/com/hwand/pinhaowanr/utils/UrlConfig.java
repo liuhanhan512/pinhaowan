@@ -3,7 +3,7 @@ package com.hwand.pinhaowanr.utils;
 import java.util.Map;
 
 /**
- * Created by duanjunlei on 2015/11/28.
+ * Created by dxz on 2015/11/28.
  */
 public class UrlConfig {
 

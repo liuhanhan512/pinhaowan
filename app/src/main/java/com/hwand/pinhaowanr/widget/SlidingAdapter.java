@@ -35,9 +35,9 @@ public class SlidingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private SlidingButtonView mMenu = null;
 
-    public SlidingAdapter(Context context, List<MsgInfo> datas) {
+    public SlidingAdapter(Context context, List<MsgInfo> datas,OnSlidingViewClickListener listener) {
         mContext = context;
-        mIDeleteBtnClickListener = (OnSlidingViewClickListener) context;
+        mIDeleteBtnClickListener = listener;
         mDatas = datas;
 
     }
@@ -57,7 +57,7 @@ public class SlidingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
 
         try {
-            MsgViewHolder msgHolder = (MsgViewHolder) holder;
+            final MsgViewHolder msgHolder = (MsgViewHolder) holder;
             final MsgInfo msg = mDatas.get(position);
             //设置内容布局的宽为屏幕宽度
             msgHolder.layout_content.getLayoutParams().width = AndTools.getScreenWidth(mContext);
@@ -79,7 +79,7 @@ public class SlidingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     if (menuIsOpen()) {
                         closeMenu();//关闭菜单
                     } else {
-                        int n = holder.getLayoutPosition();
+                        int n = msgHolder.getPosition();
                         mIDeleteBtnClickListener.onItemClick(v, n);
                     }
 
@@ -88,7 +88,7 @@ public class SlidingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             msgHolder.btn_Delete.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int n = holder.getLayoutPosition();
+                    int n = msgHolder.getPosition();
                     mIDeleteBtnClickListener.onDeleteBtnCilck(v, n);
                 }
             });

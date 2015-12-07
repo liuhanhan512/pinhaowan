@@ -240,6 +240,7 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
                         tx.hide(FinalRegisterFragment.this);
                         tx.add(R.id.fragment_container, fragment, "MineNaviFragment");
                         fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                        tx.addToBackStack("MineNaviFragment");
                         tx.commit();
                     } else {
                         String msg = "网络问题请重试！";

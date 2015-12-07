@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by hanhanliu on 15/11/20.
+ * Created by dxz on 15/11/20.
  */
 public class LoginFragment extends BaseFragment implements View.OnClickListener {
 
@@ -180,6 +180,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
                                 tx.hide(LoginFragment.this);
                                 tx.add(R.id.fragment_container, fragment, "MineNaviFragment");
                                 fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                tx.addToBackStack("MineNaviFragment");
                                 tx.commit();
                         }
 

@@ -1,7 +1,7 @@
 package com.hwand.pinhaowanr.model;
 
 /**
- * Created by hanhanliu on 15/12/5.
+ * Created by dxz on 15/12/5.
  */
 public class UserInfoModel {
 

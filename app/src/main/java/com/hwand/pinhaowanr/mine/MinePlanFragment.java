@@ -14,13 +14,14 @@ import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.community.SmallPartnerFragment;
 import com.hwand.pinhaowanr.community.SpellDFragment;
+import com.hwand.pinhaowanr.main.MineFragment;
 import com.hwand.pinhaowanr.utils.AndTools;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by hanhanliu on 15/11/20.
+ * Created by dxz on 15/11/20.
  */
 public class MinePlanFragment extends BaseFragment {
 
@@ -48,7 +49,7 @@ public class MinePlanFragment extends BaseFragment {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_community_layout;
+        return R.layout.fragment_plan_layout;
     }
 
     @Override
@@ -74,7 +75,7 @@ public class MinePlanFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-
+        MineFragment.setNoExit(true);
     }
 
     @Override

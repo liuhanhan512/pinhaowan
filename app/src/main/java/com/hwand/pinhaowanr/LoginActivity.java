@@ -30,6 +30,8 @@ import java.util.Map;
 
 /**
  * A login screen that offers login via phone/password.
+ *
+ * Created by dxz on 15/11/20.
  */
 public class LoginActivity extends BaseActivity implements OnClickListener, OnLayoutChangeListener {
 

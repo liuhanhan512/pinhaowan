@@ -7,6 +7,7 @@ import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -28,7 +29,7 @@ import java.util.Map;
 /**
  * Created by dxz on 15/12/01.
  */
-public class MessageFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class MessageFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, SlidingAdapter.OnSlidingViewClickListener {
 
     public final static int SIZE = 20;
 
@@ -83,7 +84,7 @@ public class MessageFragment extends BaseFragment implements SwipeRefreshLayout.
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new SlidingAdapter(getActivity(), new ArrayList<MsgInfo>());
+        mAdapter = new SlidingAdapter(getActivity(), new ArrayList<MsgInfo>(), this);
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -139,7 +140,6 @@ public class MessageFragment extends BaseFragment implements SwipeRefreshLayout.
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    getFragmentManager().popBackStack();
                                 }
                             }).show();
                 }
@@ -167,5 +167,15 @@ public class MessageFragment extends BaseFragment implements SwipeRefreshLayout.
     @Override
     public void onRefresh() {
         request();
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+
+    }
+
+    @Override
+    public void onDeleteBtnCilck(View view, int position) {
+
     }
 }

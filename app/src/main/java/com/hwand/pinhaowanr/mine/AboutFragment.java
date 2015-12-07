@@ -7,7 +7,7 @@ import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.main.MineFragment;
 
 /**
- * Created by hanhanliu on 15/11/20.
+ * Created by dxz on 15/11/20.
  */
 public class AboutFragment extends BaseFragment {
 

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_fragment_white"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/rl_bottom"
+        android:orientation="vertical"
+        android:overScrollMode="never"
+        android:scrollbars="none" />
+
+    <!-- 底部按钮以及 编辑框 -->
+    <RelativeLayout
+        android:id="@+id/rl_bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="3dp"
+        android:background="@color/divider_light_gray">
+
+        <TextView
+            android:id="@+id/btn_send"
+            android:layout_width="60dp"
+            android:layout_height="32dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@color/bg_btn_yellow"
+            android:gravity="center"
+            android:text="发送" />
+
+        <EditText
+            android:id="@+id/msg_input"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_toLeftOf="@id/btn_send"
+            android:singleLine="true"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+</RelativeLayout>
