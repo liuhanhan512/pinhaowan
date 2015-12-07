@@ -21,7 +21,6 @@ import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.main.MineFragment;
 import com.hwand.pinhaowanr.utils.LogUtil;
-import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.CircleImageView;
 import com.hwand.pinhaowanr.widget.FetchPhotoDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -157,7 +156,7 @@ public class UserInfoFragment extends BaseFragment {
             }
         });
         try {
-            String url = UrlConfig.PIC_URL + DataCacheHelper.getInstance().getUserInfo().getUrl();
+            String url = DataCacheHelper.getInstance().getUserInfo().getUrl();
             LogUtil.d("dxz", url);
             ImageLoader.getInstance().displayImage(url, mHeadImageView);
         } catch (Exception e) {
@@ -170,9 +169,9 @@ public class UserInfoFragment extends BaseFragment {
         super.onResume();
         MineFragment.setNoExit(true);
     }
-    
+
     private void modifyHeadPic() {
-        if(mFetchPhotoDialog == null){
+        if (mFetchPhotoDialog == null) {
             mFetchPhotoDialog = new FetchPhotoDialog(getActivity());
             mFetchPhotoDialog.setFetchPhoteClickListener(mFetchPhotoClickListener);
         }
@@ -197,9 +196,9 @@ public class UserInfoFragment extends BaseFragment {
         }
     };
 
-    private Uri openCapture(int requestCode){
+    private Uri openCapture(int requestCode) {
 
-        if(!isCanUseSDCard()){
+        if (!isCanUseSDCard()) {
             Toast.makeText(getActivity(), R.string.sdcard_unavailable, Toast.LENGTH_SHORT).show();
             return null;
         }
@@ -213,9 +212,9 @@ public class UserInfoFragment extends BaseFragment {
         try {
             uri = getActivity().getContentResolver()
                     .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-        }catch(Throwable ex){
+        } catch (Throwable ex) {
             // 红米手机会出现无法创建文件的crash，做一个保护
-            File file = new File(getImageCacheDir(getActivity()).getAbsolutePath(),filename + ".jpg");
+            File file = new File(getImageCacheDir(getActivity()).getAbsolutePath(), filename + ".jpg");
             uri = Uri.fromFile(file);
         }
 
@@ -224,26 +223,30 @@ public class UserInfoFragment extends BaseFragment {
         startActivityForResult(intent, requestCode);
         return uri;
     }
+
     private boolean isCanUseSDCard() {
         return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
+
     private File getImageCacheDir(Context context) {
         return getCacheDirByType("uil-images");
     }
-    private  File getCacheDirByType(String type) {
+
+    private File getCacheDirByType(String type) {
         File cacheDir = getActivity().getCacheDir();
         File typeCacheDir = new File(cacheDir, type);
-        if (typeCacheDir!=null && !typeCacheDir.exists()) {
+        if (typeCacheDir != null && !typeCacheDir.exists()) {
             typeCacheDir.mkdirs();
         }
         return typeCacheDir;
     }
-    private void openPhotoLibrary( int requestCode){
-        try{
+
+    private void openPhotoLibrary(int requestCode) {
+        try {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("image/*");
             startActivityForResult(intent, requestCode);
-        }catch(Throwable e){
+        } catch (Throwable e) {
             e.printStackTrace();
         }
     }

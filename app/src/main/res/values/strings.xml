@@ -9,7 +9,7 @@
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_phone">手机号码不存在</string>
-    <string name="error_invalid_password">密码太短了</string>
+    <string name="error_invalid_password">密码为6-8位字符</string>
     <string name="error_incorrect_password">密码不正确</string>
     <string name="error_inconsistent_password">密码不一致</string>
     <string name="error_field_required">需要填写</string>

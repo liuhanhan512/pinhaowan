@@ -30,6 +30,13 @@ public class StrUtils {
         return b;
     }
 
+    public static boolean isPasswordValid(String password) {
+        String check = "([A-Za-z0-9]|((?=[\\x21-\\x7e]+)[^A-Za-z0-9])){6,8}";
+        Pattern regex = Pattern.compile(check);
+        Matcher matcher = regex.matcher(password);
+        return matcher.matches();
+    }
+
     public static String encode(String str) {
         if (str == null) {
             return Constants.STR_EMPTY;
