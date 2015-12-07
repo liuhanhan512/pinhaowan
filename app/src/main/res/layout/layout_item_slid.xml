@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hwand.pinhaowanr.widget.SlidingButtonView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="80dp"
     android:background="@android:color/white"
     android:layout_marginBottom="1dp"
     >
@@ -15,6 +15,7 @@
             android:layout_width="80dp"
             android:gravity="center"
             android:layout_toRightOf="@+id/layout_content"
+            android:layout_marginLeft="6dp"
             android:text="删 除"
             android:background="@drawable/btn_click_red_havebackground"
             android:textColor="#DDFFFFFF"
@@ -22,16 +23,59 @@
         <RelativeLayout
             android:id="@+id/layout_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true">
+            <com.hwand.pinhaowanr.widget.CircleImageView
+                android:id="@+id/head"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="12dp"
+                android:src="@mipmap/btn_txbig"
+                android:layout_marginTop="6dp"></com.hwand.pinhaowanr.widget.CircleImageView>
+
             <TextView
-                android:id="@+id/text"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:textSize="50dp"
-                android:textColor="#DD000000"
-                android:background="@drawable/btn_click_black_havebackground"
+                android:id="@+id/tv_name"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_toRightOf="@+id/head"
+                android:layout_marginLeft="15dp"
+                android:textSize="15sp"
+                android:text="用户名"
+                android:textColor="@color/text_color_black"
+                />
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="12dp"
+                android:textSize="15sp"
+                android:text="你好"
+                android:textColor="@color/text_color_black"
+                />
+            <TextView
+                android:id="@+id/tv_msg"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_toRightOf="@+id/head"
+                android:layout_marginLeft="15dp"
+                android:layout_below="@+id/tv_name"
+                android:textSize="15sp"
+                android:text="你好"
+                android:textColor="@color/text_color_black"
                 />
         </RelativeLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider_light_gray"
+            android:layout_alignParentBottom="true"/>
     </RelativeLayout>
 </com.hwand.pinhaowanr.widget.SlidingButtonView>

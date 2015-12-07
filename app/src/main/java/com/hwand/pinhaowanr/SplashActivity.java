@@ -7,7 +7,7 @@ import android.os.Handler;
 import com.hwand.pinhaowanr.main.MainActivity;
 
 /**
- * 引导页
+ * Created by dxz on 15/11/28.
  */
 public class SplashActivity extends BaseActivity {
 

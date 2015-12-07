@@ -6,7 +6,7 @@ import android.os.Handler;
 /**
  * 注册验证码计时器
  * <p/>
- * Created by duanjunlei on 2015/12/4.
+ * Created by dxz on 2015/12/4.
  */
 public class VerifyCodeTimer extends CountDownTimer {
     private static Handler mHandler;

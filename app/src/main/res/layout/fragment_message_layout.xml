@@ -7,6 +7,11 @@
 
     <include layout="@layout/titlebar_nor_layout"></include>
 
+    <com.hwand.pinhaowanr.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:scrollbars="none"
@@ -14,5 +19,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:overScrollMode="never"/>
+    </com.hwand.pinhaowanr.widget.SwipeRefreshLayout>
 
 </LinearLayout>

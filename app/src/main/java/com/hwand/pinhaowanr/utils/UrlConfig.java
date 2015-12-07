@@ -3,13 +3,11 @@ package com.hwand.pinhaowanr.utils;
 import java.util.Map;
 
 /**
- * Created by duanjunlei on 2015/11/28.
+ * Created by dxz on 2015/11/28.
  */
 public class UrlConfig {
 
     public static final String HOST_PATH = "http://123.57.33.24/server/";
-
-    public static final String PIC_URL = "http://123.57.33.24/";
 
     public static final String URL_LOGIN = HOST_PATH + "Login?";
     public static final String URL_GET_PWD = HOST_PATH + "GetPassword?";

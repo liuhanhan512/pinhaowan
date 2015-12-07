@@ -9,33 +9,43 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.model.MsgInfo;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.LogUtil;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created by dxz on 2015/12/4.
  */
-public class SlidingAdapter extends RecyclerView.Adapter<SlidingAdapter.MyViewHolder> implements SlidingButtonView.OnSlidingButtonListener {
+public class SlidingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements SlidingButtonView.OnSlidingButtonListener {
 
     private Context mContext;
 
     private OnSlidingViewClickListener mIDeleteBtnClickListener;
 
-    private List<String> mDatas = new ArrayList<String>();
+    private List<MsgInfo> mDatas = new ArrayList<MsgInfo>();
 
     private SlidingButtonView mMenu = null;
 
-    public SlidingAdapter(Context context) {
-
+    public SlidingAdapter(Context context, List<MsgInfo> datas,OnSlidingViewClickListener listener) {
         mContext = context;
-        mIDeleteBtnClickListener = (OnSlidingViewClickListener) context;
+        mIDeleteBtnClickListener = listener;
+        mDatas = datas;
 
-        for (int i = 0; i < 10; i++) {
-            mDatas.add(i + "");
-        }
+    }
+
+    public void update(List<MsgInfo> datas) {
+        mDatas.clear();
+        mDatas.addAll(datas);
+        this.notifyDataSetChanged();
     }
 
     @Override
@@ -44,53 +54,73 @@ public class SlidingAdapter extends RecyclerView.Adapter<SlidingAdapter.MyViewHo
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
 
-        holder.textView.setText(mDatas.get(position));
-        //设置内容布局的宽为屏幕宽度
-        holder.layout_content.getLayoutParams().width = AndTools.getScreenWidth(mContext);
+        try {
+            final MsgViewHolder msgHolder = (MsgViewHolder) holder;
+            final MsgInfo msg = mDatas.get(position);
+            //设置内容布局的宽为屏幕宽度
+            msgHolder.layout_content.getLayoutParams().width = AndTools.getScreenWidth(mContext);
 
-        holder.textView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //判断是否有删除菜单打开
-                if (menuIsOpen()) {
-                    closeMenu();//关闭菜单
-                } else {
-                    int n = holder.getLayoutPosition();
-                    mIDeleteBtnClickListener.onItemClick(v, n);
+            ImageLoader.getInstance().displayImage(msg.getUrl(), msgHolder.head);
+            msgHolder.tv_name.setText(msg.getName());
+            long time = msg.getTime();
+            Date date = new Date(time);
+            Locale aLocale = Locale.US;
+            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm", new DateFormatSymbols(aLocale));
+            fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+            msgHolder.tv_time.setText(fmt.format(date));
+            msgHolder.tv_msg.setText(msg.getContent());
+
+            msgHolder.layout_content.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //判断是否有删除菜单打开
+                    if (menuIsOpen()) {
+                        closeMenu();//关闭菜单
+                    } else {
+                        int n = msgHolder.getPosition();
+                        mIDeleteBtnClickListener.onItemClick(v, n);
+                    }
+
                 }
+            });
+            msgHolder.btn_Delete.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int n = msgHolder.getPosition();
+                    mIDeleteBtnClickListener.onDeleteBtnCilck(v, n);
+                }
+            });
+        } catch (Exception e) {
 
-            }
-        });
-        holder.btn_Delete.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int n = holder.getLayoutPosition();
-                mIDeleteBtnClickListener.onDeleteBtnCilck(v, n);
-            }
-        });
+        }
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup arg0, int arg1) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_item_slid, arg0, false);
-        MyViewHolder holder = new MyViewHolder(view);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_item_slid, parent, false);
+        MsgViewHolder holder = new MsgViewHolder(view);
 
         return holder;
     }
 
-
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    class MsgViewHolder extends RecyclerView.ViewHolder {
+        public CircleImageView head;
         public TextView btn_Delete;
-        public TextView textView;
+        public TextView tv_name;
+        public TextView tv_time;
+        public TextView tv_msg;
         public ViewGroup layout_content;
 
-        public MyViewHolder(View itemView) {
+        public MsgViewHolder(View itemView) {
             super(itemView);
+            head = (CircleImageView) itemView.findViewById(R.id.head);
             btn_Delete = (TextView) itemView.findViewById(R.id.tv_delete);
-            textView = (TextView) itemView.findViewById(R.id.text);
+            tv_name = (TextView) itemView.findViewById(R.id.tv_name);
+            tv_time = (TextView) itemView.findViewById(R.id.tv_time);
+            tv_msg = (TextView) itemView.findViewById(R.id.tv_msg);
             layout_content = (ViewGroup) itemView.findViewById(R.id.layout_content);
 
             ((SlidingButtonView) itemView).setSlidingButtonListener(SlidingAdapter.this);
@@ -98,7 +128,7 @@ public class SlidingAdapter extends RecyclerView.Adapter<SlidingAdapter.MyViewHo
     }
 
     public void addData(int position) {
-        mDatas.add(position, "添加项");
+//        mDatas.add(position, "添加项");
         notifyItemInserted(position);
     }
 

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
 import com.android.volley.Response;
@@ -28,6 +27,9 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
+/**
+ * Created by dxz on 15/11/20.
+ */
 public class MainApplication extends Application {
 
     private static long mLastTimeStamp = 0;

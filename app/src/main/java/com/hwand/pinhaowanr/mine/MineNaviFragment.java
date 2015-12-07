@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by hanhanliu on 15/11/20.
+ * Created by dxz on 15/11/20.
  */
 public class MineNaviFragment extends BaseFragment {
 
@@ -57,16 +57,32 @@ public class MineNaviFragment extends BaseFragment {
             if (!isAdded()) {
                 return;
             }
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction tx = fm.beginTransaction();
             switch (msg.what) {
                 case MSG_INTENT_PLAN:
+                    MinePlanFragment fragmentPlan = MinePlanFragment.newInstance();
+                    tx.hide(MineNaviFragment.this);
+                    tx.add(R.id.fragment_container, fragmentPlan, "MinePlanFragment");
+                    tx.addToBackStack(null);
+                    tx.commit();
+                    break;
                 case MSG_INTENT_MSG:
+                    MessageFragment fragmentMsg = MessageFragment.newInstance();
+                    tx.hide(MineNaviFragment.this);
+                    tx.add(R.id.fragment_container, fragmentMsg, "MessageFragment");
+                    tx.addToBackStack(null);
+                    tx.commit();
+                    break;
                 case MSG_INTENT_PWD:
-
+                    PwdModifyFragment fragmentPwd = PwdModifyFragment.newInstance();
+                    tx.hide(MineNaviFragment.this);
+                    tx.add(R.id.fragment_container, fragmentPwd, "PwdModifyFragment");
+                    tx.addToBackStack(null);
+                    tx.commit();
                     break;
                 case MSG_INTENT_ABOUT:
                     AboutFragment fragment = AboutFragment.newInstance();
-                    FragmentManager fm = getFragmentManager();
-                    FragmentTransaction tx = fm.beginTransaction();
                     tx.hide(MineNaviFragment.this);
                     tx.add(R.id.fragment_container, fragment, "AboutFragment");
                     tx.addToBackStack(null);
@@ -74,7 +90,9 @@ public class MineNaviFragment extends BaseFragment {
                     break;
                 case MSG_LOGOUT:
                     logout();
+                    break;
                 default:
+                    break;
 
             }
 
@@ -101,7 +119,7 @@ public class MineNaviFragment extends BaseFragment {
         setTitleBarTtile("我的");
         mListView = (ListView) mFragmentView.findViewById(R.id.nv_list);
         mHeader = getActivity().getLayoutInflater().inflate(R.layout.mine_header_layout, null);
-        mHeadImageView = (CircleImageView)mHeader.findViewById(R.id.head);
+        mHeadImageView = (CircleImageView) mHeader.findViewById(R.id.head);
         mUserName = (TextView) mHeader.findViewById(R.id.user_name);
         mFooter = getActivity().getLayoutInflater().inflate(R.layout.mine_footer_layout, null);
 
@@ -127,8 +145,8 @@ public class MineNaviFragment extends BaseFragment {
 
         try {
             mUserName.setText(DataCacheHelper.getInstance().getUserInfo().getName());
-            String url = UrlConfig.PIC_URL + DataCacheHelper.getInstance().getUserInfo().getUrl();
-            LogUtil.d("dxz",url);
+            String url = DataCacheHelper.getInstance().getUserInfo().getUrl();
+            LogUtil.d("dxz", url);
             ImageLoader.getInstance().displayImage(url, mHeadImageView);
             mHeader.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -142,7 +160,7 @@ public class MineNaviFragment extends BaseFragment {
                     tx.commit();
                 }
             });
-        } catch (Exception e){
+        } catch (Exception e) {
         }
 
     }
@@ -169,6 +187,8 @@ public class MineNaviFragment extends BaseFragment {
                     FragmentTransaction tx = fm.beginTransaction();
                     tx.hide(MineNaviFragment.this);
                     tx.add(R.id.fragment_container, fragment, "LoginFragment");
+                    fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    tx.addToBackStack("LoginFragment");
                     tx.commit();
                     AndTools.showToast("已退出登录");
                 } else {
@@ -179,6 +199,8 @@ public class MineNaviFragment extends BaseFragment {
                     FragmentTransaction tx = fm.beginTransaction();
                     tx.hide(MineNaviFragment.this);
                     tx.add(R.id.fragment_container, fragment, "LoginFragment");
+                    fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    tx.addToBackStack("LoginFragment");
                     tx.commit();
                     AndTools.showToast("已退出登录");
                 }

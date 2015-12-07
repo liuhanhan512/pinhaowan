@@ -28,11 +28,12 @@ import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.DDAlertDialog;
 import com.hwand.pinhaowanr.widget.DDProgressDialog;
 
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by hanhanliu on 15/11/20.
+ * Created by dxz on 15/11/20.
  */
 public class LoginFragment extends BaseFragment implements View.OnClickListener {
 
@@ -119,7 +120,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
             mPassword.setError(getString(R.string.error_field_required));
             focusView = mPassword;
             cancel = true;
-        } else if (!isPasswordValid(password)) {
+        } else if (!StrUtils.isPasswordValid(password)) {
             mPassword.setError(getString(R.string.error_invalid_password));
             focusView = mPassword;
             cancel = true;
@@ -146,7 +147,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
             mDialog = DDProgressDialog.show(getActivity(), "登录中", "正在努力加载...", true);
             Map<String, String> params = new HashMap<String, String>();
             params.put("telephone", phone);
-            params.put("passward", password);
+            params.put("passward", URLEncoder.encode(password));
             String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_LOGIN, params);
             NetworkRequest.get(url, new Response.Listener<String>() {
                 @Override
@@ -179,6 +180,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
                                 tx.hide(LoginFragment.this);
                                 tx.add(R.id.fragment_container, fragment, "MineNaviFragment");
                                 fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                tx.addToBackStack("MineNaviFragment");
                                 tx.commit();
                         }
 
@@ -208,11 +210,6 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
                 }
             });
         }
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 3;
     }
 
     private void showRegister(boolean show) {

@@ -20,8 +20,7 @@ import com.hwand.pinhaowanr.R;
 import java.util.List;
 
 /**
- * @data: 2014-7-21 下午2:30:32
- * @version: V1.0
+ * Created by dxz on 15/11/28.
  */
 
 public class MineAdapter extends BaseAdapter {

@@ -933,7 +933,6 @@ public class AndTools {
     }
 
     public static void displayImage(DisplayImageOptions displayImageOptions, String url, final ImageView imageView) {
-        url = UrlConfig.PIC_URL + url;
         ImageLoader.getInstance().displayImage(url, imageView, displayImageOptions, new ImageLoadingListener() {
 
             @Override
