@@ -57,7 +57,7 @@ public class SlidingButtonView extends HorizontalScrollView {
             this.scrollTo(0, 0);
             //获取水平滚动条可以滑动的范围，即右侧按钮的宽度
             mScrollWidth = mTextView_Delete.getWidth();
-            LogUtil.i("wxz", "mScrollWidth:" + mScrollWidth);
+            LogUtil.i("dxz", "mScrollWidth:" + mScrollWidth);
         }
 
     }
@@ -117,9 +117,11 @@ public class SlidingButtonView extends HorizontalScrollView {
      * 关闭菜单
      */
     public void closeMenu() {
+        LogUtil.i("dxz", "closeMenu");
         if (!isOpen) {
             return;
         }
+        LogUtil.i("dxz", "close");
         this.smoothScrollTo(0, 0);
         isOpen = false;
     }

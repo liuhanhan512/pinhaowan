@@ -1,5 +1,6 @@
 package com.hwand.pinhaowanr.mine;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -54,6 +56,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
     private TextView mRegister;
 
     private DDProgressDialog mDialog;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_login;
@@ -158,8 +161,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
 
                     if (!TextUtils.isEmpty(response)) {
                         Gson gson = new Gson();
-                        UserInfo  info = gson.fromJson(response,UserInfo.class);
-                        switch (info.getResult()){
+                        UserInfo info = gson.fromJson(response, UserInfo.class);
+                        switch (info.getResult()) {
                             case 0:
                             case 1:
                                 new DDAlertDialog.Builder(getActivity())
@@ -172,6 +175,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
                                         }).show();
                                 break;
                             case 2:
+                                hideImm();
                                 AndTools.showToast("登陆成功");
                                 DataCacheHelper.getInstance().saveUserInfo(response);
                                 MineNaviFragment fragment = MineNaviFragment.newInstance();
@@ -212,6 +216,14 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         }
     }
 
+    private void hideImm() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm.isActive()) {
+            imm.hideSoftInputFromWindow(mBtnLogin.getApplicationWindowToken(), 0);
+
+        }
+    }
+
     private void showRegister(boolean show) {
         mRegister.setVisibility(show ? View.VISIBLE : View.GONE);
     }
@@ -230,7 +242,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction tx = fm.beginTransaction();
                 tx.hide(LoginFragment.this);
-                tx.add(R.id.fragment_container , fragment, "RegisterFragment");
+                tx.add(R.id.fragment_container, fragment, "RegisterFragment");
                 tx.addToBackStack(null);
                 tx.commit();
                 break;

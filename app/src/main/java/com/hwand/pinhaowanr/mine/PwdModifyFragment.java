@@ -1,22 +1,19 @@
 package com.hwand.pinhaowanr.mine;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.gson.Gson;
 import com.hwand.pinhaowanr.BaseFragment;
-import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.main.MineFragment;
-import com.hwand.pinhaowanr.model.UserInfo;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
@@ -58,7 +55,7 @@ public class PwdModifyFragment extends BaseFragment implements View.OnClickListe
     protected void initViews() {
         super.initViews();
         initView();
-        setTitleBarTtile("注册");
+        setTitleBarTtile("修改密码");
     }
 
     @Override
@@ -107,6 +104,10 @@ public class PwdModifyFragment extends BaseFragment implements View.OnClickListe
             mCommitPwd.setError(getString(R.string.error_inconsistent_password));
             focusView = mCommitPwd;
             cancel = true;
+        } else if (!StrUtils.isPasswordValid(oldPwd)) {
+            mOldPwd.setError(getString(R.string.error_invalid_password));
+            focusView = mOldPwd;
+            cancel = true;
         } else if (!StrUtils.isPasswordValid(pwd)) {
             mPwd.setError(getString(R.string.error_invalid_password));
             focusView = mPwd;
@@ -118,33 +119,27 @@ public class PwdModifyFragment extends BaseFragment implements View.OnClickListe
             focusView.requestFocus();
         } else {
             Map<String, String> params = new HashMap<String, String>();
-            params.put("passward", URLEncoder.encode(pwd));
-            String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_REGISTER, params);
+            params.put("oldPassword", URLEncoder.encode(oldPwd));
+            params.put("newPassword", URLEncoder.encode(pwd));
+            String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_MODIFY_PWD, params);
             LogUtil.d("dxz", url);
             NetworkRequest.get(url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    // TODO:
                     LogUtil.d("dxz", response);
-                    if (!TextUtils.isEmpty(response) && response.contains("1")) {
-                        Gson gson = new Gson();
-                        UserInfo info = gson.fromJson(response, UserInfo.class);
-                        String str = gson.toJson(info, UserInfo.class);
-                        DataCacheHelper.getInstance().saveUserInfo(str);
-                        AndTools.showToast("注册成功");
-                        MineNaviFragment fragment = MineNaviFragment.newInstance();
-                        FragmentManager fm = getFragmentManager();
-                        FragmentTransaction tx = fm.beginTransaction();
-                        tx.hide(PwdModifyFragment.this);
-                        tx.add(R.id.fragment_container, fragment, "MineNaviFragment");
-                        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                        tx.commit();
+                    // 结果（result）0 原密码输入的不对 1 新密码不合法 2 成功
+                    if (!TextUtils.isEmpty(response) && response.contains("2")) {
+                        AndTools.showToast("修改成功！");
+                        hideImm();
+                        getFragmentManager().popBackStack();
                     } else {
                         String msg = "网络问题请重试！";
                         if (TextUtils.isEmpty(response)) {
 
                         } else if (response.contains("0")) {
-                            msg = "验证码验证失败！";
+                            msg = "原密码输入的不对！";
+                        } else if (response.contains("1")) {
+                            msg = " 新密码不合法！";
                         }
                         new DDAlertDialog.Builder(getActivity())
                                 .setTitle("提示").setMessage(msg)
@@ -152,7 +147,6 @@ public class PwdModifyFragment extends BaseFragment implements View.OnClickListe
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
-                                        getFragmentManager().popBackStack();
                                     }
                                 }).show();
                     }
@@ -176,4 +170,11 @@ public class PwdModifyFragment extends BaseFragment implements View.OnClickListe
         }
     }
 
+    private void hideImm() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm.isActive()) {
+            imm.hideSoftInputFromWindow(mNext.getApplicationWindowToken(), 0);
+
+        }
+    }
 }

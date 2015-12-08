@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.R;
-import com.hwand.pinhaowanr.community.SmallPartnerFragment;
 import com.hwand.pinhaowanr.community.SpellDFragment;
 import com.hwand.pinhaowanr.main.MineFragment;
 import com.hwand.pinhaowanr.utils.AndTools;
@@ -190,7 +189,7 @@ public class MinePlanFragment extends BaseFragment {
             }
             switch (position) {
                 case ORDER:
-                    mCurrentFragment = SmallPartnerFragment.newInstance();
+                    mCurrentFragment = OrderFragment.newInstance();
                     break;
                 case CLASS:
                     mCurrentFragment = SpellDFragment.newInstance();

@@ -1,11 +1,13 @@
 package com.hwand.pinhaowanr.mine;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -225,6 +227,7 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
                     LogUtil.d("dxz", response);
                     // 结果（result）0 失败（ConfirmVerifyCode 接口验证没有通过） 1 成功 2 密码不合法
                     if (!TextUtils.isEmpty(response) && response.contains("1")) {
+                        hideImm();
                         Gson gson = new Gson();
                         UserInfo info = gson.fromJson(response, UserInfo.class);
                         info.setName(name);
@@ -282,4 +285,11 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
         }
     }
 
+    private void hideImm() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm.isActive()) {
+            imm.hideSoftInputFromWindow(mNext.getApplicationWindowToken(), 0);
+
+        }
+    }
 }

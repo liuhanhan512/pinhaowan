@@ -1,26 +1,37 @@
 package com.hwand.pinhaowanr.widget;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.event.DeleteAllEvent;
 import com.hwand.pinhaowanr.model.MsgInfo;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.LogUtil;
+import com.hwand.pinhaowanr.utils.NetworkRequest;
+import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by dxz on 2015/12/4.
@@ -35,7 +46,7 @@ public class SlidingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private SlidingButtonView mMenu = null;
 
-    public SlidingAdapter(Context context, List<MsgInfo> datas,OnSlidingViewClickListener listener) {
+    public SlidingAdapter(Context context, List<MsgInfo> datas, OnSlidingViewClickListener listener) {
         mContext = context;
         mIDeleteBtnClickListener = listener;
         mDatas = datas;
@@ -43,7 +54,6 @@ public class SlidingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public void update(List<MsgInfo> datas) {
-        mDatas.clear();
         mDatas.addAll(datas);
         this.notifyDataSetChanged();
     }
@@ -133,9 +143,45 @@ public class SlidingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public void removeData(int position) {
-        mDatas.remove(position);
-        notifyItemRemoved(position);
+        final MsgInfo msg = mDatas.get(position);
+        delMsg(position, msg);
+    }
 
+    private void delMsg(final int position, final MsgInfo msg) {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("sendId", msg.getSendId() + "");
+        String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_DEL_MSG, params);
+        LogUtil.d("dxz", url);
+        NetworkRequest.get(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                LogUtil.d("dxz", response);
+                // 结果（result）0 失败 1 成功
+                if (!TextUtils.isEmpty(response) && response.contains("1")) {
+                    mDatas.remove(position);
+                    notifyItemRemoved(position);
+                    if (mDatas.size() <= 0) {
+                        EventBus.getDefault().post(new DeleteAllEvent());
+                    }
+                    AndTools.showToast("删除成功！");
+                } else {
+                    AndTools.showToast("删除失败！");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                LogUtil.d("dxz", error.toString());
+                new DDAlertDialog.Builder(mContext)
+                        .setTitle("提示").setMessage("网络问题请重试！")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
+            }
+        });
     }
 
     /**
@@ -143,6 +189,7 @@ public class SlidingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
      */
     @Override
     public void onMenuIsOpen(View view) {
+        LogUtil.i("dxz", "onMenuIsOpen");
         mMenu = (SlidingButtonView) view;
     }
 
@@ -164,6 +211,7 @@ public class SlidingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
      * 关闭菜单
      */
     public void closeMenu() {
+        LogUtil.i("dxz", "closeMenu");
         mMenu.closeMenu();
         mMenu = null;
 

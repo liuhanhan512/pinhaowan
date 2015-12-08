@@ -1,6 +1,12 @@
 package com.hwand.pinhaowanr.model;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hwand.pinhaowanr.utils.NonProguard;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by dxz on 2015/12/2.
@@ -90,5 +96,13 @@ public class MsgInfo implements NonProguard {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public static List<MsgInfo> arrayFromData(String str) {
+
+        Type listType = new TypeToken<ArrayList<MsgInfo>>() {
+        }.getType();
+
+        return new Gson().fromJson(str, listType);
     }
 }

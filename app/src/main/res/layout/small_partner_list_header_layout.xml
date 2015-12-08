@@ -39,8 +39,8 @@
 
                 <com.hwand.pinhaowanr.widget.CircleImageView
                     android:id="@+id/avatar1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
                     android:src="@mipmap/contact" />
 
@@ -68,8 +68,8 @@
 
                 <com.hwand.pinhaowanr.widget.CircleImageView
                     android:id="@+id/avatar2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
                     android:src="@mipmap/contact" />
 
@@ -97,8 +97,8 @@
 
                 <com.hwand.pinhaowanr.widget.CircleImageView
                     android:id="@+id/avatar3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
                     android:src="@mipmap/contact" />
 
@@ -126,8 +126,8 @@
 
                 <com.hwand.pinhaowanr.widget.CircleImageView
                     android:id="@+id/avatar4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
                     android:src="@mipmap/contact" />
 
@@ -155,8 +155,8 @@
 
                 <com.hwand.pinhaowanr.widget.CircleImageView
                     android:id="@+id/avatar5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
                     android:src="@mipmap/contact" />
 
@@ -185,8 +185,8 @@
 
                 <com.hwand.pinhaowanr.widget.CircleImageView
                     android:id="@+id/avatar6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
                     android:src="@mipmap/more" />
 

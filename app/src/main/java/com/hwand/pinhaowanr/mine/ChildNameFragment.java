@@ -1,9 +1,11 @@
 package com.hwand.pinhaowanr.mine;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -89,6 +91,7 @@ public class ChildNameFragment extends BaseFragment {
                             // 结果（result）0 失败 1 成功
                             if (!TextUtils.isEmpty(response) && response.contains("1")) {
                                 AndTools.showToast("修改成功！");
+                                hideImm();
                                 getFragmentManager().popBackStack();
                             } else {
                                 new DDAlertDialog.Builder(getActivity())
@@ -119,5 +122,13 @@ public class ChildNameFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    private void hideImm() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm.isActive()) {
+            imm.hideSoftInputFromWindow(mNext.getApplicationWindowToken(), 0);
+
+        }
     }
 }

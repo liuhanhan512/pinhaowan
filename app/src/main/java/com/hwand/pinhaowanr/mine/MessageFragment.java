@@ -4,17 +4,21 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.event.DeleteAllEvent;
 import com.hwand.pinhaowanr.main.MineFragment;
 import com.hwand.pinhaowanr.model.MsgInfo;
+import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
@@ -24,7 +28,10 @@ import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by dxz on 15/12/01.
@@ -57,13 +64,28 @@ public class MessageFragment extends BaseFragment implements SwipeRefreshLayout.
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
+    private View mEmptyView;
+    private TextView mEmptyText;
 
     private SlidingAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
 
     private int mCount = 0;
+    private List<MsgInfo> mDatas = new ArrayList<MsgInfo>();
     private boolean isLoading;
-    private boolean onData;
+    private boolean noData;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
     @Override
     protected int getLayoutId() {
@@ -84,8 +106,9 @@ public class MessageFragment extends BaseFragment implements SwipeRefreshLayout.
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new SlidingAdapter(getActivity(), new ArrayList<MsgInfo>(), this);
+        mAdapter = new SlidingAdapter(getActivity(), mDatas, this);
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -93,7 +116,7 @@ public class MessageFragment extends BaseFragment implements SwipeRefreshLayout.
                 super.onScrolled(recyclerView, dx, dy);
                 int lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
                 int totalItemCount = mLayoutManager.getItemCount();
-                //lastVisibleItem >= totalItemCount - 4 表示剩下4个item自动加载，各位自由选择
+                //lastVisibleItem >= totalItemCount - 2 表示剩下2个item自动加载，各位自由选择
                 // dy>0 表示向下滑动
                 if (lastVisibleItem >= totalItemCount - 2 && dy > 0) {
                     if (isLoading) {
@@ -104,7 +127,15 @@ public class MessageFragment extends BaseFragment implements SwipeRefreshLayout.
                 }
             }
         });
-
+        mEmptyView = mFragmentView.findViewById(R.id.empty_layout);
+        mEmptyText = (TextView) mFragmentView.findViewById(R.id.empty_text);
+        mEmptyText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                request();
+            }
+        });
+        mEmptyView.setVisibility(View.GONE);
         request();
     }
 
@@ -115,7 +146,8 @@ public class MessageFragment extends BaseFragment implements SwipeRefreshLayout.
     }
 
     private void request() {
-        if (onData) {
+        if (noData) {
+            mSwipeRefreshLayout.setRefreshing(false);
             return;
         }
         isLoading = true;
@@ -128,23 +160,34 @@ public class MessageFragment extends BaseFragment implements SwipeRefreshLayout.
         NetworkRequest.get(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                LogUtil.d("dxz", response);
                 mSwipeRefreshLayout.setRefreshing(false);
                 isLoading = false;
-                LogUtil.d("dxz", response);
-                if (!TextUtils.isEmpty(response) && response.contains("1")) {
-                    // TODO:
+                if (!TextUtils.isEmpty(response)) {
+                    List<MsgInfo> datas = MsgInfo.arrayFromData(response);
+                    if (datas != null && datas.size() > 0) {
+                        mCount += datas.size();
+                        mEmptyView.setVisibility(View.GONE);
+                        mRecyclerView.setVisibility(View.VISIBLE);
+                        mAdapter.update(datas);
+                    } else {
+                        AndTools.showToast("已经没有更多消息");
+                        if (mCount == 0) {
+                            mEmptyView.setVisibility(View.VISIBLE);
+                            mRecyclerView.setVisibility(View.GONE);
+                            return;
+                        }
+                        noData = true;
+                    }
                 } else {
-                    new DDAlertDialog.Builder(getActivity())
-                            .setTitle("提示").setMessage("网络问题请重试！")
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
+                    AndTools.showToast("已经没有更多消息");
+                    if (mCount == 0) {
+                        mEmptyView.setVisibility(View.VISIBLE);
+                        mRecyclerView.setVisibility(View.GONE);
+                        return;
+                    }
+                    noData = true;
                 }
-
-
             }
         }, new Response.ErrorListener() {
             @Override
@@ -166,7 +209,11 @@ public class MessageFragment extends BaseFragment implements SwipeRefreshLayout.
 
     @Override
     public void onRefresh() {
-        request();
+        if (isLoading) {
+            LogUtil.d("dxz", "ignore manually update!");
+        } else {
+            request();//这里多线程也要手动控制isLoading
+        }
     }
 
     @Override
@@ -176,6 +223,13 @@ public class MessageFragment extends BaseFragment implements SwipeRefreshLayout.
 
     @Override
     public void onDeleteBtnCilck(View view, int position) {
+        mAdapter.removeData(position);
+        mCount = mAdapter.getItemCount();
+    }
 
+    public void onEventMainThread(DeleteAllEvent event) {
+        mEmptyView.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.GONE);
+        AndTools.showToast("已经没有更多消息");
     }
 }
