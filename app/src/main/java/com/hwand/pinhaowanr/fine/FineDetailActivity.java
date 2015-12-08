@@ -2,6 +2,8 @@ package com.hwand.pinhaowanr.fine;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -27,9 +29,14 @@ import com.hwand.pinhaowanr.model.ClassDetailTitleModel;
 import com.hwand.pinhaowanr.model.HomePageModel;
 import com.hwand.pinhaowanr.model.RegionModel;
 import com.hwand.pinhaowanr.utils.AndTools;
+import com.hwand.pinhaowanr.utils.BizUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.sso.QZoneSsoHandler;
+import com.umeng.socialize.sso.UMQQSsoHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -216,15 +223,33 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
     }
 
     private void onReservationClick(){
-
+        ReservationActivity.launch(this , mClassDetailModel);
     }
 
     private void onGiftTicketClick(){
         if(mHomePageModel.getViewType() == 3){//赠票
 
         } else {//分享
-
+            onShare();
         }
+    }
+
+    private void onShare(){
+        final UMSocialService mController = UMServiceFactory.getUMSocialService("com.umeng.share");
+
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        if(mHomePageModel != null){
+
+            BizUtil.share(this, "title","content", mHomePageModel.getPictureUrl(), "http://www.baidu.com", bitmap, mController);
+        }
+//        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(this, qqAppId,
+//                qqSecret);
+//        qqSsoHandler.addToSocialSDK();
+//
+//        QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(this, qqAppId,
+//                qqSecret);
+//        qZoneSsoHandler.addToSocialSDK();
+        mController.openShare(this, false);
     }
 
     class Adapter extends BaseAdapter {
