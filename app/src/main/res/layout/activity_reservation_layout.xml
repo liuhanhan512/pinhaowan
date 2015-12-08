@@ -7,8 +7,8 @@
     <com.hwand.pinhaowanr.widget.calendar.UniformGridView
         android:id="@+id/calendar_title"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="@android:color/holo_green_light" />
+        android:layout_height="40dp"
+        android:background="@color/white" />
 
     <com.hwand.pinhaowanr.widget.InterruptTouchView
         android:id="@+id/calendar_touch_container"
@@ -20,7 +20,7 @@
             android:id="@+id/calendar_body"
             android:layout_width="match_parent"
             android:layout_height="252dp"
-            android:background="@android:color/holo_green_light" />
+            android:background="@color/white" />
 
         <LinearLayout
             android:id="@+id/attendance_detail"

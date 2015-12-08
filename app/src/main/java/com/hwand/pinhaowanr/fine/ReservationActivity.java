@@ -110,7 +110,7 @@ public class ReservationActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reservation_layout);
-
+        initIntentValues();
         initTitle();
         initViews();
     }
@@ -120,7 +120,7 @@ public class ReservationActivity extends BaseActivity {
     }
 
     private void initTitle(){
-        setTitle(getString(R.string.reservation));
+        setActionBarTtile(getString(R.string.reservation));
     }
 
     private void initViews(){
@@ -465,15 +465,17 @@ public class ReservationActivity extends BaseActivity {
                     setTodayBackground();
                 } else {
                     mDateText.setBackgroundDrawable(null);
+                    mDateText.setSelected(false);
                 }
             }
         }
 
         private void setTodayBackground() {
             if (mCalendarItemTodayTip == null) {
-                mCalendarItemTodayTip = ReservationActivity.this.getResources().getDrawable(R.mipmap.calendar_today_date_tip);
+                mCalendarItemTodayTip = ReservationActivity.this.getResources().getDrawable(R.drawable.circle_solid_red_bg);
             }
             mDateText.setBackgroundDrawable(mCalendarItemTodayTip);
+            mDateText.setSelected(true);
         }
 
         public void setCurrentTip(boolean isCurrent) {
@@ -485,15 +487,17 @@ public class ReservationActivity extends BaseActivity {
                     setTodayBackground();
                 } else {
                     mDateText.setBackgroundDrawable(null);
+                    mDateText.setSelected(false);
                 }
             }
         }
 
         private void setCurrentBackground() {
             if (mCalendarItemCurrentTip == null) {
-                mCalendarItemCurrentTip = ReservationActivity.this.getResources().getDrawable(R.mipmap.calendar_today_date_tip);
+                mCalendarItemCurrentTip = ReservationActivity.this.getResources().getDrawable(R.mipmap.circle_dot);
             }
             mDateText.setBackgroundDrawable(mCalendarItemCurrentTip);
+            mDateText.setSelected(true);
         }
 
         public void setLeaveTip(boolean hasLeave) {
