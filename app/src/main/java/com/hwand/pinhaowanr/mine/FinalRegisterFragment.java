@@ -223,6 +223,7 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
                 public void onResponse(String response) {
                     // TODO:
                     LogUtil.d("dxz", response);
+                    // 结果（result）0 失败（ConfirmVerifyCode 接口验证没有通过） 1 成功 2 密码不合法
                     if (!TextUtils.isEmpty(response) && response.contains("1")) {
                         Gson gson = new Gson();
                         UserInfo info = gson.fromJson(response, UserInfo.class);
@@ -248,6 +249,8 @@ public class FinalRegisterFragment extends BaseFragment implements View.OnClickL
 
                         } else if (response.contains("0")) {
                             msg = "验证码验证失败！";
+                        }else if (response.contains("2")) {
+                            msg = "密码不合法！";
                         }
                         new DDAlertDialog.Builder(getActivity())
                                 .setTitle("提示").setMessage(msg)

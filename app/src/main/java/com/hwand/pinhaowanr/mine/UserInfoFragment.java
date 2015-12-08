@@ -3,6 +3,7 @@ package com.hwand.pinhaowanr.mine;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,26 +11,40 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.main.MineFragment;
+import com.hwand.pinhaowanr.model.UserInfo;
+import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.LogUtil;
+import com.hwand.pinhaowanr.utils.NetworkRequest;
+import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.CircleImageView;
+import com.hwand.pinhaowanr.widget.DDAlertDialog;
 import com.hwand.pinhaowanr.widget.FetchPhotoDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by dxz on 15/12/01.
@@ -49,6 +64,8 @@ public class UserInfoFragment extends BaseFragment {
     public static final int REQUEST_PHOTO_LIBRARY = 10009;
 
     private Uri mImageUri;
+
+    private String mPath;
 
     public static UserInfoFragment newInstance() {
         UserInfoFragment fragment = new UserInfoFragment();
@@ -220,7 +237,7 @@ public class UserInfoFragment extends BaseFragment {
 
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-        startActivityForResult(intent, requestCode);
+        getRootFragment().startActivityForResult(intent, requestCode);
         return uri;
     }
 
@@ -245,23 +262,23 @@ public class UserInfoFragment extends BaseFragment {
         try {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("image/*");
-            startActivityForResult(intent, requestCode);
+            getRootFragment().startActivityForResult(intent, requestCode);
         } catch (Throwable e) {
             e.printStackTrace();
         }
     }
 
 
-    private static final int ASPECT_X = 100;
-    private static final int ASPECT_Y = 100;
-
-    private static final String PIC_FORMAT = ".jpg";
+//    private static final int ASPECT_X = 100;
+//    private static final int ASPECT_Y = 100;
+//
+//    private static final String PIC_FORMAT = ".jpg";
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (Activity.RESULT_OK == resultCode) {
-            String tempFileName = System.currentTimeMillis() + PIC_FORMAT; // 图片剪裁的时候存储的临时文件的名称
+//            String tempFileName = System.currentTimeMillis() + PIC_FORMAT; // 图片剪裁的时候存储的临时文件的名称
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
                     // 设置头像使用图片剪裁
@@ -276,6 +293,7 @@ public class UserInfoFragment extends BaseFragment {
                     if (uri == null) {
                         return;
                     }
+                    mImageUri = uri;
 //                    startCropImageActivityForResult(uri, false, REQUEST_CODE_IMAGE_CROP, PIC_FORMAT, ASPECT_X, ASPECT_Y);
                     break;
 //                case REQUEST_CODE_IMAGE_CROP:
@@ -285,6 +303,88 @@ public class UserInfoFragment extends BaseFragment {
 //                    break;
 
             }
+            if (mImageUri != null) {
+                mPath = AndTools.getImageAbsolutePath(getActivity(), mImageUri);
+                LogUtil.d("dxz", mImageUri.toString());
+                LogUtil.d("dxz", mPath);
+                upload();
+            }
         }
     }
+
+    /**
+     * 得到根Fragment
+     *
+     * @return
+     */
+    private Fragment getRootFragment() {
+        Fragment fragment = getParentFragment();
+        while (fragment.getParentFragment() != null) {
+            fragment = fragment.getParentFragment();
+        }
+        return fragment;
+
+    }
+
+    private void upload() {
+        try {
+            if (mImageUri != null) {
+                Map<String, String> params = new HashMap<String, String>();
+                NetworkRequest.upload(UrlConfig.URL_MODIFY_HEAD, mPath, params, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        LogUtil.d("dxz", response);
+                        // 结果（result）0 失败 1 成功
+                        if (!TextUtils.isEmpty(response) && response.contains("1")) {
+                            AndTools.showToast("修改头像成功！");
+                            try {
+                                JSONObject json = new JSONObject(response);
+                                String url = json.optString("url");
+                                LogUtil.d("dxz", url);
+                                ImageLoader.getInstance().displayImage(mImageUri.toString(), mHeadImageView);
+                                UserInfo info = DataCacheHelper.getInstance().getUserInfo();
+                                info.setUrl(url);
+                                Gson gson = new Gson();
+                                String str = gson.toJson(info, UserInfo.class);
+                                DataCacheHelper.getInstance().saveUserInfo(str);
+                                ImageLoader.getInstance().loadImageSync(url);
+                            } catch (Exception e) {
+                                ImageLoader.getInstance().displayImage(DataCacheHelper.getInstance().getUserInfo().getUrl(), mHeadImageView);
+                            }
+
+                        } else {
+                            ImageLoader.getInstance().displayImage(DataCacheHelper.getInstance().getUserInfo().getUrl(), mHeadImageView);
+                            new DDAlertDialog.Builder(getActivity())
+                                    .setTitle("提示").setMessage("网络问题请重试！")
+                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    }).show();
+                        }
+
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        ImageLoader.getInstance().displayImage(DataCacheHelper.getInstance().getUserInfo().getUrl(), mHeadImageView);
+                        new DDAlertDialog.Builder(getActivity())
+                                .setTitle("提示").setMessage("网络问题请重试！")
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }).show();
+                    }
+                });
+            }
+        } catch (Exception e) {
+
+        }
+
+    }
+
 }

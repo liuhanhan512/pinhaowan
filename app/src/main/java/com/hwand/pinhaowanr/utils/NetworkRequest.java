@@ -2,6 +2,7 @@ package com.hwand.pinhaowanr.utils;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
@@ -12,13 +13,16 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.BitmapLruCache;
 import com.android.volley.toolbox.GsonRequest;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.MultipartRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.MainApplication;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -73,6 +77,7 @@ public class NetworkRequest {
     /**
      * Checks the response headers for session cookie and saves it
      * if it finds it.
+     *
      * @param headers Response Headers.
      */
     public final static void checkSessionCookie(Map<String, String> headers) {
@@ -85,13 +90,23 @@ public class NetworkRequest {
             if (cookie.length() > 0) {
                 String[] splitCookie = cookie.split(";");
                 cookie = splitCookie[0];
-                AndTools.saveCurrentData2Cache(MainApplication.getInstance(),SESSION_COOKIE,cookie);
+                String sessionId = AndTools.getCurrentData(MainApplication.getInstance(), SESSION_COOKIE);
+                if (TextUtils.isEmpty(sessionId)) {
+                    AndTools.saveCurrentData2Cache(MainApplication.getInstance(), SESSION_COOKIE, cookie);
+                } else {
+                    if (!TextUtils.equals(sessionId, cookie)) {
+                        AndTools.saveCurrentData2Cache(MainApplication.getInstance(), DataCacheHelper.KEY_USER_INFO, "");
+                        DataCacheHelper.getInstance().setUserInfo(null);
+                        AndTools.saveCurrentData2Cache(MainApplication.getInstance(), NetworkRequest.SESSION_COOKIE, cookie);
+                    }
+                }
             }
         }
     }
 
     /**
      * Adds session cookie to headers if exists.
+     *
      * @param headers
      */
     public final static void addSessionCookie(Map<String, String> headers) {
@@ -178,6 +193,17 @@ public class NetworkRequest {
         }
 
         return response;
+    }
+
+    public static void upload(String url, String filePath, final Map<String, String> params,
+                              Response.Listener<String> listener,
+                              Response.ErrorListener errorListener) {
+        RequestQueue queue = getRequestQueue();
+        File file = new File(filePath);
+        String fileName = file.getName();
+        MultipartRequest request = new MultipartRequest(url,
+                errorListener, listener, fileName, file, params);
+        queue.add(request);
     }
 
     public static void post(String url, final Map<String, String> params,

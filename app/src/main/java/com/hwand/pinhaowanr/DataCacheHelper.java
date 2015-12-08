@@ -1,13 +1,10 @@
 
 package com.hwand.pinhaowanr;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
-import com.hwand.pinhaowanr.model.UserInfo;
 import com.hwand.pinhaowanr.model.ConfigModel;
+import com.hwand.pinhaowanr.model.UserInfo;
 import com.hwand.pinhaowanr.utils.AndTools;
-import com.hwand.pinhaowanr.utils.GsonUtil;
 import com.hwand.pinhaowanr.utils.NonProguard;
 
 import java.util.ArrayList;
@@ -18,6 +15,11 @@ public class DataCacheHelper implements NonProguard {
     public static final String KEY_USER_INFO = "USER_INFO";
     public static final String KEY_CONFIG = "CONFIG";
     public static final String KEY_CURRENT_CITY_CODE = "KEY_CURRENT_CITY_CODE";
+
+
+    public void setUserInfo(UserInfo mUserInfo) {
+        this.mUserInfo = mUserInfo;
+    }
 
     private UserInfo mUserInfo;
 

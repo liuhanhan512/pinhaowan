@@ -182,6 +182,7 @@ public class MineNaviFragment extends BaseFragment {
                 if (!TextUtils.isEmpty(response) && response.contains("1")) {
                     AndTools.saveCurrentData2Cache(MainApplication.getInstance(), DataCacheHelper.KEY_USER_INFO, "");
                     AndTools.saveCurrentData2Cache(MainApplication.getInstance(), NetworkRequest.SESSION_COOKIE, "");
+                    DataCacheHelper.getInstance().setUserInfo(null);
                     LoginFragment fragment = LoginFragment.newInstance();
                     FragmentManager fm = getFragmentManager();
                     FragmentTransaction tx = fm.beginTransaction();
