@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.model.ClassDetailModel;
 import com.hwand.pinhaowanr.widget.InterruptTouchView;
 import com.hwand.pinhaowanr.widget.calendar.CalendarGridView;
 import com.hwand.pinhaowanr.widget.calendar.CalendarUtils;
@@ -89,9 +90,19 @@ public class ReservationActivity extends BaseActivity {
             R.string.calendar_saturday
     };
 
+    private static final String CLASS_DETAIL_MODEL_KEY = "CLASS_DETAIL_MODEL_KEY";
+    private ClassDetailModel mClassDetailModel;
+
     public static void launch(Context context){
         Intent intent = new Intent();
         intent.setClass(context , ReservationActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void launch(Context context , ClassDetailModel classDetailModel){
+        Intent intent = new Intent();
+        intent.setClass(context , ReservationActivity.class);
+        intent.putExtra(CLASS_DETAIL_MODEL_KEY, classDetailModel);
         context.startActivity(intent);
     }
 
@@ -102,6 +113,10 @@ public class ReservationActivity extends BaseActivity {
 
         initTitle();
         initViews();
+    }
+
+    private void initIntentValues(){
+        mClassDetailModel = (ClassDetailModel) getIntent().getSerializableExtra(CLASS_DETAIL_MODEL_KEY);
     }
 
     private void initTitle(){

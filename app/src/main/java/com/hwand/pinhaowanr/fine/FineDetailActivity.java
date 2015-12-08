@@ -2,6 +2,7 @@ package com.hwand.pinhaowanr.fine;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -10,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -20,11 +23,15 @@ import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.CommonViewHolder;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.ClassDetailModel;
+import com.hwand.pinhaowanr.model.ClassDetailTitleModel;
 import com.hwand.pinhaowanr.model.HomePageModel;
+import com.hwand.pinhaowanr.model.RegionModel;
+import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,11 +48,15 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
 
     private Adapter mAdapter;
 
+    private TextView mGiftTickets;
+
     private static final String HOME_PAGE_MODEL_KEY = "HOME_PAGE_MODEL_KEY";
 
     private HomePageModel mHomePageModel;
 
     private ClassDetailModel mClassDetailModel;
+
+    private List<ClassDetailTitleModel> classDetailTitleModels = new ArrayList<ClassDetailTitleModel>();
 
     public static void launch(Context context){
         Intent intent = new Intent();
@@ -75,7 +86,7 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
     }
 
     private void initTitle(){
-
+        setActionBarTtile(mHomePageModel.getClassName());
     }
 
     private void initViews(){
@@ -92,6 +103,11 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(mOnItemClickListener);
 
+        mGiftTickets = (TextView)findViewById(R.id.gift_ticket_text);
+        if(mHomePageModel.getViewType() != 3){//游戏类叫赠票，其他叫分享
+            mGiftTickets.setText(getString(R.string.share_text));
+        }
+
         findViewById(R.id.contact_layout).setOnClickListener(this);
         findViewById(R.id.reservation_layout).setOnClickListener(this);
         findViewById(R.id.gift_ticket_layout).setOnClickListener(this);
@@ -104,9 +120,27 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
         }
     };
 
+    private TextView mTel;
+    private TextView mHour;
+    private TextView mAge;
     private View initHeaderView(){
 
         View headerView = View.inflate(this , R.layout.fine_detail_list_header_layout , null);
+        ImageView imageView = (ImageView)headerView.findViewById(R.id.image);
+        AndTools.displayImage(null, mHomePageModel.getPictureUrl(), imageView);
+
+        TextView name = (TextView) headerView.findViewById(R.id.name);
+        name.setText(mHomePageModel.getClassName());
+
+        TextView tickets = (TextView) headerView.findViewById(R.id.tickets);
+        tickets.setText(getString(R.string.remainder_tickets, mHomePageModel.getRemainTicket()));
+
+        TextView address = (TextView) headerView.findViewById(R.id.address);
+        address.setText(mHomePageModel.getDetailAddress());
+
+        mTel = (TextView) headerView.findViewById(R.id.tel);
+        mHour = (TextView) headerView.findViewById(R.id.hours);
+        mAge = (TextView) headerView.findViewById(R.id.age);
 
         return headerView;
     }
@@ -135,7 +169,21 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
     }
 
     private void updateViews(){
-        setActionBarTtile(mClassDetailModel.getInstitutionName());
+        if(mClassDetailModel != null){
+
+            mTel.setText(getString(R.string.fine_detail_tel , mClassDetailModel.getTelephone()));
+            mHour.setText(getString(R.string.fine_detail_hour , mClassDetailModel.getBusineTime()));
+            mAge.setText(getString(R.string.fine_detail_age , mClassDetailModel.getMinAge() , mClassDetailModel.getMinAge()));
+
+            List<ClassDetailTitleModel> classDetailTitleModels = mClassDetailModel.getTitleList();
+            if(classDetailTitleModels != null){
+                this.classDetailTitleModels.clear();
+                this.classDetailTitleModels.addAll(classDetailTitleModels);
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+
+
     }
 
     @Override
@@ -160,6 +208,10 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
     }
 
     private void onContactClick(){
+        if(mClassDetailModel != null){
+            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mClassDetailModel.getTelephone()));
+            startActivity(intent);
+        }
 
     }
 
@@ -168,14 +220,18 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
     }
 
     private void onGiftTicketClick(){
+        if(mHomePageModel.getViewType() == 3){//赠票
 
+        } else {//分享
+
+        }
     }
 
     class Adapter extends BaseAdapter {
 
         @Override
         public int getCount() {
-            return 0;
+            return classDetailTitleModels.size();
         }
 
         @Override
@@ -195,9 +251,19 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
                         .inflate(R.layout.fine_detail_list_item_layout, viewGroup, false);
             }
 
+            ClassDetailTitleModel classDetailTitleModel = classDetailTitleModels.get(position);
             TextView title = CommonViewHolder.get(convertView , R.id.title);
             TextView content = CommonViewHolder.get(convertView , R.id.content);
             ImageView image = CommonViewHolder.get(convertView , R.id.image);
+            int screenWidth = AndTools.getScreenWidth(FineDetailActivity.this);
+            int height = screenWidth * 9 / 16;
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) image.getLayoutParams();
+            layoutParams.height = height;
+            image.setLayoutParams(layoutParams);
+
+            title.setText(classDetailTitleModel.getTitle());
+            content.setText(classDetailTitleModel.getContent());
+            AndTools.displayImage(null , classDetailTitleModel.getUrl() , image);
             return convertView;
         }
     }
