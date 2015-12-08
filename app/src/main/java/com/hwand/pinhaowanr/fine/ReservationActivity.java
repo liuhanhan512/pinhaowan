@@ -10,26 +10,36 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hwand.pinhaowanr.BaseActivity;
+import com.hwand.pinhaowanr.CommonViewHolder;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.model.ClassDetailGroupTitleModel;
 import com.hwand.pinhaowanr.model.ClassDetailModel;
+import com.hwand.pinhaowanr.model.ClassDetailSubTitleModel;
+import com.hwand.pinhaowanr.model.HomePageModel;
+import com.hwand.pinhaowanr.utils.AndTools;
+import com.hwand.pinhaowanr.utils.DateUtil;
 import com.hwand.pinhaowanr.widget.InterruptTouchView;
 import com.hwand.pinhaowanr.widget.calendar.CalendarGridView;
 import com.hwand.pinhaowanr.widget.calendar.CalendarUtils;
 import com.hwand.pinhaowanr.widget.calendar.CalendarViewPager;
 import com.hwand.pinhaowanr.widget.calendar.UniformGridView;
+import com.hwand.pinhaowanr.widget.hlistview.HListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +72,8 @@ public class ReservationActivity extends BaseActivity {
 
     private ExpandableListView mListView;
 
+    private Adapter mAdapter;
+
     private ValueAnimator mCalendarAnimator;
     private ValueAnimator mDetailAnimator;
 
@@ -92,6 +104,8 @@ public class ReservationActivity extends BaseActivity {
 
     private static final String CLASS_DETAIL_MODEL_KEY = "CLASS_DETAIL_MODEL_KEY";
     private ClassDetailModel mClassDetailModel;
+
+    private List<ClassDetailGroupTitleModel> classDetailGroupTitleModels = new ArrayList<ClassDetailGroupTitleModel>();
 
     public static void launch(Context context){
         Intent intent = new Intent();
@@ -125,7 +139,9 @@ public class ReservationActivity extends BaseActivity {
 
     private void initViews(){
         mListView = (ExpandableListView)findViewById(R.id.listview);
-        mListView.setAdapter(new Adapter());
+        mAdapter = new Adapter();
+        mListView.setAdapter(mAdapter);
+        expandView();
 
         UniformGridView calendarTitle = (UniformGridView) findViewById(R.id.calendar_title);
 
@@ -262,6 +278,12 @@ public class ReservationActivity extends BaseActivity {
             mCurrentDayLine = 0;
         }
         mCalendarPager.setTranslationY(- mCalendarLineHeight * mCurrentDayLine);
+    }
+
+    private void expandView() {
+        for (int i = 0; i < classDetailGroupTitleModels.size(); i++) {
+            mListView.expandGroup(i);
+        }
     }
 
     private void cancelAllAnimator() {
@@ -704,52 +726,171 @@ public class ReservationActivity extends BaseActivity {
 
         @Override
         public int getGroupCount() {
-            return 0;
+            return classDetailGroupTitleModels.size();
         }
 
         @Override
         public int getChildrenCount(int i) {
-            return 0;
+            return 1;
         }
 
         @Override
         public Object getGroup(int i) {
-            return null;
+            return classDetailGroupTitleModels.get(i);
         }
 
         @Override
-        public Object getChild(int i, int i1) {
-            return null;
+        public Object getChild(int groupPosition, int childPosition) {
+            return classDetailGroupTitleModels.get(groupPosition).getClassDetailSubTitleModelList().get(childPosition);
         }
 
         @Override
-        public long getGroupId(int i) {
-            return 0;
+        public long getGroupId(int groupPosition) {
+            return groupPosition;
         }
 
         @Override
-        public long getChildId(int i, int i1) {
-            return 0;
+        public long getChildId(int groupPosition, int childPosition) {
+            // TODO Auto-generated method stub
+            return groupPosition << 32 + childPosition;
         }
 
         @Override
         public boolean hasStableIds() {
-            return false;
+            return true;
         }
 
         @Override
-        public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
-            return null;
+        public View getGroupView(int groupPosition, boolean isExpanded,
+                                 View convertView, ViewGroup parent) {
+            // TODO Auto-generated method stub
+            View groupView = null;
+            if (convertView == null) {
+                groupView = newGroupView(parent);
+            } else {
+                groupView = convertView;
+            }
+            bindGroupView(groupPosition, groupView);
+            return groupView;
+        }
+
+        private View newGroupView(ViewGroup parent) {
+            return View.inflate(ReservationActivity.this , R.layout.reservation_group_item_layout, null);
+        }
+
+        private void bindGroupView(final int groupPosition, View groupView) {
+            TextView title = (TextView)groupView.findViewById(R.id.day_time);
+            title.setText(classDetailGroupTitleModels.get(groupPosition).getTime());
+            ;
         }
 
         @Override
-        public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
-            return null;
+        public View getChildView(int groupPosition, int childPosition,boolean isLastChild,
+                                 View convertView, ViewGroup parent) {
+            // TODO Auto-generated method stub
+            View childView = null;
+            if (convertView == null) {
+                childView = newChildView(parent, groupPosition);
+            } else {
+                childView = convertView;
+            }
+            bindChildView(groupPosition, childPosition, childView);
+            return childView;
         }
 
+        private View newChildView(ViewGroup parent, final int groupPosition) {
+            View v = View.inflate(ReservationActivity.this , R.layout.resevation_child_item_layout, null);
+
+            return v;
+        }
+
+        private void bindChildView(final int groupPosition, int childPosition,
+                                   View groupView) {
+
+            ListView listView = (ListView) groupView.findViewById(R.id.listview);
+
+            final ReservationAdapter adapter  = new ReservationAdapter(groupPosition);
+
+            listView.setAdapter(adapter);// 设置菜单Adapter
+
+        }
         @Override
         public boolean isChildSelectable(int i, int i1) {
             return false;
+        }
+    }
+
+    private static final int STATE_RESERVATED = 1;//已经预约
+    private static final int STATE_FULL = 2;
+    private static final int STATE_CAN = 3;
+
+    class ReservationAdapter extends BaseAdapter{
+
+        private List<ClassDetailSubTitleModel> classDetailSubTitleModels = new ArrayList<ClassDetailSubTitleModel>();
+
+        public ReservationAdapter(int groupPosition){
+            List<ClassDetailSubTitleModel> subTitleModels = classDetailGroupTitleModels.get(groupPosition).getClassDetailSubTitleModelList();
+            if(subTitleModels != null){
+                classDetailSubTitleModels.clear();
+                classDetailSubTitleModels.addAll(subTitleModels);
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return classDetailSubTitleModels.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup viewGroup) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(ReservationActivity.this)
+                        .inflate(R.layout.reservation_list_item_layout, viewGroup, false);
+            }
+            ClassDetailSubTitleModel classDetailSubTitleModel = classDetailSubTitleModels.get(position);
+
+            TextView time = CommonViewHolder.get(convertView , R.id.time);
+            time.setText(getString(R.string.reservation_time , DateUtil.convertLongToString(classDetailSubTitleModel.getStartTime()),
+                        DateUtil.convertLongToString(classDetailSubTitleModel.getEndTime())));
+
+            TextView reservationStatus = CommonViewHolder.get(convertView , R.id.reservation_status);
+            int state = classDetailSubTitleModel.getState();
+            switch (state){
+                case STATE_RESERVATED:
+                    reservationStatus.setEnabled(true);
+                    reservationStatus.setText(getString(R.string.reserved));
+                    reservationStatus.setBackgroundResource(R.drawable.red_solid_corner_bg);
+                    break;
+                case STATE_FULL:
+                    reservationStatus.setEnabled(false);
+                    reservationStatus.setText(getString(R.string.fully_booked));
+                    reservationStatus.setBackgroundResource(R.drawable.gray_solid_corner_bg);
+                    break;
+                case STATE_CAN:
+                    reservationStatus.setEnabled(true);
+                    reservationStatus.setText(getString(R.string.reservation));
+                    reservationStatus.setBackgroundResource(R.drawable.yellow_solid_corner_bg);
+                    break;
+            }
+
+            reservationStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            return convertView;
         }
     }
 }

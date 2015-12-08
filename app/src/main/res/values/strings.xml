@@ -69,6 +69,9 @@
     <string name="fine_detail_hour">营业时间：%s</string>
     <string name="fine_detail_age">适合年龄 : %1$d - %2$d</string>
     <string name="share_text">分享</string>
+    <string name="reservation_time">%1$s - %2$s</string>
+    <string name="reserved">已预约</string>
+    <string name="fully_booked">已约满</string>
 
 
     <string name="calendar_sunday">日</string>
