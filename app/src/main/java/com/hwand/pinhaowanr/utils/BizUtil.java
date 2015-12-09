@@ -28,8 +28,8 @@ public class BizUtil {
 
         String packageName = context.getPackageName();
 
-        String wxAppId = "wxc97914015647efb3";
-        String wxAppSecret = "d74de78b3d95b04eddb47f5cadff5469";
+        String wxAppId = "wx2d0d5abbf6adbc47";
+        String wxAppSecret = "450f1e91922ac95d79ced27ba14b4f06";
         UMWXHandler wxHandler = new UMWXHandler(context, wxAppId, wxAppSecret);
         wxHandler.addToSocialSDK();
         UMWXHandler wxCircleHandler = new UMWXHandler(context, wxAppId, wxAppSecret);
