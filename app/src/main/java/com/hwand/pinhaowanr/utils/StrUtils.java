@@ -4,6 +4,9 @@ import android.text.TextUtils;
 
 import com.tencent.connect.common.Constants;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
@@ -164,5 +167,47 @@ public class StrUtils {
     public static String buildTransaction(final String type, final String id, final int scene) {
         return (TextUtils.isEmpty(type) || TextUtils.isEmpty(id)) ? String.valueOf(System.currentTimeMillis()) : type
                 + "_" + id + "_" + scene + "_" + System.currentTimeMillis();
+    }
+
+
+    public static String unescapeHtml(String str) {
+        if (str == null) {
+            return null;
+        }
+        try {
+            StringWriter writer = new StringWriter ((int)(str.length() * 1.5));
+            unescapeHtml(writer, str);
+            return writer.toString();
+        } catch (IOException ioe) {
+            //should be impossible
+        }
+        return null;
+    }
+
+    /**
+     * <p>Unescapes a string containing entity escapes to a string
+     * containing the actual Unicode characters corresponding to the
+     * escapes. Supports HTML 4.0 entities.</p>
+     *
+     * <p>For example, the string "&amp;lt;Fran&amp;ccedil;ais&amp;gt;"
+     * will become "&lt;Fran&ccedil;ais&gt;"</p>
+     *
+     * <p>If an entity is unrecognized, it is left alone, and inserted
+     * verbatim into the result string. e.g. "&amp;gt;&amp;zzzz;x" will
+     * become "&gt;&amp;zzzz;x".</p>
+     *
+     * @param writer  the writer receiving the unescaped string, not null
+     * @param string  the <code>String</code> to unescape, may be null
+     * @throws IllegalArgumentException if the writer is null
+     * @throws java.io.IOException if an IOException occurs
+     */
+    public static void unescapeHtml(Writer writer, String string) throws IOException {
+        if (writer == null ) {
+            throw new IllegalArgumentException ("The Writer must not be null.");
+        }
+        if (string == null) {
+            return;
+        }
+        Entities.HTML40.unescape(writer, string);
     }
 }
