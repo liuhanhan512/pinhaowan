@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,7 +26,6 @@ import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.ClassDetailModel;
 import com.hwand.pinhaowanr.model.ClassDetailTitleModel;
 import com.hwand.pinhaowanr.model.HomePageModel;
-import com.hwand.pinhaowanr.model.RegionModel;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.BizUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
@@ -35,8 +33,6 @@ import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.sso.QZoneSsoHandler;
-import com.umeng.socialize.sso.UMQQSsoHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,7 +43,7 @@ import java.util.Map;
  * 好玩详情页
  * Created by hanhanliu on 15/11/23.
  */
-public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener{
+public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -65,15 +61,15 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
 
     private List<ClassDetailTitleModel> classDetailTitleModels = new ArrayList<ClassDetailTitleModel>();
 
-    public static void launch(Context context){
+    public static void launch(Context context) {
         Intent intent = new Intent();
-        intent.setClass(context , FineDetailActivity.class);
+        intent.setClass(context, FineDetailActivity.class);
         context.startActivity(intent);
     }
 
-    public static void launch(Context context , HomePageModel homePageModel){
+    public static void launch(Context context, HomePageModel homePageModel) {
         Intent intent = new Intent();
-        intent.setClass(context , FineDetailActivity.class);
+        intent.setClass(context, FineDetailActivity.class);
         intent.putExtra(HOME_PAGE_MODEL_KEY, homePageModel);
         context.startActivity(intent);
     }
@@ -88,30 +84,30 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
         fetchData();
     }
 
-    private void initIntentValues(){
+    private void initIntentValues() {
         mHomePageModel = (HomePageModel) getIntent().getSerializableExtra(HOME_PAGE_MODEL_KEY);
     }
 
-    private void initTitle(){
+    private void initTitle() {
         setActionBarTtile(mHomePageModel.getClassName());
     }
 
-    private void initViews(){
+    private void initViews() {
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         //加载颜色是循环播放的，只要没有完成刷新就会一直循环，color1>color2>color3>color4
         mSwipeRefreshLayout.setColorScheme(android.R.color.white, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
-        mListView = (ListView)findViewById(R.id.listview);
+        mListView = (ListView) findViewById(R.id.listview);
         mListView.addHeaderView(initHeaderView());
 
         mAdapter = new Adapter();
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(mOnItemClickListener);
 
-        mGiftTickets = (TextView)findViewById(R.id.gift_ticket_text);
-        if(mHomePageModel.getViewType() != 3){//游戏类叫赠票，其他叫分享
+        mGiftTickets = (TextView) findViewById(R.id.gift_ticket_text);
+        if (mHomePageModel.getViewType() != 3) {//游戏类叫赠票，其他叫分享
             mGiftTickets.setText(getString(R.string.share_text));
         }
 
@@ -130,10 +126,11 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
     private TextView mTel;
     private TextView mHour;
     private TextView mAge;
-    private View initHeaderView(){
 
-        View headerView = View.inflate(this , R.layout.fine_detail_list_header_layout , null);
-        ImageView imageView = (ImageView)headerView.findViewById(R.id.image);
+    private View initHeaderView() {
+
+        View headerView = View.inflate(this, R.layout.fine_detail_list_header_layout, null);
+        ImageView imageView = (ImageView) headerView.findViewById(R.id.image);
         AndTools.displayImage(null, mHomePageModel.getPictureUrl(), imageView);
 
         TextView name = (TextView) headerView.findViewById(R.id.name);
@@ -152,9 +149,9 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
         return headerView;
     }
 
-    private void fetchData(){
+    private void fetchData() {
         Map<String, String> params = new HashMap<String, String>();
-        params.put("id" , mHomePageModel.getId()+"");
+        params.put("id", mHomePageModel.getId() + "");
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_CLASS_DETAIL, params);
         NetworkRequest.get(url, new Response.Listener<String>() {
             @Override
@@ -162,7 +159,7 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
                 mSwipeRefreshLayout.setRefreshing(false);
                 if (!TextUtils.isEmpty(response)) {
                     Gson gson = new Gson();
-                    mClassDetailModel = gson.fromJson(response , ClassDetailModel.class);
+                    mClassDetailModel = gson.fromJson(response, ClassDetailModel.class);
                     updateViews();
                 }
 
@@ -175,15 +172,15 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
         });
     }
 
-    private void updateViews(){
-        if(mClassDetailModel != null){
+    private void updateViews() {
+        if (mClassDetailModel != null) {
 
-            mTel.setText(getString(R.string.fine_detail_tel , mClassDetailModel.getTelephone()));
-            mHour.setText(getString(R.string.fine_detail_hour , mClassDetailModel.getBusineTime()));
-            mAge.setText(getString(R.string.fine_detail_age , mClassDetailModel.getMinAge() , mClassDetailModel.getMinAge()));
+            mTel.setText(getString(R.string.fine_detail_tel, mClassDetailModel.getTelephone()));
+            mHour.setText(getString(R.string.fine_detail_hour, mClassDetailModel.getBusineTime()));
+            mAge.setText(getString(R.string.fine_detail_age, mClassDetailModel.getMinAge(), mClassDetailModel.getMinAge()));
 
             List<ClassDetailTitleModel> classDetailTitleModels = mClassDetailModel.getTitleList();
-            if(classDetailTitleModels != null){
+            if (classDetailTitleModels != null) {
                 this.classDetailTitleModels.clear();
                 this.classDetailTitleModels.addAll(classDetailTitleModels);
                 mAdapter.notifyDataSetChanged();
@@ -201,7 +198,7 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.contact_layout:
                 onContactClick();
                 break;
@@ -214,33 +211,33 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
         }
     }
 
-    private void onContactClick(){
-        if(mClassDetailModel != null){
+    private void onContactClick() {
+        if (mClassDetailModel != null) {
             Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mClassDetailModel.getTelephone()));
             startActivity(intent);
         }
 
     }
 
-    private void onReservationClick(){
-        ReservationActivity.launch(this , mClassDetailModel);
+    private void onReservationClick() {
+        ReservationActivity.launch(this, mClassDetailModel,mHomePageModel.getId());
     }
 
-    private void onGiftTicketClick(){
-        if(mHomePageModel.getViewType() == 3){//赠票
+    private void onGiftTicketClick() {
+        if (mHomePageModel.getViewType() == 3) {//赠票
 
         } else {//分享
             onShare();
         }
     }
 
-    private void onShare(){
+    private void onShare() {
         final UMSocialService mController = UMServiceFactory.getUMSocialService("com.umeng.share");
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-        if(mHomePageModel != null){
+        if (mHomePageModel != null) {
 
-            BizUtil.share(this, "title","content", mHomePageModel.getPictureUrl(), "http://www.baidu.com", bitmap, mController);
+            BizUtil.share(this, "title", "content", mHomePageModel.getPictureUrl(), "http://www.baidu.com", bitmap, mController);
         }
 //        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(this, qqAppId,
 //                qqSecret);
@@ -277,9 +274,9 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
             }
 
             ClassDetailTitleModel classDetailTitleModel = classDetailTitleModels.get(position);
-            TextView title = CommonViewHolder.get(convertView , R.id.title);
-            TextView content = CommonViewHolder.get(convertView , R.id.content);
-            ImageView image = CommonViewHolder.get(convertView , R.id.image);
+            TextView title = CommonViewHolder.get(convertView, R.id.title);
+            TextView content = CommonViewHolder.get(convertView, R.id.content);
+            ImageView image = CommonViewHolder.get(convertView, R.id.image);
             int screenWidth = AndTools.getScreenWidth(FineDetailActivity.this);
             int height = screenWidth * 9 / 16;
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) image.getLayoutParams();
@@ -288,7 +285,7 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
 
             title.setText(classDetailTitleModel.getTitle());
             content.setText(classDetailTitleModel.getContent());
-            AndTools.displayImage(null , classDetailTitleModel.getUrl() , image);
+            AndTools.displayImage(null, classDetailTitleModel.getUrl(), image);
             return convertView;
         }
     }

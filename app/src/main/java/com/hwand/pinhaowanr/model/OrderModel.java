@@ -2,23 +2,23 @@ package com.hwand.pinhaowanr.model;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.hwand.pinhaowanr.utils.NonProguard;
 
-import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.List;
 
 /**
- * Created by hanhanliu on 15/12/4.
+ * Created by dxz on 15/12/4.
  */
-public class ClassDetailSubTitleModel implements Serializable {
+public class OrderModel implements NonProguard {
     private int subscribeId;
     private long startTime;
     private long endTime;
-    private int state;
+    private String name;
 
-    public static List<ClassDetailSubTitleModel> arrayFromData(String str) {
+    public static List<OrderModel> arrayFromData(String str) {
 
-        Type listType = new TypeToken<List<ClassDetailSubTitleModel>>() {
+        Type listType = new TypeToken<List<OrderModel>>() {
         }.getType();
 
         return new Gson().fromJson(str, listType);
@@ -48,11 +48,11 @@ public class ClassDetailSubTitleModel implements Serializable {
         this.endTime = endTime;
     }
 
-    public int getState() {
-        return state;
+    public String getName() {
+        return name;
     }
 
-    public void setState(int state) {
-        this.state = state;
+    public void setName(String name) {
+        this.name = name;
     }
 }

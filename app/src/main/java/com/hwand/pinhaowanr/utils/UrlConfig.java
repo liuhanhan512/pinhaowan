@@ -18,6 +18,7 @@ public class UrlConfig {
     public static final String URL_HOME_PAGE = HOST_PATH + "GetHomePageInfo?";
     public static final String URL_SEARCH_MORE = HOST_PATH + "SearchAndMore?";
     public static final String URL_CLASS_DETAIL = HOST_PATH + "CheckClassDetail?";
+    public static final String URL_APPLY_TIMES = HOST_PATH + "GetSubscribeTime?";
     public static final String URL_APPLY_CLASS = HOST_PATH + "SubscribeClass?";
     public static final String URL_BUDDY_INFO = HOST_PATH + "GetPartnerInfo?";
     public static final String URL_SUPER_MOMMYS = HOST_PATH + "GetRegisterUsers?";
@@ -35,6 +36,7 @@ public class UrlConfig {
     public static final String URL_FOCUS_SOMEONE = HOST_PATH + "FocusForOther?";
     public static final String URL_SEND_MSG = HOST_PATH + "SendMessage?";
     public static final String URL_QUERY_MY_ORDERS = HOST_PATH + "CheckMySubscribe?";
+    public static final String URL_DEL_MY_ORDER = HOST_PATH + "DeleteMySubscribe?";
     public static final String URL_QUERY_MSGS = HOST_PATH + "CheckMyAllMessage?";
     public static final String URL_QUERY_MSG_DETAIL = HOST_PATH + "CheckMessageDetail?";
     public static final String URL_DEL_MSG = HOST_PATH + "DeleteMessage?";

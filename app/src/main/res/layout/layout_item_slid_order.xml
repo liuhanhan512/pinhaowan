@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hwand.pinhaowanr.widget.SlidingButtonView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:paddingBottom="1dp"
+    android:background="@color/divider_light_gray">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_delete"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="1dp"
+            android:layout_toRightOf="@+id/layout_content"
+            android:background="@mipmap/btn_delete" />
+
+        <RelativeLayout
+            android:id="@+id/layout_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bg_fragment_white"
+            android:layout_centerVertical="true">
+
+            <TextView
+                android:id="@+id/tv_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="9dp"
+                android:layout_marginTop="5dp"
+                android:text="11月5日星期四"
+                android:textColor="@color/text_color_light"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_day"
+                android:layout_marginLeft="9dp"
+                android:layout_marginTop="5dp"
+                android:text="16:30-18:30"
+                android:textColor="@color/text_color_black"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/dot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@+id/tv_time"
+                android:background="@mipmap/dot" />
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="6dp"
+                android:layout_toRightOf="@+id/dot"
+                android:text="活动名称"
+                android:textColor="@color/text_color_black"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+</com.hwand.pinhaowanr.widget.SlidingButtonView>

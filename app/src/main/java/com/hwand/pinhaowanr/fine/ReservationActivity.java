@@ -2,13 +2,13 @@ package com.hwand.pinhaowanr.fine;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,30 +19,33 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.CommonViewHolder;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.ClassDetailGroupTitleModel;
 import com.hwand.pinhaowanr.model.ClassDetailModel;
 import com.hwand.pinhaowanr.model.ClassDetailSubTitleModel;
-import com.hwand.pinhaowanr.model.HomePageModel;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.DateUtil;
+import com.hwand.pinhaowanr.utils.NetworkRequest;
+import com.hwand.pinhaowanr.utils.UrlConfig;
+import com.hwand.pinhaowanr.widget.DDAlertDialog;
 import com.hwand.pinhaowanr.widget.InterruptTouchView;
 import com.hwand.pinhaowanr.widget.calendar.CalendarGridView;
 import com.hwand.pinhaowanr.widget.calendar.CalendarUtils;
 import com.hwand.pinhaowanr.widget.calendar.CalendarViewPager;
 import com.hwand.pinhaowanr.widget.calendar.UniformGridView;
-import com.hwand.pinhaowanr.widget.hlistview.HListView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 预约界面
@@ -92,7 +95,7 @@ public class ReservationActivity extends BaseActivity {
     private Drawable mCalendarItemTodayTip;
     private Drawable mCalendarItemCurrentTip;
 
-    private static final int[] WEEK_WORDS = new int[] {
+    private static final int[] WEEK_WORDS = new int[]{
             R.string.calendar_sunday,
             R.string.calendar_monday,
             R.string.calendar_tuesday,
@@ -103,20 +106,23 @@ public class ReservationActivity extends BaseActivity {
     };
 
     private static final String CLASS_DETAIL_MODEL_KEY = "CLASS_DETAIL_MODEL_KEY";
+    private static final String CLASS_DETAIL_ID_KEY = "CLASS_DETAIL_ID_KEY";
     private ClassDetailModel mClassDetailModel;
+    private int mId;
 
     private List<ClassDetailGroupTitleModel> classDetailGroupTitleModels = new ArrayList<ClassDetailGroupTitleModel>();
 
-    public static void launch(Context context){
+    public static void launch(Context context) {
         Intent intent = new Intent();
-        intent.setClass(context , ReservationActivity.class);
+        intent.setClass(context, ReservationActivity.class);
         context.startActivity(intent);
     }
 
-    public static void launch(Context context , ClassDetailModel classDetailModel){
+    public static void launch(Context context, ClassDetailModel classDetailModel, int id) {
         Intent intent = new Intent();
-        intent.setClass(context , ReservationActivity.class);
+        intent.setClass(context, ReservationActivity.class);
         intent.putExtra(CLASS_DETAIL_MODEL_KEY, classDetailModel);
+        intent.putExtra(CLASS_DETAIL_ID_KEY, id);
         context.startActivity(intent);
     }
 
@@ -129,16 +135,17 @@ public class ReservationActivity extends BaseActivity {
         initViews();
     }
 
-    private void initIntentValues(){
+    private void initIntentValues() {
         mClassDetailModel = (ClassDetailModel) getIntent().getSerializableExtra(CLASS_DETAIL_MODEL_KEY);
+        mId = getIntent().getIntExtra(CLASS_DETAIL_ID_KEY, -1);
     }
 
-    private void initTitle(){
+    private void initTitle() {
         setActionBarTtile(getString(R.string.reservation));
     }
 
-    private void initViews(){
-        mListView = (ExpandableListView)findViewById(R.id.listview);
+    private void initViews() {
+        mListView = (ExpandableListView) findViewById(R.id.listview);
         mAdapter = new Adapter();
         mListView.setAdapter(mAdapter);
         expandView();
@@ -277,7 +284,7 @@ public class ReservationActivity extends BaseActivity {
         } else {
             mCurrentDayLine = 0;
         }
-        mCalendarPager.setTranslationY(- mCalendarLineHeight * mCurrentDayLine);
+        mCalendarPager.setTranslationY(-mCalendarLineHeight * mCurrentDayLine);
     }
 
     private void expandView() {
@@ -305,8 +312,8 @@ public class ReservationActivity extends BaseActivity {
         }
         mAttendanceDetail.setTranslationY(t);
         t = mCalendarPager.getTranslationY() + diffY;
-        if (t < - mCalendarLineHeight * mCurrentDayLine) {
-            t = - mCalendarLineHeight * mCurrentDayLine;
+        if (t < -mCalendarLineHeight * mCurrentDayLine) {
+            t = -mCalendarLineHeight * mCurrentDayLine;
         } else if (t > 0) {
             t = 0;
         }
@@ -332,7 +339,7 @@ public class ReservationActivity extends BaseActivity {
         } else {
             CalendarAnimator ca = new CalendarAnimator(mAttendanceDetail, false, 0, 0);
             mCalendarAnimator = startAnimator(ca);
-            ca = new CalendarAnimator(mCalendarPager, false, 0, - mCurrentDayLine * mCalendarLineHeight);
+            ca = new CalendarAnimator(mCalendarPager, false, 0, -mCurrentDayLine * mCalendarLineHeight);
             mDetailAnimator = startAnimator(ca);
         }
     }
@@ -348,7 +355,7 @@ public class ReservationActivity extends BaseActivity {
         } else {
             CalendarAnimator ca = new CalendarAnimator(mAttendanceDetail, false, v, 0);
             mCalendarAnimator = startAnimator(ca);
-            ca = new CalendarAnimator(mCalendarPager, false, v, - mCurrentDayLine * mCalendarLineHeight);
+            ca = new CalendarAnimator(mCalendarPager, false, v, -mCurrentDayLine * mCalendarLineHeight);
             mDetailAnimator = startAnimator(ca);
         }
     }
@@ -682,9 +689,9 @@ public class ReservationActivity extends BaseActivity {
                 float diffY = event.getY() - mLastY;
 
                 // 当日历收起时，listview可以进行滑动；如果listview没有滑到起始的地方，日历无法展开
-                if(mAttendanceDetail.getTranslationY() <= 0){
+                if (mAttendanceDetail.getTranslationY() <= 0) {
                     float innerDiffY = event.getY() - mInnerLastY;
-                    if((mListView.getScrollY() > 0) || (innerDiffY <= 0 && mListView.getScrollY() <= 0)){
+                    if ((mListView.getScrollY() > 0) || (innerDiffY <= 0 && mListView.getScrollY() <= 0)) {
                         mInnerLastX = event.getX();
                         mInnerLastY = event.getY();
                         return false;
@@ -718,10 +725,12 @@ public class ReservationActivity extends BaseActivity {
             }
             return false;
         }
-    };
+    }
+
+    ;
 
 
-    class Adapter extends BaseExpandableListAdapter{
+    class Adapter extends BaseExpandableListAdapter {
 
 
         @Override
@@ -775,17 +784,17 @@ public class ReservationActivity extends BaseActivity {
         }
 
         private View newGroupView(ViewGroup parent) {
-            return View.inflate(ReservationActivity.this , R.layout.reservation_group_item_layout, null);
+            return View.inflate(ReservationActivity.this, R.layout.reservation_group_item_layout, null);
         }
 
         private void bindGroupView(final int groupPosition, View groupView) {
-            TextView title = (TextView)groupView.findViewById(R.id.day_time);
+            TextView title = (TextView) groupView.findViewById(R.id.day_time);
             title.setText(classDetailGroupTitleModels.get(groupPosition).getTime());
             ;
         }
 
         @Override
-        public View getChildView(int groupPosition, int childPosition,boolean isLastChild,
+        public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
                                  View convertView, ViewGroup parent) {
             // TODO Auto-generated method stub
             View childView = null;
@@ -799,7 +808,7 @@ public class ReservationActivity extends BaseActivity {
         }
 
         private View newChildView(ViewGroup parent, final int groupPosition) {
-            View v = View.inflate(ReservationActivity.this , R.layout.resevation_child_item_layout, null);
+            View v = View.inflate(ReservationActivity.this, R.layout.resevation_child_item_layout, null);
 
             return v;
         }
@@ -809,11 +818,12 @@ public class ReservationActivity extends BaseActivity {
 
             ListView listView = (ListView) groupView.findViewById(R.id.listview);
 
-            final ReservationAdapter adapter  = new ReservationAdapter(groupPosition);
+            final ReservationAdapter adapter = new ReservationAdapter(groupPosition);
 
             listView.setAdapter(adapter);// 设置菜单Adapter
 
         }
+
         @Override
         public boolean isChildSelectable(int i, int i1) {
             return false;
@@ -824,13 +834,13 @@ public class ReservationActivity extends BaseActivity {
     private static final int STATE_FULL = 2;
     private static final int STATE_CAN = 3;
 
-    class ReservationAdapter extends BaseAdapter{
+    class ReservationAdapter extends BaseAdapter {
 
         private List<ClassDetailSubTitleModel> classDetailSubTitleModels = new ArrayList<ClassDetailSubTitleModel>();
 
-        public ReservationAdapter(int groupPosition){
+        public ReservationAdapter(int groupPosition) {
             List<ClassDetailSubTitleModel> subTitleModels = classDetailGroupTitleModels.get(groupPosition).getClassDetailSubTitleModelList();
-            if(subTitleModels != null){
+            if (subTitleModels != null) {
                 classDetailSubTitleModels.clear();
                 classDetailSubTitleModels.addAll(subTitleModels);
             }
@@ -859,13 +869,13 @@ public class ReservationActivity extends BaseActivity {
             }
             ClassDetailSubTitleModel classDetailSubTitleModel = classDetailSubTitleModels.get(position);
 
-            TextView time = CommonViewHolder.get(convertView , R.id.time);
-            time.setText(getString(R.string.reservation_time , DateUtil.convertLongToString(classDetailSubTitleModel.getStartTime()),
-                        DateUtil.convertLongToString(classDetailSubTitleModel.getEndTime())));
+            TextView time = CommonViewHolder.get(convertView, R.id.time);
+            time.setText(getString(R.string.reservation_time, DateUtil.convertLongToString(classDetailSubTitleModel.getStartTime()),
+                    DateUtil.convertLongToString(classDetailSubTitleModel.getEndTime())));
 
-            TextView reservationStatus = CommonViewHolder.get(convertView , R.id.reservation_status);
+            TextView reservationStatus = CommonViewHolder.get(convertView, R.id.reservation_status);
             int state = classDetailSubTitleModel.getState();
-            switch (state){
+            switch (state) {
                 case STATE_RESERVATED:
                     reservationStatus.setEnabled(true);
                     reservationStatus.setText(getString(R.string.reserved));
@@ -892,5 +902,76 @@ public class ReservationActivity extends BaseActivity {
 
             return convertView;
         }
+    }
+
+    private void getTimeList() {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("id", mId + "");
+        // TODO
+        params.put("month", "yyyy-MM");
+        String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_APPLY_TIMES, params);
+        NetworkRequest.get(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (!TextUtils.isEmpty(response)) {
+                    List<ClassDetailSubTitleModel> list = ClassDetailSubTitleModel.arrayFromData(response);
+                } else {
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+    }
+
+    private void apply(int subscribeId) {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("subscribeId", subscribeId + "");
+        String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_APPLY_CLASS, params);
+        NetworkRequest.get(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //结果（result） 1 已经预约  2 人已经满 3 你不是会员 4 成功
+                if (!TextUtils.isEmpty(response) && response.contains("4")) {
+                    AndTools.showToast("成功预约！");
+                } else {
+                    String msg = "网络问题请重试！";
+                    if (TextUtils.isEmpty(response)) {
+
+                    } else if (response.contains("1")) {
+                        msg = "已经预约！";
+                    } else if (response.contains("2")) {
+                        msg = "预约人已经满！";
+                    } else if (response.contains("3")) {
+                        msg = "你不是会员！";
+                    }
+                    new DDAlertDialog.Builder(ReservationActivity.this)
+                            .setTitle("提示").setMessage(msg)
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    getFragmentManager().popBackStack();
+                                }
+                            }).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                new DDAlertDialog.Builder(ReservationActivity.this)
+                        .setTitle("提示").setMessage("网络问题请重试！")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                getFragmentManager().popBackStack();
+                            }
+                        }).show();
+            }
+        });
     }
 }
