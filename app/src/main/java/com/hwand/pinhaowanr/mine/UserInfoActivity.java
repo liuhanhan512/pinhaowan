@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseActivity;
+import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.UserInfoModel;
 import com.hwand.pinhaowanr.utils.AndTools;
@@ -66,12 +67,21 @@ public class UserInfoActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 // TODO
+                if(MainApplication.getInstance().isLogin()) {
+//                    focus();
+                } else {
+                    AndTools.showToast("发私信需要登录");
+                }
             }
         });
         mBtnFocus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                focus();
+                if(MainApplication.getInstance().isLogin()) {
+                    focus();
+                } else {
+                    AndTools.showToast("关注需要登录");
+                }
             }
         });
     }

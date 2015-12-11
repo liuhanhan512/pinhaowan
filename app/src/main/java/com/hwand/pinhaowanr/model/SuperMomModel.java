@@ -15,9 +15,10 @@ public class SuperMomModel {
     private long time;
     private String url;
 
-    public static List<SuperMomModel> arrayHomePageModelFromData(String str) {
+    public static List<SuperMomModel> arrayFromData(String str) {
 
-        Type listType = new TypeToken<List<SuperMomModel>>() {}.getType();
+        Type listType = new TypeToken<List<SuperMomModel>>() {
+        }.getType();
 
         return new Gson().fromJson(str, listType);
     }

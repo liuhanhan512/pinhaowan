@@ -10,9 +10,11 @@ public class UserInfo implements NonProguard {
     /**
      * result : 0 失败(用户名或者密码错误) 1 已经登录 2 成功
      * birthday : 2015-01-01
+     * familyAddress : 家庭住址
      * childSex : 0 女 1 男
      * childName : ldd
      * name : dd
+     * roleId : 3
      * url : defaultHead.png
      * relation : 1 父亲 2 母亲 3 其他
      */
@@ -22,9 +24,11 @@ public class UserInfo implements NonProguard {
     private String birthday;
     private int childSex;
     private String childName;
+    private String familyAddress;
     private String name;
     private String url;
     private int relation;
+    private int roleId;
 
     public void setBirthday(String birthday) {
         this.birthday = birthday;
@@ -80,5 +84,21 @@ public class UserInfo implements NonProguard {
 
     public int getRelation() {
         return relation;
+    }
+
+    public String getFamilyAddress() {
+        return familyAddress;
+    }
+
+    public void setFamilyAddress(String familyAddress) {
+        this.familyAddress = familyAddress;
+    }
+
+    public int getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
     }
 }
