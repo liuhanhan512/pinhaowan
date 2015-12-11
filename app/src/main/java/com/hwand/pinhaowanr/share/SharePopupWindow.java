@@ -19,10 +19,6 @@ import com.umeng.socialize.bean.SocializeEntity;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.controller.listener.SocializeListeners;
-import com.umeng.socialize.media.QQShareContent;
-import com.umeng.socialize.media.QZoneShareContent;
-import com.umeng.socialize.media.SinaShareContent;
-import com.umeng.socialize.sso.SinaSsoHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
@@ -136,7 +132,7 @@ public class SharePopupWindow extends PopupWindow {
     public void setShareContent(ShareModel shareModel) {
 
         // 配置SSO
-        mController.getConfig().setSsoHandler(new SinaSsoHandler());
+//        mController.getConfig().setSsoHandler(new SinaSsoHandler());
 
         WeiXinShareContent weixinContent = new WeiXinShareContent();
         weixinContent
@@ -158,30 +154,30 @@ public class SharePopupWindow extends PopupWindow {
         mController.setShareMedia(circleMedia);
 
 
-        // 设置QQ空间分享内容
-        QZoneShareContent qzone = new QZoneShareContent();
-        qzone.setShareContent(shareModel.getText());
-        qzone.setTargetUrl(shareModel.getUrl());
-        qzone.setTitle(shareModel.getTitle());
-        qzone.setShareMedia(shareModel.getUmImage());
-        // qzone.setShareMedia(uMusic);
-        mController.setShareMedia(qzone);
-
-
-        QQShareContent qqShareContent = new QQShareContent();
-        qqShareContent.setShareContent(shareModel.getText());
-        qqShareContent.setTitle(shareModel.getTitle());
-        qqShareContent.setShareMedia(shareModel.getUmImage());
-        qqShareContent.setTargetUrl(shareModel.getUrl());
-        mController.setShareMedia(qqShareContent);
-
-        SinaShareContent sinaContent = new SinaShareContent();
-        sinaContent
-                .setShareContent(shareModel.getText()+shareModel.getUrl());
-        sinaContent.setTitle(shareModel.getTitle());
-        sinaContent.setTargetUrl(shareModel.getUrl());
-        sinaContent.setShareImage(shareModel.getUmImage());
-        mController.setShareMedia(sinaContent);
+//        // 设置QQ空间分享内容
+//        QZoneShareContent qzone = new QZoneShareContent();
+//        qzone.setShareContent(shareModel.getText());
+//        qzone.setTargetUrl(shareModel.getUrl());
+//        qzone.setTitle(shareModel.getTitle());
+//        qzone.setShareMedia(shareModel.getUmImage());
+//        // qzone.setShareMedia(uMusic);
+//        mController.setShareMedia(qzone);
+//
+//
+//        QQShareContent qqShareContent = new QQShareContent();
+//        qqShareContent.setShareContent(shareModel.getText());
+//        qqShareContent.setTitle(shareModel.getTitle());
+//        qqShareContent.setShareMedia(shareModel.getUmImage());
+//        qqShareContent.setTargetUrl(shareModel.getUrl());
+//        mController.setShareMedia(qqShareContent);
+//
+//        SinaShareContent sinaContent = new SinaShareContent();
+//        sinaContent
+//                .setShareContent(shareModel.getText()+shareModel.getUrl());
+//        sinaContent.setTitle(shareModel.getTitle());
+//        sinaContent.setTargetUrl(shareModel.getUrl());
+//        sinaContent.setShareImage(shareModel.getUmImage());
+//        mController.setShareMedia(sinaContent);
 
     }
 

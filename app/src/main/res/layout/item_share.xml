@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:src="@mipmap/umeng_socialize_wechat" />
+        android:src="@drawable/umeng_socialize_wechat" />
 
     <TextView
         android:id="@+id/share_title"

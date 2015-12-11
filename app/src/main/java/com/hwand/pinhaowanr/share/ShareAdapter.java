@@ -27,8 +27,8 @@ import com.hwand.pinhaowanr.R;
 public class ShareAdapter extends BaseAdapter {
 
     private static String[] shareNames = new String[]{"微信", "朋友圈", "微博", "QQ" ,"QQ空间"};
-    private int[] shareIcons = new int[]{R.mipmap.umeng_socialize_wechat, R.mipmap.umeng_socialize_wxcircle, R.mipmap.umeng_socialize_sina_on,
-            R.mipmap.umeng_socialize_qq_on, R.mipmap.umeng_socialize_qzone_on};
+    private int[] shareIcons = new int[]{R.drawable.umeng_socialize_wechat, R.drawable.umeng_socialize_wxcircle, R.drawable.umeng_socialize_sina_on,
+            R.drawable.umeng_socialize_qq_on, R.drawable.umeng_socialize_qzone_on};
 
     private LayoutInflater inflater;
 

@@ -31,8 +31,13 @@ import com.hwand.pinhaowanr.utils.BizUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.weixin.controller.UMWXHandler;
+import com.umeng.socialize.weixin.media.CircleShareContent;
+import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -232,21 +237,45 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
     }
 
     private void onShare() {
-        final UMSocialService mController = UMServiceFactory.getUMSocialService("com.umeng.share");
-
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
         if (mHomePageModel != null) {
+            final UMSocialService mController = UMServiceFactory.getUMSocialService("com.umeng.share");
 
-            BizUtil.share(this, "title", "content", mHomePageModel.getPictureUrl(), "http://www.baidu.com", bitmap, mController);
+            // 注意：在微信授权的时候，必须传递appSecret
+            // wx967daebe835fbeac是你在微信开发平台注册应用的AppID, 这里需要替换成你注册的AppID
+            String wxAppId = "wx2d0d5abbf6adbc47";
+            String wxAppSecret = "450f1e91922ac95d79ced27ba14b4f06";
+            // 添加微信平台
+            UMWXHandler wxHandler = new UMWXHandler(this, wxAppId, wxAppSecret);
+            wxHandler.addToSocialSDK();
+
+            // 支持微信朋友圈
+            UMWXHandler wxCircleHandler = new UMWXHandler(this, wxAppId, wxAppSecret);
+            wxCircleHandler.setToCircle(true);
+            wxCircleHandler.addToSocialSDK();
+
+            UMImage urlImage = new UMImage(this, mHomePageModel.getPictureUrl());
+            WeiXinShareContent weixinContent = new WeiXinShareContent();
+            weixinContent
+                    .setShareContent("来自友盟社会化组件（SDK）让移动应用快速整合社交分享功能-微信。http://www.umeng.com/social");
+            weixinContent.setTitle("友盟社会化分享组件-微信");
+            weixinContent.setTargetUrl("http://www.umeng.com/social");
+            weixinContent.setShareMedia(urlImage);
+            mController.setShareMedia(weixinContent);
+
+            // 设置朋友圈分享的内容
+            CircleShareContent circleMedia = new CircleShareContent();
+            circleMedia
+                    .setShareContent("来自友盟社会化组件（SDK）让移动应用快速整合社交分享功能-朋友圈。http://www.umeng.com/social");
+            circleMedia.setTitle("友盟社会化分享组件-朋友圈");
+            circleMedia.setShareMedia(urlImage);
+            circleMedia.setTargetUrl("http://www.umeng.com/social");
+            mController.setShareMedia(circleMedia);
+
+//            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+//            BizUtil.share(this, "title", "content", mHomePageModel.getPictureUrl(), "http://www.baidu.com", bitmap, mController);
+            mController.getConfig().setPlatforms(SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE);
+            mController.openShare(this, false);
         }
-//        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(this, qqAppId,
-//                qqSecret);
-//        qqSsoHandler.addToSocialSDK();
-//
-//        QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(this, qqAppId,
-//                qqSecret);
-//        qZoneSsoHandler.addToSocialSDK();
-        mController.openShare(this, false);
     }
 
     class Adapter extends BaseAdapter {

@@ -2,7 +2,6 @@ package com.hwand.pinhaowanr.utils;
 
 import android.text.TextUtils;
 
-import com.tencent.connect.common.Constants;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -40,6 +39,7 @@ public class StrUtils {
         return matcher.matches();
     }
 
+    /**
     public static String encode(String str) {
         if (str == null) {
             return Constants.STR_EMPTY;
@@ -72,6 +72,7 @@ public class StrUtils {
         }
     }
 
+
     public static String getMD5(String content) {
         if (!TextUtils.isEmpty(content)) {
             try {
@@ -86,6 +87,7 @@ public class StrUtils {
         }
         return Constants.STR_EMPTY;
     }
+
 
     private static String getHashString(MessageDigest digest) {
         StringBuilder builder = new StringBuilder(Constants.STR_EMPTY);
@@ -119,6 +121,8 @@ public class StrUtils {
         }
         return "\"" + str + "\"";
     }
+
+   */
 
     public static boolean emailCheck(String str) {
         String check = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*"
