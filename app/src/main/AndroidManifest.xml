@@ -157,6 +157,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/Actionbar_Animation"
             android:windowSoftInputMode="stateHidden|adjustResize"></activity>
+
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
 

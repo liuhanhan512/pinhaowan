@@ -9,6 +9,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.laiwang.tide.share.business.BaseShareUnit;
+import com.alibaba.laiwang.tide.share.business.ShareInfo;
+import com.hwand.pinhaowanr.share.channel.WeixinFriendShareUnit;
+import com.hwand.pinhaowanr.share.channel.WeixinGroupShareUnit;
+import com.alibaba.laiwang.tide.share.business.excutor.ShareToManager;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
@@ -17,8 +22,8 @@ import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.ActivityDiscussModel;
 import com.hwand.pinhaowanr.model.ActivityModel;
 import com.hwand.pinhaowanr.model.ActivitySignModel;
-import com.hwand.pinhaowanr.model.ClassDetailModel;
 import com.hwand.pinhaowanr.model.TheCommunityActivityModel;
+import com.hwand.pinhaowanr.share.ShareConstants;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.DateUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
@@ -26,8 +31,10 @@ import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.ActivityDetailDiscussView;
 import com.hwand.pinhaowanr.widget.ActivityDetailSignUpView;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
+import com.hwand.pinhaowanr.share.view.ShareActionBox;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +62,8 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
 
     private LinearLayout mSignUoLayout, mSignUpContainer;
     private LinearLayout mCommentLayout , mCommoentContainer;
+
+    private List<BaseShareUnit> mShareList = new ArrayList<BaseShareUnit>();
 
     public static void launch(Context context){
         Intent intent = new Intent();
@@ -85,6 +94,14 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
         initViews();
         mSwipeRefreshLayout.setRefreshing(true);
         fetchData();
+
+        ShareToManager.init(this, new ShareConstants(this));
+        initShareList();
+    }
+
+    private void initShareList(){
+        mShareList.add(new WeixinFriendShareUnit(this));
+        mShareList.add(new WeixinGroupShareUnit(this));
     }
 
     private void initTitle(){
@@ -138,6 +155,86 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
         mCommentLayout = (LinearLayout)findViewById(R.id.comment_layout);
         mCommoentContainer = (LinearLayout)findViewById(R.id.comment_container);
 
+        findViewById(R.id.discuss_layout).setOnClickListener(this);
+        findViewById(R.id.share_layout).setOnClickListener(this);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        switch (v.getId()){
+            case R.id.discuss_layout:
+                break;
+            case R.id.share_layout:
+                onShare();
+                break;
+        }
+    }
+
+    String PIC_URL = "https://t.alipayobjects.com/images/rmsweb/T1vs0gXXhlXXXXXXXX.jpg";
+    private ShareInfo initShareInfo(){
+        ShareInfo shareInfo = new ShareInfo();
+        shareInfo.setTitle("Test");
+        shareInfo.setContent("Test Content");
+        shareInfo.setPictureUrl(PIC_URL);
+        return shareInfo;
+    }
+
+    private void onShare(){
+
+        ShareActionBox box = new ShareActionBox(this,mShareList).setShareInfo(initShareInfo());
+        box.show();
+
+        /**
+        final UMSocialService mController = UMServiceFactory.getUMSocialService("com.umeng.share");
+
+        // 注意：在微信授权的时候，必须传递appSecret
+        // wx967daebe835fbeac是你在微信开发平台注册应用的AppID, 这里需要替换成你注册的AppID
+        String wxAppId = "wx2d0d5abbf6adbc47";
+        String wxAppSecret = "450f1e91922ac95d79ced27ba14b4f06";
+        // 添加微信平台
+        UMWXHandler wxHandler = new UMWXHandler(this, wxAppId, wxAppSecret);
+        wxHandler.addToSocialSDK();
+
+        // 支持微信朋友圈
+        UMWXHandler wxCircleHandler = new UMWXHandler(this, wxAppId, wxAppSecret);
+        wxCircleHandler.setToCircle(true);
+        wxCircleHandler.addToSocialSDK();
+
+        String url = "https://t.alipayobjects.com/images/rmsweb/T1vs0gXXhlXXXXXXXX.jpg";
+        UMImage urlImage = new UMImage(this, url);
+        WeiXinShareContent weixinContent = new WeiXinShareContent();
+        weixinContent.setShareContent("来自友盟社会化组件（SDK）让移动应用快速整合社交分享功能-微信。http://www.umeng.com/social");
+        weixinContent.setTitle("友盟社会化分享组件-微信");
+        weixinContent.setTargetUrl("http://www.umeng.com/social");
+        weixinContent.setShareMedia(urlImage);
+        mController.setShareMedia(weixinContent);
+
+        // 设置朋友圈分享的内容
+        CircleShareContent circleMedia = new CircleShareContent();
+        circleMedia
+                .setShareContent("来自友盟社会化组件（SDK）让移动应用快速整合社交分享功能-朋友圈。http://www.umeng.com/social");
+        circleMedia.setTitle("友盟社会化分享组件-朋友圈");
+        circleMedia.setShareMedia(urlImage);
+        circleMedia.setTargetUrl("http://www.umeng.com/social");
+        mController.setShareMedia(circleMedia);
+
+        mController.getConfig().removePlatform(SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE);
+        mController.getConfig().setPlatforms(SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE);
+
+        mController.openShare(this, new SocializeListeners.SnsPostListener() {
+            @Override
+            public void onStart() {
+                Log.d("lzc", "onStart=============>" );
+            }
+
+            @Override
+            public void onComplete(SHARE_MEDIA share_media, int errorCode, SocializeEntity socializeEntity) {
+                Log.d("lzc", "errorCode=============>" + errorCode);
+            }
+        });
+         */
     }
 
     private void fetchData(){

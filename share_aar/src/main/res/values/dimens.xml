@@ -1,0 +1,47 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="padding_size_4">4dp</dimen>
+    <dimen name="padding_size_12">12dp</dimen>
+    <dimen name="padding_size_20">20dp</dimen>
+    <dimen name="text_size_10">10sp</dimen>
+    <dimen name="text_size_10_dp">10dp</dimen>
+    <dimen name="text_size_xsmall">11sp</dimen>
+    <dimen name="text_size_12">12sp</dimen>
+    <dimen name="text_size_12_dp">12dp</dimen>
+    <dimen name="text_size_small">13sp</dimen>
+    <dimen name="text_size_14">14sp</dimen>
+    <dimen name="text_size_medium">16sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="text_size_xmedium">18sp</dimen>
+    <!-- 通用的分割线的高度：注意了，高度是1个像素，不是一个dp -->
+    <dimen name="common_listview_divider_height">1px</dimen>
+    <!-- 导航的样式定义处理 -->
+    <dimen name="common_navigator_height">44dp</dimen>
+    <dimen name="birth_dialog_height">20sp</dimen>
+    <dimen name="navigator_horizonal_height">1dp</dimen>
+    <dimen name="navigator_vertical_width">1dp</dimen>
+
+    <dimen name="friend_letter_size">10dp</dimen>
+
+    <!-- 字体的大小，对应的是讲font_size前缀去除掉是ui规范中的命名（加上前缀是为了保持后续加类似的大小的方便性） -->
+    <dimen name="font_size_s0">24sp</dimen>
+    <dimen name="font_size_s1">20sp</dimen>
+    <dimen name="font_size_s1_dp">20dp</dimen>
+    <dimen name="font_size_s2">18sp</dimen>
+    <dimen name="font_size_s2_dp">18dp</dimen>
+    <dimen name="font_size_s3_dp">16dp</dimen>
+    <dimen name="font_size_s4">15sp</dimen>
+    <dimen name="font_size_s4_dp">15dp</dimen> <!-- sp单位 会跟随系统设置放大缩小-->
+    <dimen name="font_size_s5">14sp</dimen>
+    <dimen name="font_size_s5_dp">14dp</dimen>
+    <dimen name="font_size_s6">13sp</dimen>
+    <dimen name="font_size_s6_dp">13dp</dimen>
+    <dimen name="font_size_s7">12sp</dimen>
+    <dimen name="font_size_s7_dp">12dp</dimen>
+    <dimen name="font_size_s8">11sp</dimen>
+    <dimen name="font_size_s8_dp">11dp</dimen>
+    <dimen name="font_size_s9">10sp</dimen>
+</resources>

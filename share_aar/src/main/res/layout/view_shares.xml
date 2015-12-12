@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="@drawable/btn_gray_bg"
+    android:orientation="vertical"
+    android:paddingBottom="18dp" >
+
+    <View 
+        android:id="@+id/share_divider"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/common_listview_divider_height"
+        android:background="#66222222"/>
+    
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_below="@id/share_divider"
+        android:gravity="center"
+        android:textColor="@color/C4"
+        android:textSize="@dimen/font_size_s5" />
+    
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="fill_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/title"
+        android:background="#ffffff" />
+
+    <com.hwand.pinhaowanr.share.view.ShareViewpagerIndicator
+        android:id="@+id/indicator"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pager"
+        android:padding="10dip" />
+
+    <Button
+        style="@style/Bb3"
+        android:id="@+id/btn_share_cancel"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/indicator"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:gravity="center"
+        android:text="@string/cancel_message"/>
+
+</RelativeLayout>

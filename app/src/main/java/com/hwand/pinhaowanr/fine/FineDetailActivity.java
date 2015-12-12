@@ -17,6 +17,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.laiwang.tide.share.business.BaseShareUnit;
+import com.alibaba.laiwang.tide.share.business.ShareInfo;
+import com.alibaba.laiwang.tide.share.business.excutor.ShareToManager;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
@@ -26,18 +29,15 @@ import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.ClassDetailModel;
 import com.hwand.pinhaowanr.model.ClassDetailTitleModel;
 import com.hwand.pinhaowanr.model.HomePageModel;
+import com.hwand.pinhaowanr.share.ShareConstants;
+import com.hwand.pinhaowanr.share.channel.WeixinFriendShareUnit;
+import com.hwand.pinhaowanr.share.channel.WeixinGroupShareUnit;
+import com.hwand.pinhaowanr.share.view.ShareActionBox;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.BizUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.weixin.controller.UMWXHandler;
-import com.umeng.socialize.weixin.media.CircleShareContent;
-import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,7 +87,16 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
         initTitle();
         initViews();
         fetchData();
+
+        ShareToManager.init(this, new ShareConstants(this));
+        initShareList();
     }
+    private List<BaseShareUnit> mShareList = new ArrayList<BaseShareUnit>();
+    private void initShareList(){
+        mShareList.add(new WeixinFriendShareUnit(this));
+        mShareList.add(new WeixinGroupShareUnit(this));
+    }
+
 
     private void initIntentValues() {
         mHomePageModel = (HomePageModel) getIntent().getSerializableExtra(HOME_PAGE_MODEL_KEY);
@@ -236,8 +245,20 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
         }
     }
 
+    String PIC_URL = "https://t.alipayobjects.com/images/rmsweb/T1vs0gXXhlXXXXXXXX.jpg";
+    private ShareInfo initShareInfo(){
+        ShareInfo shareInfo = new ShareInfo();
+        shareInfo.setTitle("Test");
+        shareInfo.setContent("Test Content");
+        shareInfo.setPictureUrl(PIC_URL);
+        return shareInfo;
+    }
+
     private void onShare() {
         if (mHomePageModel != null) {
+            ShareActionBox box = new ShareActionBox(this,mShareList).setShareInfo(initShareInfo());
+            box.show();
+            /**
             final UMSocialService mController = UMServiceFactory.getUMSocialService("com.umeng.share");
 
             // 注意：在微信授权的时候，必须传递appSecret
@@ -275,6 +296,7 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
 //            BizUtil.share(this, "title", "content", mHomePageModel.getPictureUrl(), "http://www.baidu.com", bitmap, mController);
             mController.getConfig().setPlatforms(SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE);
             mController.openShare(this, false);
+             */
         }
     }
 
