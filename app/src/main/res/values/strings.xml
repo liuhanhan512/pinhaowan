@@ -85,6 +85,7 @@
     <string name="launch_people">发起人</string>
     <string name="spell_d_class_time">时间: %s</string>
     <string name="spell_d_people_count">人数：%1$d / %2$d</string>
+    <string name="launch_spell_d">发起拼拼</string>
 
     <string name="calendar_sunday">日</string>
     <string name="calendar_monday">一</string>

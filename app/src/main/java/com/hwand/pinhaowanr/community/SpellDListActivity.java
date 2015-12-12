@@ -175,6 +175,13 @@ public class SpellDListActivity extends BaseActivity implements SwipeRefreshLayo
             TextView price = (TextView)convertView.findViewById(R.id.money);
             price.setText(getString(R.string.price, pinClassModel.getMoney()));
 
+            convertView.findViewById(R.id.spell_text).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
 
             List<PinClassPeopleModel> pinClassPeopleModels = pinClassModel.getAttendList();
             if(pinClassPeopleModels != null){
