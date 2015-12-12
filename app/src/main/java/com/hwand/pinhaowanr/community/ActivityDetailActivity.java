@@ -18,6 +18,7 @@ import com.hwand.pinhaowanr.model.ActivityModel;
 import com.hwand.pinhaowanr.model.ClassDetailModel;
 import com.hwand.pinhaowanr.model.TheCommunityActivityModel;
 import com.hwand.pinhaowanr.utils.AndTools;
+import com.hwand.pinhaowanr.utils.DateUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
@@ -104,7 +105,8 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
             TextView address = (TextView)findViewById(R.id.address);
             address.setText(mTheCommunityActivityModel.getDetailAddress());
             TextView time = (TextView)findViewById(R.id.time);
-            time.setText(getString(R.string.sign_up_times , mTheCommunityActivityModel.getStratTime() ,mTheCommunityActivityModel.getEndTime()));
+            time.setText(getString(R.string.sign_up_times , DateUtil.convertLongToString(mTheCommunityActivityModel.getStratTime()),
+                    DateUtil.convertLongToString(mTheCommunityActivityModel.getEndTime())));
 
             TextView age = (TextView)findViewById(R.id.age);
 //            age.setText(getString(R.string.fine_detail_age , mTheCommunityActivityModel.get));

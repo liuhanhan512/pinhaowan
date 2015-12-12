@@ -1,29 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.hwand.pinhaowanr.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/container"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
+    <com.hwand.pinhaowanr.widget.SwipeRefreshLayout
+
+        android:id="@+id/container"
+        android:layout_above="@+id/indicator"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/activity_info_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
+                <LinearLayout
+                    android:id="@+id/activity_info_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/image"
+                        android:scaleType="fitXY"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_marginLeft="12dp"
+                        android:drawableLeft="@mipmap/fine_group_item_image_divider"
+                        android:drawablePadding="6dp"
+                        android:gravity="left|center"
+                        android:textColor="@color/text_color_black"
+                        android:textSize="16sp"
+                        android:text="@string/activity_detail" />
+
+                    <View
+                        android:background="@color/color_divider_line"
+                        android:layout_width="match_parent"
+                        android:layout_height="1px">
+
+                    </View>
+
+                    <TextView
+                        android:id="@+id/address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_marginLeft="12dp"
+                        android:drawablePadding="6dp"
+                        android:drawableRight="@mipmap/location"
+                        android:gravity="left|center"
+                        android:text="@string/activity_detail" />
+
+                    <View
+                        android:background="@color/color_divider_line"
+                        android:layout_width="match_parent"
+                        android:layout_height="1px">
+
+                    </View>
+
+                    <TextView
+                        android:id="@+id/time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginTop="6dp"
+                        android:gravity="left|center"
+                        android:text="@string/activity_detail" />
+
+                    <TextView
+                        android:id="@+id/age"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginTop="6dp"
+                        android:gravity="left|center"
+                        android:text="@string/activity_detail" />
+
+                    <TextView
+                        android:id="@+id/people_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginLeft="12dp"
+                        android:gravity="left|center"
+                        android:text="@string/activity_detail" />
+
+                    <View
+                        android:background="@color/color_divider_line"
+                        android:layout_marginTop="6dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="1px">
+
+                    </View>
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="12dp"
+                    android:drawableLeft="@mipmap/fine_group_item_image_divider"
+                    android:drawablePadding="6dp"
+                    android:gravity="left|center"
+                    android:text="@string/activity_description" />
+
                 <ImageView
-                    android:id="@+id/image"
+                    android:id="@+id/image_description"
                     android:layout_width="match_parent"
                     android:layout_height="120dp" />
+
+
+                <TextView
+                    android:id="@+id/activity_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:gravity="left|center"
+                    android:text="@string/activity_detail" />
+
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -32,385 +137,317 @@
                     android:drawableLeft="@mipmap/fine_group_item_image_divider"
                     android:drawablePadding="6dp"
                     android:gravity="left|center"
-                    android:text="@string/activity_detail" />
+                    android:text="@string/sign_up_time" />
 
+                <LinearLayout
+                    android:id="@+id/sign_up_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/address"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_marginLeft="12dp"
+                    android:drawableLeft="@mipmap/fine_group_item_image_divider"
                     android:drawablePadding="6dp"
-                    android:drawableRight="@mipmap/location"
                     android:gravity="left|center"
-                    android:text="@string/activity_detail" />
+                    android:text="@string/discuss" />
 
+                <LinearLayout
+                    android:id="@+id/comment_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                </LinearLayout>
+
+
+
+                <!--
                 <TextView
-                    android:id="@+id/time"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
-                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="12dp"
+                    android:drawableLeft="@mipmap/fine_group_item_image_divider"
+                    android:drawablePadding="6dp"
                     android:gravity="left|center"
-                    android:text="@string/activity_detail" />
+                    android:layout_marginLeft="12dp"
+                    android:text="@string/project" />
 
-                <TextView
-                    android:id="@+id/age"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:layout_marginLeft="12dp"
-                    android:gravity="left|center"
-                    android:text="@string/activity_detail" />
+                <RelativeLayout
+                    android:background="@drawable/bottom_border_bg"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:id="@+id/one_visit_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp">
 
-                <TextView
-                    android:id="@+id/people_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:layout_marginLeft="12dp"
-                    android:gravity="left|center"
-                    android:text="@string/activity_detail" />
+
+                    <TextView
+                        android:id="@+id/one_visit"
+                        android:layout_centerVertical="true"
+                        android:text="@string/one_visit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/one_visit_view"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:background="@color/transparent_grey"
+                        android:text="@string/spell_d_view"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/one_visit_launch"
+                        android:layout_toLeftOf="@+id/one_visit_view"
+                        android:layout_marginRight="8dp"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:background="@mipmap/corner_yellow_bg"
+                        android:text="@string/spell_d_launch"
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/one_visit_cost"
+                        android:layout_toLeftOf="@+id/one_visit_launch"
+                        android:layout_marginRight="8dp"
+                        android:layout_toRightOf="@+id/one_visit"
+                        android:layout_marginLeft="8dp"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:gravity="right"
+                        android:layout_centerVertical="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:background="@drawable/bottom_border_bg"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:id="@+id/stage_visit_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp">
+
+
+                    <TextView
+                        android:id="@+id/stage_visit"
+                        android:layout_centerVertical="true"
+                        android:text="@string/stage_visit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/stage_visit_view"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:background="@color/transparent_grey"
+                        android:text="@string/spell_d_view"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/stage_visit_launch"
+                        android:layout_toLeftOf="@+id/stage_visit_view"
+                        android:layout_marginRight="8dp"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:background="@mipmap/corner_yellow_bg"
+                        android:text="@string/spell_d_launch"
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/stage_visit_cost"
+                        android:layout_toLeftOf="@+id/stage_visit_launch"
+                        android:layout_marginRight="8dp"
+                        android:layout_toRightOf="@+id/stage_visit"
+                        android:layout_marginLeft="8dp"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:gravity="right"
+                        android:layout_centerVertical="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:id="@+id/all_visit_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp">
+
+
+                    <TextView
+                        android:id="@+id/all_visit"
+                        android:layout_centerVertical="true"
+                        android:text="@string/stage_visit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/all_visit_view"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:background="@color/transparent_grey"
+                        android:text="@string/spell_d_view"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/all_visit_launch"
+                        android:layout_toLeftOf="@+id/all_visit_view"
+                        android:layout_marginRight="8dp"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:background="@mipmap/corner_yellow_bg"
+                        android:text="@string/spell_d_launch"
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/all_visit_cost"
+                        android:layout_toLeftOf="@+id/all_visit_launch"
+                        android:layout_marginRight="8dp"
+                        android:layout_toRightOf="@+id/all_visit"
+                        android:layout_marginLeft="8dp"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:gravity="right"
+                        android:layout_centerVertical="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+                -->
 
             </LinearLayout>
 
+        </ScrollView>
+    </com.hwand.pinhaowanr.widget.SwipeRefreshLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="12dp"
-                android:drawableLeft="@mipmap/fine_group_item_image_divider"
-                android:drawablePadding="6dp"
-                android:gravity="left|center"
-                android:text="@string/activity_description" />
+    <LinearLayout
+        android:id="@+id/indicator"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <RelativeLayout
+            android:id="@+id/discuss_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/yellow_selector"
+            android:gravity="center">
 
             <ImageView
-                android:id="@+id/image_description"
-                android:layout_width="match_parent"
-                android:layout_height="120dp" />
-
-
-            <TextView
-                android:id="@+id/activity_description"
+                android:id="@+id/discuss_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:gravity="left|center"
-                android:text="@string/activity_detail" />
-
+                android:layout_centerVertical="true"
+                android:src="@mipmap/comment" />
 
             <TextView
+                android:id="@+id/discuss_text"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_marginLeft="12dp"
-                android:drawableLeft="@mipmap/fine_group_item_image_divider"
-                android:drawablePadding="6dp"
-                android:gravity="left|center"
-                android:text="@string/sign_up_time" />
-
-            <LinearLayout
-                android:id="@+id/sign_up_container"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                android:layout_toRightOf="@+id/discuss_image"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:includeFontPadding="true"
+                android:padding="0dp"
+                android:singleLine="true"
+                android:text="@string/discuss"
+                android:textSize="15sp" />
 
-            </LinearLayout>
 
-            <TextView
+        </RelativeLayout>
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"
+            android:background="#cccccc" />
+
+
+        <RelativeLayout
+            android:id="@+id/share_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/yellow_selector"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/gift_ticket_image"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_marginLeft="12dp"
-                android:drawableLeft="@mipmap/fine_group_item_image_divider"
-                android:drawablePadding="6dp"
-                android:gravity="left|center"
-                android:text="@string/discuss" />
-
-            <LinearLayout
-                android:id="@+id/comment_container"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_centerVertical="true"
+                android:src="@mipmap/share_icon" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/indicator"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/white"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <RelativeLayout
-                    android:id="@+id/discuss_layout"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/yellow_selector"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:id="@+id/discuss_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:src="@mipmap/comment" />
-
-                    <TextView
-                        android:id="@+id/discuss_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="8dp"
-                        android:layout_toRightOf="@+id/discuss_image"
-                        android:ellipsize="end"
-                        android:gravity="center"
-                        android:includeFontPadding="true"
-                        android:padding="0dp"
-                        android:singleLine="true"
-                        android:text="@string/discuss"
-                        android:textSize="15sp" />
-
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="1px"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="12dp"
-                    android:layout_marginTop="12dp"
-                    android:background="#cccccc" />
-
-
-                <RelativeLayout
-                    android:id="@+id/share_layout"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/yellow_selector"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:id="@+id/gift_ticket_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:src="@mipmap/share_icon" />
-
-                    <TextView
-                        android:id="@+id/gift_ticket_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="8dp"
-                        android:layout_toRightOf="@+id/gift_ticket_image"
-                        android:ellipsize="end"
-                        android:gravity="center"
-                        android:includeFontPadding="true"
-                        android:padding="0dp"
-                        android:singleLine="true"
-                        android:text="@string/share_text"
-                        android:textSize="15sp" />
-
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <!--
             <TextView
+                android:id="@+id/gift_ticket_text"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_marginTop="12dp"
-                android:drawableLeft="@mipmap/fine_group_item_image_divider"
-                android:drawablePadding="6dp"
-                android:gravity="left|center"
-                android:layout_marginLeft="12dp"
-                android:text="@string/project" />
-
-            <RelativeLayout
-                android:background="@drawable/bottom_border_bg"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:id="@+id/one_visit_layout"
-                android:layout_width="match_parent"
-                android:layout_height="48dp">
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                android:layout_toRightOf="@+id/gift_ticket_image"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:includeFontPadding="true"
+                android:padding="0dp"
+                android:singleLine="true"
+                android:text="@string/share_text"
+                android:textSize="15sp" />
 
 
-                <TextView
-                    android:id="@+id/one_visit"
-                    android:layout_centerVertical="true"
-                    android:text="@string/one_visit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+        </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/one_visit_view"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="6dp"
-                    android:background="@color/transparent_grey"
-                    android:text="@string/spell_d_view"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/one_visit_launch"
-                    android:layout_toLeftOf="@+id/one_visit_view"
-                    android:layout_marginRight="8dp"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="6dp"
-                    android:background="@mipmap/corner_yellow_bg"
-                    android:text="@string/spell_d_launch"
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/one_visit_cost"
-                    android:layout_toLeftOf="@+id/one_visit_launch"
-                    android:layout_marginRight="8dp"
-                    android:layout_toRightOf="@+id/one_visit"
-                    android:layout_marginLeft="8dp"
-                    android:singleLine="true"
-                    android:ellipsize="end"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="6dp"
-                    android:gravity="right"
-                    android:layout_centerVertical="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:background="@drawable/bottom_border_bg"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:id="@+id/stage_visit_layout"
-                android:layout_width="match_parent"
-                android:layout_height="48dp">
-
-
-                <TextView
-                    android:id="@+id/stage_visit"
-                    android:layout_centerVertical="true"
-                    android:text="@string/stage_visit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/stage_visit_view"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="6dp"
-                    android:background="@color/transparent_grey"
-                    android:text="@string/spell_d_view"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/stage_visit_launch"
-                    android:layout_toLeftOf="@+id/stage_visit_view"
-                    android:layout_marginRight="8dp"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="6dp"
-                    android:background="@mipmap/corner_yellow_bg"
-                    android:text="@string/spell_d_launch"
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/stage_visit_cost"
-                    android:layout_toLeftOf="@+id/stage_visit_launch"
-                    android:layout_marginRight="8dp"
-                    android:layout_toRightOf="@+id/stage_visit"
-                    android:layout_marginLeft="8dp"
-                    android:singleLine="true"
-                    android:ellipsize="end"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="6dp"
-                    android:gravity="right"
-                    android:layout_centerVertical="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:id="@+id/all_visit_layout"
-                android:layout_width="match_parent"
-                android:layout_height="48dp">
-
-
-                <TextView
-                    android:id="@+id/all_visit"
-                    android:layout_centerVertical="true"
-                    android:text="@string/stage_visit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/all_visit_view"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="6dp"
-                    android:background="@color/transparent_grey"
-                    android:text="@string/spell_d_view"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/all_visit_launch"
-                    android:layout_toLeftOf="@+id/all_visit_view"
-                    android:layout_marginRight="8dp"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="6dp"
-                    android:background="@mipmap/corner_yellow_bg"
-                    android:text="@string/spell_d_launch"
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/all_visit_cost"
-                    android:layout_toLeftOf="@+id/all_visit_launch"
-                    android:layout_marginRight="8dp"
-                    android:layout_toRightOf="@+id/all_visit"
-                    android:layout_marginLeft="8dp"
-                    android:singleLine="true"
-                    android:ellipsize="end"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="6dp"
-                    android:gravity="right"
-                    android:layout_centerVertical="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </RelativeLayout>
-            -->
-
-        </LinearLayout>
-
-    </ScrollView>
-</com.hwand.pinhaowanr.widget.SwipeRefreshLayout>
+</RelativeLayout>
