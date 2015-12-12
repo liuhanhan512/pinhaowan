@@ -67,10 +67,10 @@ public class ContentFragment extends BaseFragment {
         mNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String address = mContent.getText().toString();
+                final String content = mContent.getText().toString();
                 boolean cancel = false;
                 View focusView = null;
-                if (TextUtils.isEmpty(address)) {
+                if (TextUtils.isEmpty(content)) {
                     mContent.setError(getString(R.string.error_field_required));
                     focusView = mContent;
                     cancel = true;
@@ -82,7 +82,7 @@ public class ContentFragment extends BaseFragment {
                 } else {
                     Map<String, String> params = new HashMap<String, String>();
                     params.put("type", "7");
-                    params.put("value", URLEncoder.encode(address));
+                    params.put("value", URLEncoder.encode(content));
                     String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_MODIFY_USER_INFO, params);
                     LogUtil.d("dxz", url);
                     NetworkRequest.get(url, new Response.Listener<String>() {
