@@ -1,5 +1,11 @@
 package com.hwand.pinhaowanr.model;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.List;
+
 /**
  * Created by hanhanliu on 15/12/6.
  */
@@ -12,6 +18,14 @@ public class SpellDModel {
     private int id;
     private int isPinClass;
     private String title;
+
+    public static List<SpellDModel> arrayFromData(String str) {
+
+        Type listType = new TypeToken<List<SpellDModel>>() {
+        }.getType();
+
+        return new Gson().fromJson(str, listType);
+    }
 
     public long getCreateTime() {
         return createTime;

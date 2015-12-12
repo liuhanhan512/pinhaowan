@@ -1,11 +1,9 @@
 package com.hwand.pinhaowanr.fine;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +24,7 @@ import com.hwand.pinhaowanr.model.ConfigModel;
 import com.hwand.pinhaowanr.model.HomePageModel;
 import com.hwand.pinhaowanr.model.RegionModel;
 import com.hwand.pinhaowanr.utils.AndTools;
+import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.FilterListView;
@@ -55,7 +54,7 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
 
     private int mCityType = 1;
 
-    private int mRegionType = -1;
+    private int mRegionType = 0;
 
     private int mMinAge = 0;
 
@@ -123,6 +122,8 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
     }
 
     private void initTitle(){
+        // 显示类型（viewType）1 兴趣益教 2 演出展览 3 游乐
+        setActionBarTtile("游乐");
 
     }
 
@@ -167,6 +168,7 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
         params.put("startIndex" , mStartIndex + "");
         params.put("endIndex" , mEndIndex + "");
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_SEARCH_MORE, params);
+        LogUtil.d("dxz",url);
         NetworkRequest.get(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

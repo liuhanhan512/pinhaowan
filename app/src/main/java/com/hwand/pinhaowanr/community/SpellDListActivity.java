@@ -66,6 +66,10 @@ public class SpellDListActivity extends BaseActivity implements SwipeRefreshLayo
         }
     };
 
+    private void request() {
+
+    }
+
     @Override
     public void onRefresh() {
 

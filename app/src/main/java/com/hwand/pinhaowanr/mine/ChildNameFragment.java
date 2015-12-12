@@ -11,9 +11,12 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.hwand.pinhaowanr.BaseFragment;
+import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.main.MineFragment;
+import com.hwand.pinhaowanr.model.UserInfo;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
@@ -91,6 +94,14 @@ public class ChildNameFragment extends BaseFragment {
                             // 结果（result）0 失败 1 成功
                             if (!TextUtils.isEmpty(response) && response.contains("1")) {
                                 AndTools.showToast("修改成功！");
+                                try {
+                                    UserInfo info = DataCacheHelper.getInstance().getUserInfo();
+                                    info.setChildName(childName);
+                                    Gson gson = new Gson();
+                                    String str = gson.toJson(info, UserInfo.class);
+                                    DataCacheHelper.getInstance().saveUserInfo(str);
+                                } catch (Exception e) {
+                                }
                                 hideImm();
                                 getFragmentManager().popBackStack();
                             } else {
