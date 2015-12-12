@@ -1,6 +1,12 @@
 package com.hwand.pinhaowanr.model;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 主页--小伙伴--活动详情--讨论model
@@ -12,6 +18,14 @@ public class ActivityDiscussModel implements Serializable {
     private String name;
     private String time;
     private String content;
+
+    public static List<ActivityDiscussModel> arrayFromData(String str) {
+
+        Type listType = new TypeToken<ArrayList<ActivityDiscussModel>>() {
+        }.getType();
+
+        return new Gson().fromJson(str, listType);
+    }
 
     public int getId() {
         return id;

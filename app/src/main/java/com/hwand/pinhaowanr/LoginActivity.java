@@ -25,6 +25,7 @@ import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.DDAlertDialog;
 import com.hwand.pinhaowanr.widget.DDProgressDialog;
 
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -142,7 +143,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnLa
             DDProgressDialog.show(this, "登录中", "正在努力加载...", true);
             Map<String, String> params = new HashMap<String, String>();
             params.put("telephone", phone);
-            params.put("passward", password);
+            params.put("passward", URLEncoder.encode(password));
             String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_LOGIN, params);
             NetworkRequest.get(url, new Response.Listener<String>() {
                 @Override
