@@ -14,6 +14,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.model.ActivityDiscussModel;
 import com.hwand.pinhaowanr.model.ActivityModel;
 import com.hwand.pinhaowanr.model.ActivitySignModel;
 import com.hwand.pinhaowanr.model.ClassDetailModel;
@@ -22,6 +23,7 @@ import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.DateUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
+import com.hwand.pinhaowanr.widget.ActivityDetailDiscussView;
 import com.hwand.pinhaowanr.widget.ActivityDetailSignUpView;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
 
@@ -200,6 +202,15 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
                 activityDetailSignUpView.setTicketsText(getString(R.string.remainder_tickets , activitySignModel.getRemainTicket()));
                 mSignUpContainer.addView(activityDetailSignUpView);
             }
+        }
+
+        List<ActivityDiscussModel> activityDiscussModels = mActivityModel.getMessageList();
+        for(ActivityDiscussModel activityDiscussModel : activityDiscussModels){
+            ActivityDetailDiscussView activityDetailDiscussView = new ActivityDetailDiscussView(this);
+            activityDetailDiscussView.displayAvatar(activityDiscussModel.getUrl());
+            activityDetailDiscussView.setNameText(activityDiscussModel.getName());
+            activityDetailDiscussView.setContent(activityDiscussModel.getContent());
+            mCommoentContainer.addView(activityDetailDiscussView);
         }
 
 
