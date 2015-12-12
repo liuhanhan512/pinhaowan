@@ -67,9 +67,14 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_detail_layout);
         initIntentValues();
+        initTitle();
         initViews();
         mSwipeRefreshLayout.setRefreshing(true);
         fetchData();
+    }
+
+    private void initTitle(){
+        setActionBarTtile(getString(R.string.activity_detail));
     }
 
     private void initIntentValues(){

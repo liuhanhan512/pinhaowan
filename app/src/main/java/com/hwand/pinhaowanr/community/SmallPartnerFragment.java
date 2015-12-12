@@ -116,7 +116,7 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
     final AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+            ActivityDetailActivity.launch(getActivity() , theCommunityActivityModels.get(i - mListView.getHeaderViewsCount()));
         }
     };
 
