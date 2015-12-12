@@ -170,6 +170,11 @@
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
             android:theme="@style/Actionbar_Animation"></activity>
 
+        <activity android:name=".community.SpellDClassActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Actionbar_Animation"></activity>
+
+
     </application>
 
 

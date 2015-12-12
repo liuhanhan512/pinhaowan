@@ -140,7 +140,8 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
     @Override
     public void fetchData(){
         Map<String, String> params = new HashMap<String, String>();
-        params.put("cityType" , MainApplication.getInstance().getCityType() + "");
+        params.put("cityType" ,  "1");
+//        params.put("cityType" , MainApplication.getInstance().getCityType() + "");
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_PINPIN_INFO, params);
         NetworkRequest.get(url, new Response.Listener<String>() {
             @Override
