@@ -53,6 +53,7 @@
     <string name="distance">距离 %dm</string>
     <string name="sign_up">报名</string>
     <string name="small_partner_time">时间: %1$s 至 %2$s</string>
+    <string name="sign_up_times">报名时间: %1$s - %2$s</string>
     <string name="people_count">人数: %d人</string>
     <string name="sign_up_people_count">已报名 %d人</string>
     <string name="fetch_from_ablum">从相册选择</string>
@@ -72,6 +73,9 @@
     <string name="reservation_time">%1$s - %2$s</string>
     <string name="reserved">已预约</string>
     <string name="fully_booked">已约满</string>
+    <string name="sign_up_time">报名时段</string>
+    <string name="discuss">讨论</string>
+    <string name="activity_people_count">活动人数: %d</string>
 
 
 

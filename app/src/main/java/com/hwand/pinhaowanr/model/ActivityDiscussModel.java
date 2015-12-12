@@ -3,14 +3,15 @@ package com.hwand.pinhaowanr.model;
 import java.io.Serializable;
 
 /**
- * Created by hanhanliu on 15/12/5.
+ * 主页--小伙伴--活动详情--讨论model
+ * Created by hanhanliu on 15/12/12.
  */
-public class NewActivityModel implements Serializable{
+public class ActivityDiscussModel implements Serializable {
     private int id;
     private String url;
-    private String title;
     private String name;
-    private long creatTime;
+    private String time;
+    private String content;
 
     public int getId() {
         return id;
@@ -28,14 +29,6 @@ public class NewActivityModel implements Serializable{
         this.url = url;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getName() {
         return name;
     }
@@ -44,11 +37,19 @@ public class NewActivityModel implements Serializable{
         this.name = name;
     }
 
-    public long getCreatTime() {
-        return creatTime;
+    public String getTime() {
+        return time;
     }
 
-    public void setCreatTime(long creatTime) {
-        this.creatTime = creatTime;
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

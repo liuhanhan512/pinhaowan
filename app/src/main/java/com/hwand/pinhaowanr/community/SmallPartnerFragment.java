@@ -29,6 +29,7 @@ import com.hwand.pinhaowanr.model.SmallPartnerModel;
 import com.hwand.pinhaowanr.model.SuperMomModel;
 import com.hwand.pinhaowanr.model.TheCommunityActivityModel;
 import com.hwand.pinhaowanr.utils.AndTools;
+import com.hwand.pinhaowanr.utils.DateUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.CircleImageView;
@@ -114,8 +115,8 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
 
     final AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            ActivityDetailActivity.launch(getActivity() , theCommunityActivityModels.get(position));
         }
     };
 
@@ -170,12 +171,18 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
     @Override
     public void fetchData(){
         Map<String, String> params = new HashMap<String, String>();
+        /**
         params.put("cityType" , MainApplication.getInstance().getCityType() + "");
         AMapLocation mapLocation = MainApplication.getInstance().getAmapLocation();
         if(mapLocation != null){
             params.put("lng" , mapLocation.getLongitude() + "");
             params.put("lat" , mapLocation.getLatitude() + "");
         }
+        */
+
+        params.put("cityType" , "1");
+        params.put("lng" , "121.430829");
+        params.put("lat" , "31.228781");
 
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_BUDDY_INFO, params);
 
@@ -442,6 +449,12 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
 
             TheCommunityActivityModel theCommunityActivityModel = theCommunityActivityModels.get(position);
             ImageView imageView = CommonViewHolder.get(convertView , R.id.image);
+
+            RelativeLayout imageLayout = (RelativeLayout)convertView.findViewById(R.id.image_layout);
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) imageLayout.getLayoutParams();
+            layoutParams.height = AndTools.getScreenWidth(getActivity()) * 9 / 16;
+            imageLayout.setLayoutParams(layoutParams);
+
             AndTools.displayImage(null, theCommunityActivityModel.getUrl(), imageView);
 
             TextView signUpStatus = CommonViewHolder.get(convertView , R.id.sign_up_status);
@@ -470,8 +483,8 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
             });
 
             TextView time = CommonViewHolder.get(convertView, R.id.time);
-            String startTime = theCommunityActivityModel.getStratTime();
-            String endTime = theCommunityActivityModel.getEndTime();
+            String startTime = DateUtil.convertLongToString(theCommunityActivityModel.getStratTime());
+            String endTime = DateUtil.convertLongToString(theCommunityActivityModel.getEndTime());
             time.setText(getString(R.string.small_partner_time , startTime , endTime));
 
             TextView peopleCount = CommonViewHolder.get(convertView , R.id.people_count);

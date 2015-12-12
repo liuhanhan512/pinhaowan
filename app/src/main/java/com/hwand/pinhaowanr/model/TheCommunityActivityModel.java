@@ -1,18 +1,19 @@
 package com.hwand.pinhaowanr.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by hanhanliu on 15/12/5.
  */
-public class TheCommunityActivityModel {
+public class TheCommunityActivityModel implements Serializable{
     private int id;
     private String url;
     private String title;
     private String name;
     private String detailAddress;
-    private String stratTime;
-    private String endTime;
+    private long stratTime;
+    private long endTime;
     private int maxRoles;
     private int currRoles;
     private int money;
@@ -61,19 +62,19 @@ public class TheCommunityActivityModel {
         this.detailAddress = detailAddress;
     }
 
-    public String getStratTime() {
+    public long getStratTime() {
         return stratTime;
     }
 
-    public void setStratTime(String stratTime) {
+    public void setStratTime(long stratTime) {
         this.stratTime = stratTime;
     }
 
-    public String getEndTime() {
+    public long getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(long endTime) {
         this.endTime = endTime;
     }
 
