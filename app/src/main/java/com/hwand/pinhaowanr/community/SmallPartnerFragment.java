@@ -2,7 +2,6 @@ package com.hwand.pinhaowanr.community;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,18 +16,17 @@ import com.amap.api.location.AMapLocation;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
-import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.CommonViewHolder;
 import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.FleaActivityModel;
-import com.hwand.pinhaowanr.model.HomePageModel;
 import com.hwand.pinhaowanr.model.NewActivityModel;
 import com.hwand.pinhaowanr.model.RoleModel;
 import com.hwand.pinhaowanr.model.SmallPartnerModel;
 import com.hwand.pinhaowanr.model.SuperMomModel;
 import com.hwand.pinhaowanr.model.TheCommunityActivityModel;
 import com.hwand.pinhaowanr.utils.AndTools;
+import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.CircleImageView;
@@ -173,12 +171,17 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
         params.put("cityType" , MainApplication.getInstance().getCityType() + "");
         AMapLocation mapLocation = MainApplication.getInstance().getAmapLocation();
         if(mapLocation != null){
-            params.put("lng" , mapLocation.getLongitude() + "");
-            params.put("lat" , mapLocation.getLatitude() + "");
+            // TODO:
+//            params.put("lng" , mapLocation.getLongitude() + "");
+//            params.put("lat" , mapLocation.getLatitude() + "");
+
+            params.put("lng" ,"121.461409");
+            params.put("lat" , "31.201536");
         }
 
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_BUDDY_INFO, params);
 
+        LogUtil.d("dxz", url);
         NetworkRequest.get(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

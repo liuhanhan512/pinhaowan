@@ -2,16 +2,12 @@ package com.hwand.pinhaowanr.community;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -19,11 +15,9 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
-import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.CommonViewHolder;
 import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
-import com.hwand.pinhaowanr.model.HomePageModel;
 import com.hwand.pinhaowanr.model.SpellDCategoryModel;
 import com.hwand.pinhaowanr.model.SpellDEntity;
 import com.hwand.pinhaowanr.model.SpellDModel;
@@ -154,13 +148,59 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
                 mSwipeRefreshLayout.setRefreshing(false);
                 if (!TextUtils.isEmpty(response)) {
                     Gson gson = new Gson();
-                    SpellDEntity spellDEntity = gson.fromJson(response , SpellDEntity.class);
-                    if(spellDEntity != null){
+                    SpellDEntity spellDEntity = gson.fromJson(response, SpellDEntity.class);
+                    if (spellDEntity != null) {
 
                         List<SpellDCategoryModel> spellDCategoryModels = spellDEntity.getClassTypeList();
                         wrapperSpellDCategoryData(spellDCategoryModels);
 
                         List<SpellDModel> spellDModels = spellDEntity.getPinClassList();
+                        updatePinView(spellDModels);
+
+                        if ((spellDCategoryModels != null && spellDCategoryModels.size() > 0) || (spellDModels != null && spellDModels.size() > 0)) {
+                            mEmptyView.setVisibility(View.GONE);
+                            mScrollView.setVisibility(View.VISIBLE);
+                        } else {
+                            mEmptyView.setVisibility(View.VISIBLE);
+                            mScrollView.setVisibility(View.GONE);
+                        }
+                    }
+
+                } else {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    mScrollView.setVisibility(View.GONE);
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mSwipeRefreshLayout.setRefreshing(false);
+                mEmptyView.setVisibility(View.VISIBLE);
+                mScrollView.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    public void filterData(){
+        // TODO:
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("cityType" , MainApplication.getInstance().getCityType() + "");
+        params.put("classType" , 0 + "");
+        params.put("type" , 0 + "");
+        params.put("minAge" , 0 + "");
+        params.put("maxAge" , 0 + "");
+        params.put("startIndex" , 0 + "");
+        params.put("endIndex" , 0 + "");
+        String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_PIN_CLASS, params);
+        NetworkRequest.get(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                // TODO:
+                mSwipeRefreshLayout.setRefreshing(false);
+                if (!TextUtils.isEmpty(response)) {
+                    List<SpellDModel> spellDModels = SpellDModel.arrayFromData(response);
+                    if(spellDModels != null){
                         updatePinView(spellDModels);
 
                         if((spellDCategoryModels != null && spellDCategoryModels.size() > 0) || (spellDModels != null && spellDModels.size() > 0) ){

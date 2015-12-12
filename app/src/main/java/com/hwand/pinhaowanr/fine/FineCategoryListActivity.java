@@ -122,6 +122,8 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
     }
 
     private void initTitle(){
+        // 显示类型（viewType）1 兴趣益教 2 演出展览 3 游乐
+        setActionBarTtile("游乐");
 
     }
 
