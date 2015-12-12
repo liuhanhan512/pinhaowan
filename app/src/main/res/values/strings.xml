@@ -81,6 +81,10 @@
     <string name="input_comment_tips">请输入评论</string>
     <string name="activity_detail_discuss">详情评论</string>
     <string name="discuss_null_tips">评论不能为空</string>
+    <string name="pin_class">拼一个</string>
+    <string name="launch_people">发起人</string>
+    <string name="spell_d_class_time">时间: %s</string>
+    <string name="spell_d_people_count">人数：%1$d / %2$d</string>
 
     <string name="calendar_sunday">日</string>
     <string name="calendar_monday">一</string>

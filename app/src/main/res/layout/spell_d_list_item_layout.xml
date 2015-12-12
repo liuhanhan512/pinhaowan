@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/image_layout"
@@ -11,16 +11,16 @@
 
         <ImageView
             android:id="@+id/image"
-            android:scaleType="fitXY"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:scaleType="fitXY" />
 
         <TextView
             android:id="@+id/description"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="4dp"
             android:gravity="center"
 
             />
@@ -28,212 +28,52 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:paddingRight="6dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingRight="6dp">
 
         <TextView
             android:id="@+id/view_pin_class"
-            android:background="@mipmap/corner_yellow_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="@string/view_pin_class"
+            android:background="@mipmap/corner_yellow_bg"
             android:gravity="center"
+            android:paddingBottom="4dp"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
             android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:text="@string/view_pin_class" />
 
         <RelativeLayout
             android:id="@+id/left_layout"
-            android:layout_toLeftOf="@+id/view_pin_class"
-            android:layout_centerVertical="true"
-            android:paddingLeft="12dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/view_pin_class"
+            android:paddingBottom="6dp"
+            android:paddingLeft="12dp"
+            android:paddingTop="6dp">
 
             <TextView
                 android:id="@+id/class_name"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:gravity="left|center"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:gravity="left|center"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/class_name"
                 android:layout_marginTop="6dp"
-                android:textSize="14sp"
                 android:gravity="left|center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:textSize="14sp" />
         </RelativeLayout>
     </RelativeLayout>
-
-    <!--
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp">
-
-        <RelativeLayout
-            android:id="@+id/launch_people_layout"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
-            <com.hwand.pinhaowanr.widget.CircleImageView
-                android:id="@+id/launch_image"
-                android:layout_centerHorizontal="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/name"
-                android:layout_below="@+id/launch_image"
-                android:layout_marginTop="6dp"
-                android:layout_centerHorizontal="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/people_role"
-                android:layout_below="@+id/name"
-                android:layout_marginTop="6dp"
-                android:layout_centerHorizontal="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/right_layout"
-            android:layout_toRightOf="@+id/launch_people_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/topic"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:layout_marginTop="4dp"
-                android:id="@+id/address"
-                android:layout_below="@+id/topic"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/time"
-                android:layout_marginTop="12dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/people_count"
-                android:layout_marginTop="6dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <RelativeLayout
-                android:id="@+id/right_bottom_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/money"
-                    android:layout_toLeftOf="@+id/spell_text"
-                    android:gravity="left|center"
-                    android:layout_centerVertical="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/spell_text"
-                    android:background="@mipmap/corner_yellow_bg"
-                    android:text="@string/spell"
-                    android:gravity="center"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </RelativeLayout>
-
-        </RelativeLayout>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp">
-
-        <TextView
-            android:id="@+id/partner"
-            android:layout_width="60dp"
-            android:text="@string/partner"
-            android:gravity="center"
-            android:layout_height="match_parent" />
-
-        <View
-            android:id="@+id/indicator2"
-            android:layout_toRightOf="@+id/partner"
-            android:layout_width="1dp"
-            android:layout_height="match_parent">
-
-        </View>
-
-        <LinearLayout
-            android:weightSum="6"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
-            android:layout_toRightOf="@+id/indicator2"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.hwand.pinhaowanr.widget.CircleImageView
-                android:layout_weight="1"
-                android:id="@+id/avatar1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content" />
-            <com.hwand.pinhaowanr.widget.CircleImageView
-                android:layout_weight="1"
-                android:id="@+id/avatar2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content" />
-            <com.hwand.pinhaowanr.widget.CircleImageView
-                android:layout_weight="1"
-                android:id="@+id/avatar3"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content" />
-            <com.hwand.pinhaowanr.widget.CircleImageView
-                android:layout_weight="1"
-                android:id="@+id/avatar4"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content" />
-            <com.hwand.pinhaowanr.widget.CircleImageView
-                android:layout_weight="1"
-                android:id="@+id/avatar5"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content" />
-            <com.hwand.pinhaowanr.widget.CircleImageView
-                android:layout_weight="1"
-                android:id="@+id/avatar6"
-                android:src="@mipmap/add"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-    </RelativeLayout>
-    -->
 
 </LinearLayout>

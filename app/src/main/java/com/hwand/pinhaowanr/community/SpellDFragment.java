@@ -278,10 +278,10 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
             if(convertView == null){
                 convertView = View.inflate(getActivity() , R.layout.spell_d_list_item_layout , null);
             }
-            SpellDModel spellDModel = spellDModels.get(position);
+            final SpellDModel spellDModel = spellDModels.get(position);
 
             RelativeLayout imageLayout = CommonViewHolder.get(convertView , R.id.image_layout);
-            int screenWidth = AndTools.getScreenWidth(getActivity());
+            final int screenWidth = AndTools.getScreenWidth(getActivity());
             int height = screenWidth * 9 / 16;
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) imageLayout.getLayoutParams();
             layoutParams.height = height;
@@ -298,6 +298,13 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
 
             TextView address = CommonViewHolder.get(convertView , R.id.address);
             address.setText(spellDModel.getDetailAddress());
+
+            convertView.findViewById(R.id.view_pin_class).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SpellDListActivity.launch(getActivity() , spellDModel.getId());
+                }
+            });
             return convertView;
         }
     }
