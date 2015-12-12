@@ -177,7 +177,8 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
         ShareInfo shareInfo = new ShareInfo();
         shareInfo.setTitle("Test");
         shareInfo.setContent("Test Content");
-        shareInfo.setPictureUrl(PIC_URL);
+//        shareInfo.setPictureUrl(PIC_URL);
+        shareInfo.setLinkUrl("http://www.baidu.com");
         return shareInfo;
     }
 
