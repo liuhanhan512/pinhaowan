@@ -1,9 +1,11 @@
 package com.hwand.pinhaowanr.model;
 
+import java.io.Serializable;
+
 /**
  * Created by hanhanliu on 15/12/5.
  */
-public class RoleModel {
+public class RoleModel implements Serializable{
     private int id;
     private String url;
     private String name;

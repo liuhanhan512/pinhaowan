@@ -77,8 +77,10 @@
     <string name="sign_up_time">报名时段</string>
     <string name="discuss">讨论</string>
     <string name="activity_people_count">活动人数: %d</string>
-
-
+    <string name="send">发送</string>
+    <string name="input_comment_tips">请输入评论</string>
+    <string name="activity_detail_discuss">详情评论</string>
+    <string name="discuss_null_tips">评论不能为空</string>
 
     <string name="calendar_sunday">日</string>
     <string name="calendar_monday">一</string>

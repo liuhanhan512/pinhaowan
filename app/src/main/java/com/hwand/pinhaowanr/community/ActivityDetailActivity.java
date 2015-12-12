@@ -165,6 +165,7 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
         super.onClick(v);
         switch (v.getId()){
             case R.id.discuss_layout:
+                ActivityDetailDiscussActivity.launch(this , mActivityId);
                 break;
             case R.id.share_layout:
                 onShare();
