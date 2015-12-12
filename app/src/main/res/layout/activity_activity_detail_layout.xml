@@ -104,65 +104,103 @@
 
                 </LinearLayout>
 
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginTop="12dp"
-                    android:drawableLeft="@mipmap/fine_group_item_image_divider"
-                    android:drawablePadding="6dp"
-                    android:gravity="left|center"
-                    android:text="@string/activity_description" />
-
-                <ImageView
-                    android:id="@+id/image_description"
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:id="@+id/activity_description_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="120dp" />
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginTop="12dp"
+                        android:drawableLeft="@mipmap/fine_group_item_image_divider"
+                        android:drawablePadding="6dp"
+                        android:gravity="left|center"
+                        android:text="@string/activity_description" />
+
+                    <ImageView
+                        android:scaleType="fitXY"
+                        android:id="@+id/image_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp" />
 
 
-                <TextView
-                    android:id="@+id/activity_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:gravity="left|center"
-                    android:text="@string/activity_detail" />
+                    <TextView
+                        android:id="@+id/activity_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginLeft="12dp"
+                        android:lineSpacingExtra="2dp"
+                        android:lineSpacingMultiplier="1.5"
+                        android:gravity="left|center"
+                        android:text="@string/activity_detail" />
+                </LinearLayout>
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:layout_marginLeft="12dp"
-                    android:drawableLeft="@mipmap/fine_group_item_image_divider"
-                    android:drawablePadding="6dp"
-                    android:gravity="left|center"
-                    android:text="@string/sign_up_time" />
 
                 <LinearLayout
-                    android:id="@+id/sign_up_container"
+                    android:id="@+id/sign_up_layout"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_marginLeft="12dp"
+                        android:drawableLeft="@mipmap/fine_group_item_image_divider"
+                        android:drawablePadding="6dp"
+                        android:gravity="left|center"
+                        android:text="@string/sign_up_time" />
+
+                    <View
+                        android:background="@color/color_divider_line"
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"></View>
+
+                    <LinearLayout
+                        android:id="@+id/sign_up_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:layout_marginLeft="12dp"
-                    android:drawableLeft="@mipmap/fine_group_item_image_divider"
-                    android:drawablePadding="6dp"
-                    android:gravity="left|center"
-                    android:text="@string/discuss" />
-
                 <LinearLayout
-                    android:id="@+id/comment_container"
+                    android:id="@+id/comment_layout"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_marginLeft="12dp"
+                        android:drawableLeft="@mipmap/fine_group_item_image_divider"
+                        android:drawablePadding="6dp"
+                        android:gravity="left|center"
+                        android:text="@string/discuss" />
+
+                    <View
+                        android:background="@color/color_divider_line"
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"></View>
+
+                    <LinearLayout
+                        android:id="@+id/comment_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
 
                 </LinearLayout>
+
 
 
 

@@ -54,6 +54,7 @@
     <string name="sign_up">报名</string>
     <string name="small_partner_time">时间: %1$s 至 %2$s</string>
     <string name="sign_up_times">报名时间: %1$s - %2$s</string>
+    <string name="time">%1$s - %2$s</string>
     <string name="people_count">人数: %d人</string>
     <string name="sign_up_people_count">已报名 %d人</string>
     <string name="fetch_from_ablum">从相册选择</string>

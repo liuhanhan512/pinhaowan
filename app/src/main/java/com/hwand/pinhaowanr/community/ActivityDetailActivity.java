@@ -15,15 +15,19 @@ import com.google.gson.Gson;
 import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.ActivityModel;
+import com.hwand.pinhaowanr.model.ActivitySignModel;
 import com.hwand.pinhaowanr.model.ClassDetailModel;
 import com.hwand.pinhaowanr.model.TheCommunityActivityModel;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.DateUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
+import com.hwand.pinhaowanr.widget.ActivityDetailSignUpView;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,6 +46,13 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private ActivityModel mActivityModel;
+
+    private LinearLayout mActivityDescriptionLayout;
+    private ImageView mDescriptionImage;
+    private TextView  mDescriptionText;
+
+    private LinearLayout mSignUoLayout, mSignUpContainer;
+    private LinearLayout mCommentLayout , mCommoentContainer;
 
     public static void launch(Context context){
         Intent intent = new Intent();
@@ -115,6 +126,16 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
             peopleCount.setText(getString(R.string.activity_people_count , mTheCommunityActivityModel.getMaxRoles()));
 
         }
+        mActivityDescriptionLayout = (LinearLayout)findViewById(R.id.activity_description_layout);
+        mDescriptionImage = (ImageView)findViewById(R.id.image_description);
+        mDescriptionText  = (TextView)findViewById(R.id.activity_description);
+
+        mSignUoLayout = (LinearLayout)findViewById(R.id.sign_up_layout);
+        mSignUpContainer = (LinearLayout)findViewById(R.id.sign_up_container);
+
+        mCommentLayout = (LinearLayout)findViewById(R.id.comment_layout);
+        mCommoentContainer = (LinearLayout)findViewById(R.id.comment_container);
+
     }
 
     private void fetchData(){
@@ -127,7 +148,10 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
                 mSwipeRefreshLayout.setRefreshing(false);
                 if (!TextUtils.isEmpty(response)) {
                     Gson gson = new Gson();
-                    mTheCommunityActivityModel = gson.fromJson(response, TheCommunityActivityModel.class);
+                    mActivityModel = gson.fromJson(response, ActivityModel.class);
+                    if(mActivityModel != null){
+                        updateViews();
+                    }
                 }
 
             }
@@ -140,6 +164,44 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
     }
 
     private void updateViews(){
+        String url = mActivityModel.getUrl();
+        String content = mActivityModel.getContent();
+        if(TextUtils.isEmpty(url) && TextUtils.isEmpty(content)){
+            mActivityDescriptionLayout.setVisibility(View.GONE);
+        } else {
+            mActivityDescriptionLayout.setVisibility(View.VISIBLE);
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mDescriptionImage.getLayoutParams();
+            layoutParams.height = AndTools.getScreenWidth(this) * 9 / 16;
+            mDescriptionImage.setLayoutParams(layoutParams);
+            AndTools.displayImage(null, url, mDescriptionImage);
+
+            mDescriptionText.setText("   " +content);
+        }
+
+        List<ActivitySignModel> signModelList = mActivityModel.getSignTimeList();
+        if(signModelList == null || signModelList.size() <= 0){
+            mSignUoLayout.setVisibility(View.GONE);
+        } else {
+            mSignUoLayout.setVisibility(View.VISIBLE);
+            for(ActivitySignModel activitySignModel : signModelList){
+                ActivityDetailSignUpView activityDetailSignUpView = new ActivityDetailSignUpView(this);
+                activityDetailSignUpView.setOnSignUpClickListener(new ActivityDetailSignUpView.OnSignUpClickListener() {
+                    @Override
+                    public void onSignUpClick() {
+
+                    }
+                });
+                SimpleDateFormat myFmt= new SimpleDateFormat("MM月dd日");
+
+                String time = getString(R.string.time , DateUtil.convertLongToString(activitySignModel.getStartTime() ,myFmt) ,
+                        DateUtil.convertLongToString(activitySignModel.getEndTime() ,myFmt));
+                activityDetailSignUpView.setTimeText(time);
+
+                activityDetailSignUpView.setTicketsText(getString(R.string.remainder_tickets , activitySignModel.getRemainTicket()));
+                mSignUpContainer.addView(activityDetailSignUpView);
+            }
+        }
+
 
     }
 

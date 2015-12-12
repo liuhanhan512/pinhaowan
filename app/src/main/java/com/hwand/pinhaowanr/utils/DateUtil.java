@@ -17,4 +17,11 @@ public class DateUtil {
         return dateFormatted;
     }
 
+    public static String convertLongToString(long timeSTamp , DateFormat dateFormat){
+        Date date = new Date(timeSTamp);
+        String dateFormatted = dateFormat.format(date);
+
+        return dateFormatted;
+    }
+
 }
