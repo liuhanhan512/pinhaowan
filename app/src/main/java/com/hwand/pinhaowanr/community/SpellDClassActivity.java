@@ -4,25 +4,39 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.hwand.pinhaowanr.BaseActivity;
+import com.hwand.pinhaowanr.CommonViewHolder;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.fine.FineDetailActivity;
 import com.hwand.pinhaowanr.model.ActivityModel;
+import com.hwand.pinhaowanr.model.ClassDetailTitleModel;
 import com.hwand.pinhaowanr.model.SpellDCategoryModel;
 import com.hwand.pinhaowanr.model.SpellDClassModel;
+import com.hwand.pinhaowanr.model.SpellDClassStageModel;
+import com.hwand.pinhaowanr.model.SpellDClassTtileModel;
 import com.hwand.pinhaowanr.model.SpellDModel;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,7 +57,17 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
 
     private ImageView mImage;
 
+    private TextView mAge;
+
+    private LinearLayout mTimeContainer;
+
     private SpellDClassModel mSpellDClassModel;
+
+    private ListView mListView;
+
+    private Adapter mAdapter;
+
+    private List<SpellDClassTtileModel> spellDClassTtileModels = new ArrayList<SpellDClassTtileModel>();
 
     public static void launch(Context context , int id){
         Intent intent = new Intent();
@@ -90,12 +114,27 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
         mSwipeRefreshLayout.setColorScheme(android.R.color.white, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
-        mImage = (ImageView)findViewById(R.id.image);
+        mListView = (ListView) findViewById(R.id.listview);
+        mListView.addHeaderView(initHeaderView());
+        mListView.addFooterView(initFooterView());
+
+        mAdapter = new Adapter();
+        mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(mOnItemClickListener);
+
+    }
+
+    private View initHeaderView() {
+
+        View headerView = View.inflate(this, R.layout.spell_d_class_detail_listview_header_layout, null);
+        mImage = (ImageView) headerView.findViewById(R.id.image);
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mImage.getLayoutParams();
         layoutParams.height = AndTools.getScreenWidth(this) * 9 / 16;
         mImage.setLayoutParams(layoutParams);
+        mAge = (TextView)headerView .findViewById(R.id.age);
+        TextView address = (TextView)headerView.findViewById(R.id.address);
 
-        TextView address = (TextView)findViewById(R.id.address);
+        mTimeContainer = (LinearLayout)headerView.findViewById(R.id.time_container);
 
         if(mSpellDModel != null){
             AndTools.displayImage(null , mSpellDModel.getPictureUrl() , mImage);
@@ -103,7 +142,22 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
             address.setText(mSpellDModel.getDetailAddress());
 
         }
+
+        return headerView;
     }
+
+    private View initFooterView(){
+        View footerView = View.inflate(this , R.layout.spell_d_class_detail_listview_footer_layout , null);
+
+        return footerView;
+    }
+
+    final AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+        }
+    };
 
     private void fetchData(){
         Map<String, String> params = new HashMap<String, String>();
@@ -117,6 +171,12 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
                     Gson gson = new Gson();
                     mSpellDClassModel = gson.fromJson(response , SpellDClassModel.class);
                     if(mSpellDClassModel != null){
+                        List<SpellDClassTtileModel> spellDClassTtileModelList = mSpellDClassModel.getTitleList();
+                        if(spellDClassTtileModelList != null){
+                            spellDClassTtileModels.clear();
+                            spellDClassTtileModels.addAll(spellDClassTtileModelList);
+                            mAdapter.notifyDataSetChanged();
+                        }
                         updateViews();
                     }
                 }
@@ -131,11 +191,52 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
     }
 
     private void updateViews(){
-
+        mAge.setText(getString(R.string.fine_detail_age , mSpellDClassModel.getMinAge() , mSpellDClassModel.getMaxAge()));
     }
 
     @Override
     public void onRefresh() {
         fetchData();
+    }
+
+    class Adapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return spellDClassTtileModels.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup viewGroup) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(SpellDClassActivity.this)
+                        .inflate(R.layout.fine_detail_list_item_layout, viewGroup, false);
+            }
+
+            SpellDClassTtileModel spellDClassTtileModel = spellDClassTtileModels.get(position);
+            TextView title = CommonViewHolder.get(convertView, R.id.title);
+            TextView content = CommonViewHolder.get(convertView, R.id.content);
+            ImageView image = CommonViewHolder.get(convertView, R.id.image);
+            int screenWidth = AndTools.getScreenWidth(SpellDClassActivity.this);
+            int height = screenWidth * 9 / 16;
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) image.getLayoutParams();
+            layoutParams.height = height;
+            image.setLayoutParams(layoutParams);
+
+            title.setText(spellDClassTtileModel.getTitle());
+            content.setText(spellDClassTtileModel.getContent());
+            AndTools.displayImage(null, spellDClassTtileModel.getUrl(), image);
+            return convertView;
+        }
     }
 }
