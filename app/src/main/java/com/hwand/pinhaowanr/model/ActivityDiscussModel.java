@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,9 +19,10 @@ public class ActivityDiscussModel implements Serializable {
     private String time;
     private String content;
 
-    public static List<ActivityDiscussModel> arrayHomePageModelFromData(String str) {
+    public static List<ActivityDiscussModel> arrayFromData(String str) {
 
-        Type listType = new TypeToken<List<ActivityDiscussModel>>() {}.getType();
+        Type listType = new TypeToken<ArrayList<ActivityDiscussModel>>() {
+        }.getType();
 
         return new Gson().fromJson(str, listType);
     }

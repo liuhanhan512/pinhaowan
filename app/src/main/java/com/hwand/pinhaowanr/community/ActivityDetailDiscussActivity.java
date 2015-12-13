@@ -19,7 +19,6 @@ import com.google.gson.Gson;
 import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.ActivityDiscussModel;
-import com.hwand.pinhaowanr.model.ActivityModel;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
@@ -119,7 +118,7 @@ public class ActivityDetailDiscussActivity extends BaseActivity implements Swipe
                 mSwipeRefreshLayout.setRefreshing(false);
                 if (!TextUtils.isEmpty(response)) {
                     Gson gson = new Gson();
-                    List<ActivityDiscussModel> activityDiscussModels = ActivityDiscussModel.arrayHomePageModelFromData(response);
+                    List<ActivityDiscussModel> activityDiscussModels = ActivityDiscussModel.arrayFromData(response);
                     if (activityDiscussModels != null) {
                         mActivityDiscussModels.clear();
                         mActivityDiscussModels.addAll(activityDiscussModels);
