@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -13,6 +16,7 @@ import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.ActivityModel;
 import com.hwand.pinhaowanr.model.SpellDCategoryModel;
 import com.hwand.pinhaowanr.model.SpellDModel;
+import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
@@ -36,6 +40,8 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
 
     private SpellDModel mSpellDModel;
 
+    private ImageView mImage;
+
     public static void launch(Context context , int id){
         Intent intent = new Intent();
         intent.setClass(context , SpellDClassActivity.class);
@@ -45,8 +51,8 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
 
     public static void launch(Context context , SpellDModel spellDModel){
         Intent intent = new Intent();
-        intent.setClass(context , SpellDClassActivity.class);
-        intent.putExtra(SPELL_D_CATEGORY_KEY ,spellDModel);
+        intent.setClass(context, SpellDClassActivity.class);
+        intent.putExtra(SPELL_D_CATEGORY_KEY, spellDModel);
         context.startActivity(intent);
     }
 
@@ -81,6 +87,19 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
         mSwipeRefreshLayout.setColorScheme(android.R.color.white, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
+        mImage = (ImageView)findViewById(R.id.image);
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mImage.getLayoutParams();
+        layoutParams.height = AndTools.getScreenWidth(this) * 9 / 16;
+        mImage.setLayoutParams(layoutParams);
+
+        TextView address = (TextView)findViewById(R.id.address);
+
+        if(mSpellDModel != null){
+            AndTools.displayImage(null , mSpellDModel.getPictureUrl() , mImage);
+
+            address.setText(mSpellDModel.getDetailAddress());
+
+        }
     }
 
     private void fetchData(){
