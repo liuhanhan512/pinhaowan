@@ -29,6 +29,6 @@ public class WeixinFriendShareUnit extends BaseShareUnit {
         Bitmap defaultBitmap= BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_share_wx_group_default);
 
         ShareToManager.getInstance().getWeiXinExecutor().doShareHypeLink(title, content, null,
-                compressImageBySize(defaultBitmap, 30),picUrl, false, null);
+                compressImageBySize(defaultBitmap, 30),link, false, null);
     }
 }

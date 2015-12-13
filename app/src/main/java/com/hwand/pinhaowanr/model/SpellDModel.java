@@ -3,13 +3,14 @@ package com.hwand.pinhaowanr.model;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.List;
 
 /**
  * Created by hanhanliu on 15/12/6.
  */
-public class SpellDModel {
+public class SpellDModel implements Serializable{
     private long createTime;
     private String pictureUrl;
     private String subtitle;

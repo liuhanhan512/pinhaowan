@@ -49,8 +49,7 @@
         <!-- ###################添加UmengAppkey###################### -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="5653cc9667e58ee412002400" >
-        </meta-data>
+            android:value="5653cc9667e58ee412002400"></meta-data>
 
         <!-- 高德定位sdk配置 -->
         <meta-data
@@ -164,6 +163,22 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <activity
+            android:name=".community.ActivityDetailDiscussActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
+            android:theme="@style/Actionbar_Animation"></activity>
+
+        <activity android:name=".community.SpellDClassActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Actionbar_Animation"></activity>
+
+        <activity android:name=".community.LaunchSpellDActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Actionbar_Animation"></activity>
+
+
     </application>
 
 
