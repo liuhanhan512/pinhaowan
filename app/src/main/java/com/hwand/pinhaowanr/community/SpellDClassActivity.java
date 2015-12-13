@@ -153,6 +153,10 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
     private View initFooterView(){
         View footerView = View.inflate(this , R.layout.spell_d_class_detail_listview_footer_layout , null);
 
+        mOnceCost = (TextView)footerView.findViewById(R.id.one_visit_cost);
+        mStageCost = (TextView)footerView.findViewById(R.id.stage_visit_cost);
+        mAllYearCost = (TextView)footerView.findViewById(R.id.all_visit_cost);
+
         return footerView;
     }
 
@@ -209,6 +213,10 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
                 mTimeContainer.addView(spellDTimeView);
             }
         }
+
+        mOnceCost.setText(mSpellDClassModel.getOncePrice() +"");
+        mStageCost.setText(mSpellDClassModel.getStagePrice() +"");
+        mAllYearCost.setText(mSpellDClassModel.getYearPrice() + "");
     }
 
     @Override
