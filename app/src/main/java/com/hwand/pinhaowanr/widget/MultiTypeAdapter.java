@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.MsgInfo;
+import com.hwand.pinhaowanr.utils.LogUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.text.DateFormatSymbols;
@@ -50,8 +52,17 @@ public class MultiTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        // TODO:
-        return super.getItemViewType(position);
+        final MsgInfo msg = mDatas.get(position);
+        LogUtil.d("dxz",mDatas.size()+"");
+        if (msg != null) {
+            LogUtil.d("dxz","getItemViewType");
+            if (msg.getSendId() == DataCacheHelper.getInstance().getUserInfo().getRoleId()) {
+                return TYPE_ITEM_TO;
+            } else {
+                return TYPE_ITEM_FROM;
+            }
+        }
+        return TYPE_ITEM_FROM;
     }
 
     @Override
@@ -78,6 +89,7 @@ public class MultiTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         MsgViewHolder holder;
+        LogUtil.d("dxz","viewType"+viewType);
         if (viewType == TYPE_ITEM_FROM) {
             View view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_from, parent, false);
             holder = new MsgViewHolder(view);

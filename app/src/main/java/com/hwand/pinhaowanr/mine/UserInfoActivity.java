@@ -1,6 +1,7 @@
 package com.hwand.pinhaowanr.mine;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -67,8 +68,11 @@ public class UserInfoActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 // TODO
-                if(MainApplication.getInstance().isLogin()) {
-//                    focus();
+                if (MainApplication.getInstance().isLogin()) {
+                    Intent intent = new Intent();
+                    intent.setClass(UserInfoActivity.this, MessageActivity.class);
+                    intent.putExtra(MessageActivity.KEY_INTENT_ID, mID);
+                    startActivity(intent);
                 } else {
                     AndTools.showToast("发私信需要登录");
                 }
@@ -77,7 +81,7 @@ public class UserInfoActivity extends BaseActivity {
         mBtnFocus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(MainApplication.getInstance().isLogin()) {
+                if (MainApplication.getInstance().isLogin()) {
                     focus();
                 } else {
                     AndTools.showToast("关注需要登录");
@@ -156,15 +160,15 @@ public class UserInfoActivity extends BaseActivity {
                 // 0 失败（这个角色不存在） 1 成功
                 if (!TextUtils.isEmpty(response) && response.contains("1")) {
                     try {
-                        JSONObject json= new JSONObject(response);
+                        JSONObject json = new JSONObject(response);
                         int focus = json.optInt("focus");
                         if (focus != 0) {
-                            mFocusCount.setText(focus+"人");
+                            mFocusCount.setText(focus + "人");
                             AndTools.showToast("关注成功");
                         } else {
                             AndTools.showToast("关注失败");
                         }
-                    } catch (Exception e){
+                    } catch (Exception e) {
                         AndTools.showToast("关注失败");
                     }
 

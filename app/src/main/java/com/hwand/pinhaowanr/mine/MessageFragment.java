@@ -1,6 +1,7 @@
 package com.hwand.pinhaowanr.mine;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -212,13 +213,18 @@ public class MessageFragment extends BaseFragment implements SwipeRefreshLayout.
         if (isLoading) {
             LogUtil.d("dxz", "ignore manually update!");
         } else {
+            mCount = 0;
+            noData = false;
             request();//这里多线程也要手动控制isLoading
         }
     }
 
     @Override
     public void onItemClick(View view, int position) {
-
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), MessageActivity.class);
+        intent.putExtra(MessageActivity.KEY_INTENT_ID, (int) mAdapter.getItemId(position));
+        startActivity(intent);
     }
 
     @Override

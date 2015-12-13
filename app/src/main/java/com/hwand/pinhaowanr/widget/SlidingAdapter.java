@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.event.DeleteAllEvent;
 import com.hwand.pinhaowanr.model.MsgInfo;
@@ -61,6 +62,20 @@ public class SlidingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public int getItemCount() {
         return mDatas.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        final MsgInfo msg = mDatas.get(position);
+        LogUtil.d("dxz", mDatas.size() + "");
+        if (msg != null) {
+            if (msg.getSendId() == DataCacheHelper.getInstance().getUserInfo().getRoleId()) {
+                return msg.getAcceptId();
+            } else {
+                return msg.getSendId();
+            }
+        }
+        return super.getItemId(position);
     }
 
     @Override

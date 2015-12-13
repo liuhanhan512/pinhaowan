@@ -12,8 +12,10 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseActivity;
+import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.MsgInfo;
+import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
@@ -23,6 +25,7 @@ import com.hwand.pinhaowanr.widget.MultiTypeAdapter;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,6 +40,7 @@ public class MessageActivity extends BaseActivity {
     private TextView mSend;
 
     private MultiTypeAdapter mAdapter;
+    List<MsgInfo> datas = new ArrayList<MsgInfo>();
 
     private int mID;
 
@@ -49,14 +53,20 @@ public class MessageActivity extends BaseActivity {
         mID = getIntent().getIntExtra(KEY_INTENT_ID, 0);
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setStackFromEnd(true);
+//        layoutManager.setStackFromEnd(true);
         mMsgInput = (EditText) findViewById(R.id.msg_input);
         mSend = (TextView) findViewById(R.id.btn_send);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(layoutManager);
-        mAdapter = new MultiTypeAdapter(this, new ArrayList<MsgInfo>());
+        mAdapter = new MultiTypeAdapter(this, datas);
         mRecyclerView.setAdapter(mAdapter);
         request();
+        mSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                senMsg();
+            }
+        });
 
     }
 
@@ -69,17 +79,17 @@ public class MessageActivity extends BaseActivity {
             @Override
             public void onResponse(String response) {
                 LogUtil.d("dxz", response);
-                if (!TextUtils.isEmpty(response) && response.contains("1")) {
+                if (!TextUtils.isEmpty(response)) {
                     // TODO:
+                    List<MsgInfo> msgs = MsgInfo.arrayFromData(response);
+                    if (msgs != null && msgs.size() > 0) {
+                        LogUtil.d("dxz", msgs.size() + "");
+                        datas.clear();
+                        datas.addAll(msgs);
+                        mAdapter.update(datas);
+                    }
                 } else {
-                    new DDAlertDialog.Builder(MessageActivity.this)
-                            .setTitle("提示").setMessage("网络问题请重试！")
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
+                    LogUtil.d("dxz","null");
                 }
 
 
@@ -101,7 +111,7 @@ public class MessageActivity extends BaseActivity {
     }
 
     private void senMsg() {
-        String msg = mMsgInput.getText().toString();
+        final String msg = mMsgInput.getText().toString();
         mMsgInput.setError(null);
         boolean cancel = false;
         View focusView = null;
@@ -127,8 +137,17 @@ public class MessageActivity extends BaseActivity {
                     LogUtil.d("dxz", response);
                     //结果（result）0 失败(这个角色不存在) 1 成功
                     if (!TextUtils.isEmpty(response) && response.contains("1")) {
-
-                        // TODO:
+                        AndTools.showToast("发送成功！");
+                        MsgInfo msgInfo = new MsgInfo();
+                        msgInfo.setUrl(DataCacheHelper.getInstance().getUserInfo().getUrl());
+                        msgInfo.setSendId(DataCacheHelper.getInstance().getUserInfo().getRoleId());
+                        msgInfo.setAcceptId(mID);
+                        msgInfo.setContent(msg);
+                        msgInfo.setName(DataCacheHelper.getInstance().getUserInfo().getName());
+                        msgInfo.setTime(System.currentTimeMillis());
+                        msgInfo.setType(1);
+                        datas.add(msgInfo);
+                        mAdapter.update(datas);
                     } else {
                         new DDAlertDialog.Builder(MessageActivity.this)
                                 .setTitle("提示").setMessage("网络问题请重试！")
