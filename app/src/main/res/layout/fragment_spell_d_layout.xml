@@ -143,7 +143,7 @@
                     android:cacheColorHint="#00000000"
                     android:fadingEdge="none"
                     android:scrollbars="none"
-
+                    android:listSelector="#00000000"
                     >
 
                 </com.hwand.pinhaowanr.widget.SubListView>
