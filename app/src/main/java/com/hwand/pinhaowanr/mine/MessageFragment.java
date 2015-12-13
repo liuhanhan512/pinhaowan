@@ -215,6 +215,7 @@ public class MessageFragment extends BaseFragment implements SwipeRefreshLayout.
         } else {
             mCount = 0;
             noData = false;
+            mAdapter.clear();
             request();//这里多线程也要手动控制isLoading
         }
     }

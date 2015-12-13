@@ -59,6 +59,10 @@ public class SlidingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.notifyDataSetChanged();
     }
 
+    public void clear() {
+        mDatas.clear();
+    }
+
     @Override
     public int getItemCount() {
         return mDatas.size();

@@ -35,13 +35,19 @@ public class MultiTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public MultiTypeAdapter(Context context, List<MsgInfo> datas) {
         mContext = context;
-        mDatas = datas;
+        mDatas.clear();
+        mDatas.addAll(datas);
 
     }
 
     public void update(List<MsgInfo> datas) {
         mDatas.clear();
         mDatas.addAll(datas);
+        this.notifyDataSetChanged();
+    }
+
+    public void update(MsgInfo data) {
+        mDatas.add(data);
         this.notifyDataSetChanged();
     }
 
