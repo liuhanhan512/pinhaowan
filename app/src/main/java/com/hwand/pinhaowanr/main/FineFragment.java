@@ -92,7 +92,7 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -298,7 +298,9 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                             break;
                         }
                     }
-                    addHomePageModel(homePageModel ,type);
+                    if(!isAdd){
+                        addHomePageModel(homePageModel ,type);
+                    }
 
                 }
             }
