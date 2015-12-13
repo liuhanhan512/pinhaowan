@@ -49,7 +49,7 @@
     <string name="free">免费</string>
     <string name="starting">首发</string>
     <string name="back_out">再按一次退出程序</string>
-    <string name="price">￥ %d</string>
+    <string name="price">￥ %s</string>
     <string name="distance">距离 %dm</string>
     <string name="sign_up">报名</string>
     <string name="small_partner_time">时间: %1$s 至 %2$s</string>

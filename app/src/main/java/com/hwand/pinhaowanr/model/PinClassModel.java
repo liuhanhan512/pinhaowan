@@ -33,7 +33,7 @@ public class PinClassModel implements Serializable {
     private String pinTime;
     private int maxRole;
     private int currentRole;
-    private int money;
+    private String money;
 
     private List<PinClassPeopleModel> attendList;
 
@@ -133,11 +133,11 @@ public class PinClassModel implements Serializable {
         this.currentRole = currentRole;
     }
 
-    public int getMoney() {
+    public String getMoney() {
         return money;
     }
 
-    public void setMoney(int money) {
+    public void setMoney(String money) {
         this.money = money;
     }
 
