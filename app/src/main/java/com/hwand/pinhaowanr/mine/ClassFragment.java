@@ -23,6 +23,7 @@ import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.main.MineFragment;
 import com.hwand.pinhaowanr.model.PinClass;
+import com.hwand.pinhaowanr.model.PinClassPeopleModel;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
@@ -30,7 +31,6 @@ import com.hwand.pinhaowanr.utils.StrUtils;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.CircleImageView;
 import com.hwand.pinhaowanr.widget.DDAlertDialog;
-import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ import java.util.Map;
 /**
  * Created by dxz on 15/12/01.
  */
-public class ClassFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class ClassFragment extends BaseFragment {
 
     public final static int SIZE = 20;
 
@@ -67,7 +67,6 @@ public class ClassFragment extends BaseFragment implements SwipeRefreshLayout.On
         }
     };
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private View mEmptyView;
     private TextView mEmptyText;
@@ -88,11 +87,6 @@ public class ClassFragment extends BaseFragment implements SwipeRefreshLayout.On
     @Override
     protected void initViews() {
         super.initViews();
-        mSwipeRefreshLayout = (SwipeRefreshLayout) mFragmentView.findViewById(R.id.swipe_container);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        //加载颜色是循环播放的，只要没有完成刷新就会一直循环，color1>color2>color3>color4
-        mSwipeRefreshLayout.setColorScheme(android.R.color.white, android.R.color.holo_green_light,
-                android.R.color.holo_orange_light, android.R.color.holo_red_light);
         mRecyclerView = (RecyclerView) mFragmentView.findViewById(R.id.recycler_view);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -138,11 +132,9 @@ public class ClassFragment extends BaseFragment implements SwipeRefreshLayout.On
 
     private void request() {
         if (noData) {
-            mSwipeRefreshLayout.setRefreshing(false);
             return;
         }
         isLoading = true;
-        mSwipeRefreshLayout.setRefreshing(true);
         Map<String, String> params = new HashMap<String, String>();
         params.put("startIndex", mCount + "");
         params.put("endIndex", mCount + SIZE + "");
@@ -152,7 +144,6 @@ public class ClassFragment extends BaseFragment implements SwipeRefreshLayout.On
             @Override
             public void onResponse(String response) {
                 LogUtil.d("dxz", response);
-                mSwipeRefreshLayout.setRefreshing(false);
                 isLoading = false;
                 if (!TextUtils.isEmpty(response)) {
                     List<PinClass> datas = PinClass.arrayFromData(response);
@@ -192,19 +183,9 @@ public class ClassFragment extends BaseFragment implements SwipeRefreshLayout.On
                                 dialog.dismiss();
                             }
                         }).show();
-                mSwipeRefreshLayout.setRefreshing(false);
                 isLoading = false;
             }
         });
-    }
-
-    @Override
-    public void onRefresh() {
-        if (isLoading) {
-            LogUtil.d("dxz", "ignore manually update!");
-        } else {
-            request();//这里多线程也要手动控制isLoading
-        }
     }
 
     private static class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -236,17 +217,57 @@ public class ClassFragment extends BaseFragment implements SwipeRefreshLayout.On
             try {
                 CardViewHolder cardHolder = (CardViewHolder) holder;
                 final PinClass pinClass = mDatas.get(position);
-                ImageLoader.getInstance().displayImage(pinClass.getUrl(), cardHolder.avator);
+                ImageLoader.getInstance().displayImage(pinClass.getUrl(), cardHolder.avatar);
                 cardHolder.tv_name.setText(pinClass.getCreateRoleName());
 //                Date date = new Date(time);
 //                Locale aLocale = Locale.US;
 //                SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm", new DateFormatSymbols(aLocale));
 //                fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
 //                cardHolder.tv_time.setText(fmt.format(date));
+                cardHolder.tv_time.setText(mContext.getString(R.string.spell_d_class_time, pinClass.getPinTime()));
                 cardHolder.tv_add.setText(pinClass.getDetailAddress());
-                cardHolder.tv_price.setText(Html.fromHtml(StrUtils.unescapeHtml("<font color='#f86150'><b>" + pinClass.getMoney())));
-                cardHolder.tv_count.setText(Html.fromHtml(StrUtils.unescapeHtml("<font color='#f86150'><b>" + pinClass.getCurrentRole()) + "/" + pinClass.getMaxRole()));
+                cardHolder.tv_price.setText(Html.fromHtml(StrUtils.unescapeHtml("￥ " + "<font color='#f86150'><b>" + pinClass.getMoney())));
+                cardHolder.tv_count.setText(Html.fromHtml(StrUtils.unescapeHtml("<font color='#f86150'><b>" + pinClass.getCurrentRole())) + "/" + pinClass.getMaxRole());
                 cardHolder.tv_add.setText(pinClass.getDetailAddress());
+
+                cardHolder.member_1.setVisibility(View.GONE);
+                cardHolder.member_2.setVisibility(View.GONE);
+                cardHolder.member_3.setVisibility(View.GONE);
+                cardHolder.member_4.setVisibility(View.GONE);
+                cardHolder.member_5.setVisibility(View.GONE);
+                List<PinClassPeopleModel> pinClassPeopleModels = pinClass.getAttendList();
+                if (pinClassPeopleModels != null) {
+                    int peopleSize = pinClassPeopleModels.size();
+                    if (peopleSize > 0) {
+                        cardHolder.member_1.setVisibility(View.VISIBLE);
+                        ImageLoader.getInstance().displayImage(pinClassPeopleModels.get(0).getUrl(), cardHolder.member_1);
+                    }
+                    if (peopleSize > 1) {
+                        cardHolder.member_2.setVisibility(View.VISIBLE);
+                        ImageLoader.getInstance().displayImage(pinClassPeopleModels.get(1).getUrl(), cardHolder.member_2);
+                    }
+
+                    if (peopleSize > 2) {
+                        cardHolder.member_3.setVisibility(View.VISIBLE);
+                        ImageLoader.getInstance().displayImage(pinClassPeopleModels.get(2).getUrl(), cardHolder.member_2);
+                    }
+
+                    if (peopleSize > 3) {
+                        cardHolder.member_4.setVisibility(View.VISIBLE);
+                        ImageLoader.getInstance().displayImage(pinClassPeopleModels.get(3).getUrl(), cardHolder.member_2);
+                    }
+
+                    if (peopleSize > 4) {
+                        cardHolder.member_5.setVisibility(View.VISIBLE);
+                        ImageLoader.getInstance().displayImage(pinClassPeopleModels.get(4).getUrl(), cardHolder.member_2);
+                    }
+
+                    if (peopleSize > 5) {
+                        cardHolder.btn_more.setVisibility(View.VISIBLE);
+                    } else {
+                        cardHolder.btn_more.setVisibility(View.GONE);
+                    }
+                }
 
             } catch (Exception e) {
 
@@ -263,7 +284,7 @@ public class ClassFragment extends BaseFragment implements SwipeRefreshLayout.On
         }
 
         class CardViewHolder extends RecyclerView.ViewHolder {
-            public CircleImageView avator;
+            public CircleImageView avatar;
             public TextView tv_name;
             public TextView tv_time;
             public TextView tv_add;
@@ -280,7 +301,7 @@ public class ClassFragment extends BaseFragment implements SwipeRefreshLayout.On
 
             public CardViewHolder(View itemView) {
                 super(itemView);
-                avator = (CircleImageView) itemView.findViewById(R.id.avator);
+                avatar = (CircleImageView) itemView.findViewById(R.id.avatar);
                 tv_name = (TextView) itemView.findViewById(R.id.tv_name);
                 tv_time = (TextView) itemView.findViewById(R.id.tv_time);
                 tv_add = (TextView) itemView.findViewById(R.id.tv_add);
@@ -289,6 +310,11 @@ public class ClassFragment extends BaseFragment implements SwipeRefreshLayout.On
                 btn_pin = (TextView) itemView.findViewById(R.id.btn_pin);
                 btn_more = (ImageView) itemView.findViewById(R.id.btn_more);
                 members = (LinearLayout) itemView.findViewById(R.id.layout_member);
+                member_1 = (CircleImageView) itemView.findViewById(R.id.avatar1);
+                member_2 = (CircleImageView) itemView.findViewById(R.id.avatar2);
+                member_3 = (CircleImageView) itemView.findViewById(R.id.avatar3);
+                member_4 = (CircleImageView) itemView.findViewById(R.id.avatar4);
+                member_5 = (CircleImageView) itemView.findViewById(R.id.avatar5);
             }
         }
 

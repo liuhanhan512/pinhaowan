@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/divider_light_gray"
     android:padding="6dp">
 
     <android.support.v7.widget.CardView
@@ -11,8 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/bg_fragment_white"
-        android:clickable="true"
-        android:foreground="?android:attr/selectableItemBackground"
+        android:orientation="horizontal"
         app:cardCornerRadius="5dp"
         app:cardElevation="8dp">
 
@@ -21,7 +19,7 @@
             android:layout_height="wrap_content">
 
             <com.hwand.pinhaowanr.widget.CircleImageView
-                android:id="@+id/avator"
+                android:id="@+id/avatar"
                 android:layout_width="57dp"
                 android:layout_height="57dp"
                 android:layout_marginLeft="26dp"
@@ -33,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
-                android:layout_toRightOf="@+id/avator"
+                android:layout_toRightOf="@+id/avatar"
                 android:paddingLeft="30dp"
                 android:text="我的安排"
                 android:textColor="@color/black"
@@ -44,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_time"
-                android:layout_toRightOf="@+id/avator"
+                android:layout_toRightOf="@+id/avatar"
                 android:paddingLeft="30dp"
                 android:text="我的安排"
                 android:textColor="@color/black"
@@ -55,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_add"
-                android:layout_toRightOf="@+id/avator"
+                android:layout_toRightOf="@+id/avatar"
                 android:paddingLeft="30dp"
                 android:text="人数："
                 android:textColor="@color/black"
@@ -65,7 +63,7 @@
                 android:id="@+id/tv_name"
                 android:layout_width="57dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/avator"
+                android:layout_below="@+id/avatar"
                 android:layout_marginLeft="26dp"
                 android:gravity="center"
                 android:singleLine="true"
@@ -88,7 +86,7 @@
 
             <TextView
                 android:id="@+id/tv_price"
-                android:layout_width="57dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_name"
                 android:layout_marginLeft="26dp"
@@ -146,8 +144,41 @@
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="2dp"
                 android:layout_toLeftOf="@+id/btn_more"
+                android:layout_toRightOf="@+id/tv_member"
                 android:orientation="horizontal"
-                android:layout_toRightOf="@+id/tv_member"></LinearLayout>
+                android:weightSum="5">
+
+                <com.hwand.pinhaowanr.widget.CircleImageView
+                    android:id="@+id/avatar1"
+                    android:layout_width="0dp"
+                    android:layout_height="39dp"
+                    android:layout_weight="1" />
+
+                <com.hwand.pinhaowanr.widget.CircleImageView
+                    android:id="@+id/avatar2"
+                    android:layout_width="0dp"
+                    android:layout_height="39dp"
+                    android:layout_weight="1" />
+
+                <com.hwand.pinhaowanr.widget.CircleImageView
+                    android:id="@+id/avatar3"
+                    android:layout_width="0dp"
+                    android:layout_height="39dp"
+                    android:layout_weight="1" />
+
+                <com.hwand.pinhaowanr.widget.CircleImageView
+                    android:id="@+id/avatar4"
+                    android:layout_width="0dp"
+                    android:layout_height="39dp"
+                    android:layout_weight="1" />
+
+                <com.hwand.pinhaowanr.widget.CircleImageView
+                    android:id="@+id/avatar5"
+                    android:layout_width="0dp"
+                    android:layout_height="39dp"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/btn_more"
