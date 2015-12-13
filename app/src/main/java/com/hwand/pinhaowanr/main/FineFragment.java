@@ -421,7 +421,8 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FineCategoryListActivity.launch(getActivity() , mListData.get(groupPosition).getType());
+                    FineCategoryListActivity.launch(getActivity() , mListData.get(groupPosition).getType(),
+                            mListData.get(groupPosition).getCategory());
                 }
             });
         }

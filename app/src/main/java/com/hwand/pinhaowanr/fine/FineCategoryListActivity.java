@@ -51,8 +51,11 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
     private Adapter mAdapter;
 
     private static final String VIEW_TYPE_KEY = "VIEW_TYPE_KEY";
+    private static final String VIEW_NAME_KEY = "VIEW_NAME_KEY";
 
     private int mViewType = -1;
+
+    private String mViewName;
 
     private int mCityType = 1;
 
@@ -91,6 +94,14 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
         Intent intent = new Intent();
         intent.setClass(context, FineCategoryListActivity.class);
         intent.putExtra(VIEW_TYPE_KEY, viewType);
+        context.startActivity(intent);
+    }
+
+    public static void launch(Context context, int viewType , String typeName){
+        Intent intent = new Intent();
+        intent.setClass(context, FineCategoryListActivity.class);
+        intent.putExtra(VIEW_TYPE_KEY, viewType);
+        intent.putExtra(VIEW_NAME_KEY , typeName);
         context.startActivity(intent);
     }
 
@@ -144,11 +155,12 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
 
     private void initIntentValues(){
         mViewType = getIntent().getIntExtra(VIEW_TYPE_KEY , -1);
+        mViewName = getIntent().getStringExtra(VIEW_NAME_KEY );
     }
 
     private void initTitle(){
         // 显示类型（viewType）1 兴趣益教 2 演出展览 3 游乐
-        setActionBarTtile("游乐");
+        setActionBarTtile(mViewName);
 
     }
 
