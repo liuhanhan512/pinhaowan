@@ -15,6 +15,7 @@ import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.ActivityModel;
 import com.hwand.pinhaowanr.model.SpellDCategoryModel;
+import com.hwand.pinhaowanr.model.SpellDClassModel;
 import com.hwand.pinhaowanr.model.SpellDModel;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
@@ -41,6 +42,8 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
     private SpellDModel mSpellDModel;
 
     private ImageView mImage;
+
+    private SpellDClassModel mSpellDClassModel;
 
     public static void launch(Context context , int id){
         Intent intent = new Intent();
@@ -112,6 +115,10 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
                 mSwipeRefreshLayout.setRefreshing(false);
                 if (!TextUtils.isEmpty(response)) {
                     Gson gson = new Gson();
+                    mSpellDClassModel = gson.fromJson(response , SpellDClassModel.class);
+                    if(mSpellDClassModel != null){
+                        updateViews();
+                    }
                 }
 
             }
@@ -121,6 +128,10 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
+    }
+
+    private void updateViews(){
+
     }
 
     @Override
