@@ -26,22 +26,22 @@
         <TextView
             android:id="@+id/btn_msg"
             android:layout_width="140dp"
-            android:layout_height="18dp"
+            android:layout_height="28dp"
             android:layout_alignParentLeft="true"
             android:background="@drawable/white_corner_btn_bg"
             android:gravity="center"
             android:text="发私信"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/btn_focus"
             android:layout_width="140dp"
-            android:layout_height="18dp"
+            android:layout_height="28dp"
             android:layout_alignParentRight="true"
             android:background="@drawable/white_corner_btn_bg"
             android:gravity="center"
             android:text="加关注"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
     </RelativeLayout>
 
     <TextView

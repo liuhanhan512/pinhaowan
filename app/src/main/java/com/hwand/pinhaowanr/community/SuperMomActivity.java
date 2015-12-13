@@ -3,7 +3,6 @@ package com.hwand.pinhaowanr.community;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +25,7 @@ import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.CircleImageView;
+import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,6 +69,7 @@ public class SuperMomActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void initTitle() {
+        setActionBarTtile("超级妈咪");
 
     }
 
@@ -105,14 +106,16 @@ public class SuperMomActivity extends BaseActivity implements SwipeRefreshLayout
     private void fetchData() {
         if (noData) {
             mSwipeRefreshLayout.setRefreshing(false);
+            AndTools.showToast("已经没有更多用户");
             return;
         }
         isLoading = true;
         mSwipeRefreshLayout.setRefreshing(true);
         Map<String, String> params = new HashMap<String, String>();
-        params.put("startIndex", "" + mCount);
-        params.put("endIndex", "" + mCount + SIZE);
+        params.put("startIndex", mCount + "");
+        params.put("endIndex", mCount + SIZE + "");
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_SUPER_MOMMYS, params);
+        LogUtil.d("dxz", url);
         NetworkRequest.get(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -121,6 +124,7 @@ public class SuperMomActivity extends BaseActivity implements SwipeRefreshLayout
                 if (!TextUtils.isEmpty(response)) {
                     List<SuperMomModel> superMomModels = SuperMomModel.arrayFromData(response);
                     if (superMomModels != null && superMomModels.size() > 0) {
+                        mCount += superMomModels.size();
                         superMomModelList.clear();
                         superMomModelList.addAll(superMomModels);
                         mAdapter.notifyDataSetChanged();

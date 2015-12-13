@@ -1,8 +1,8 @@
 package com.hwand.pinhaowanr.community;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -13,16 +13,13 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.amap.api.location.AMapLocation;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
-import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.CommonViewHolder;
-import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.mine.UserInfoActivity;
 import com.hwand.pinhaowanr.model.FleaActivityModel;
-import com.hwand.pinhaowanr.model.HomePageModel;
 import com.hwand.pinhaowanr.model.NewActivityModel;
 import com.hwand.pinhaowanr.model.RoleModel;
 import com.hwand.pinhaowanr.model.SmallPartnerModel;
@@ -64,7 +61,7 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
 
     private List<FleaActivityModel> fleaActivityModels;
 
-    public static BaseCommunityFragment newInstance(){
+    public static BaseCommunityFragment newInstance() {
         SmallPartnerFragment fragment = new SmallPartnerFragment();
         Bundle bundle = new Bundle();
         fragment.setArguments(bundle);
@@ -79,13 +76,13 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
     @Override
     protected void initViews() {
         super.initViews();
-        mSwipeRefreshLayout = (SwipeRefreshLayout)mFragmentView. findViewById(R.id.container);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) mFragmentView.findViewById(R.id.container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         //加载颜色是循环播放的，只要没有完成刷新就会一直循环，color1>color2>color3>color4
         mSwipeRefreshLayout.setColorScheme(android.R.color.white, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
-        mListView = (ListView)mFragmentView . findViewById(R.id.listview);
+        mListView = (ListView) mFragmentView.findViewById(R.id.listview);
         mListView.addHeaderView(initHeaderView());
 
         mAdapter = new Adapter();
@@ -99,16 +96,15 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
     }
 
 
-
     private LinearLayout superMomLayout;
-    private RelativeLayout avatarLayout1 ,avatarLayout2,avatarLayout3,avatarLayout4,avatarLayout5,avatarLayout6;
+    private RelativeLayout avatarLayout1, avatarLayout2, avatarLayout3, avatarLayout4, avatarLayout5, avatarLayout6;
     private CircleImageView avatar1, avatar2, avatar3, avatar4, avatar5, avatar6;
     private TextView name1, name2, name3, name4, name5, name6;
 
     private LinearLayout newPlayLayout;
     private RelativeLayout playLayout1, playLayout2;
-    private ImageView playImage1 , playImage2;
-    private TextView playContent1 , playContent2;
+    private ImageView playImage1, playImage2;
+    private TextView playContent1, playContent2;
 
     private RelativeLayout fleaLayout;
     private ImageView fleaImage;
@@ -116,14 +112,14 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
     final AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            ActivityDetailActivity.launch(getActivity() , theCommunityActivityModels.get(i - mListView.getHeaderViewsCount()));
+            ActivityDetailActivity.launch(getActivity(), theCommunityActivityModels.get(i - mListView.getHeaderViewsCount()));
         }
     };
 
-    private View initHeaderView(){
+    private View initHeaderView() {
 
-        View headerView = View.inflate(getActivity() , R.layout.small_partner_list_header_layout , null);
-        superMomLayout = (LinearLayout)headerView.findViewById(R.id.super_mom_layout);
+        View headerView = View.inflate(getActivity(), R.layout.small_partner_list_header_layout, null);
+        superMomLayout = (LinearLayout) headerView.findViewById(R.id.super_mom_layout);
         avatarLayout1 = (RelativeLayout) headerView.findViewById(R.id.avatar_layout1);
         avatarLayout2 = (RelativeLayout) headerView.findViewById(R.id.avatar_layout2);
         avatarLayout3 = (RelativeLayout) headerView.findViewById(R.id.avatar_layout3);
@@ -169,20 +165,20 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
     }
 
     @Override
-    public void fetchData(){
+    public void fetchData() {
         Map<String, String> params = new HashMap<String, String>();
         /**
-        params.put("cityType" , MainApplication.getInstance().getCityType() + "");
-        AMapLocation mapLocation = MainApplication.getInstance().getAmapLocation();
-        if(mapLocation != null){
-            params.put("lng" , mapLocation.getLongitude() + "");
-            params.put("lat" , mapLocation.getLatitude() + "");
-        }
+         params.put("cityType" , MainApplication.getInstance().getCityType() + "");
+         AMapLocation mapLocation = MainApplication.getInstance().getAmapLocation();
+         if(mapLocation != null){
+         params.put("lng" , mapLocation.getLongitude() + "");
+         params.put("lat" , mapLocation.getLatitude() + "");
+         }
          */
 
-        params.put("cityType" ,  "1");
-        params.put("lng" ,  "121.430829");
-        params.put("lat" ,  "31.228781");
+        params.put("cityType", "1");
+        params.put("lng", "121.430829");
+        params.put("lat", "31.228781");
 
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_BUDDY_INFO, params);
 
@@ -196,7 +192,7 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
                     mListView.setVisibility(View.VISIBLE);
 
                     Gson gson = new Gson();
-                    mSmallPartnerModel = gson.fromJson(response , SmallPartnerModel.class);
+                    mSmallPartnerModel = gson.fromJson(response, SmallPartnerModel.class);
                     updateViews();
                 } else {
                     mEmptyView.setVisibility(View.VISIBLE);
@@ -214,8 +210,8 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
         });
     }
 
-    private void updateViews(){
-        if(mSmallPartnerModel != null){
+    private void updateViews() {
+        if (mSmallPartnerModel != null) {
             // update listview
             updateListView();
             //update super mom
@@ -230,22 +226,22 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
 
     }
 
-    private void updateListView(){
+    private void updateListView() {
         List<TheCommunityActivityModel> theCommunityActivityModels = mSmallPartnerModel.getNaActivityList();
-        if(theCommunityActivityModels != null){
+        if (theCommunityActivityModels != null) {
             this.theCommunityActivityModels.clear();
             this.theCommunityActivityModels.addAll(theCommunityActivityModels);
             mAdapter.notifyDataSetChanged();
         }
     }
 
-    private void updateSuperMom(){
+    private void updateSuperMom() {
         superMomModels = mSmallPartnerModel.getRoleList();
-        if(superMomModels != null){
+        if (superMomModels != null) {
             int size = superMomModels.size();
-            if(size > 0){
+            if (size > 0) {
                 superMomLayout.setVisibility(View.VISIBLE);
-                if(size >= 1){
+                if (size >= 1) {
                     avatarLayout1.setVisibility(View.VISIBLE);
                     avatarLayout2.setVisibility(View.INVISIBLE);
                     avatarLayout3.setVisibility(View.INVISIBLE);
@@ -258,7 +254,7 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
                     name1.setText(superMomModel.getName());
                 }
 
-                if(size >= 2){
+                if (size >= 2) {
                     avatarLayout2.setVisibility(View.VISIBLE);
                     avatarLayout3.setVisibility(View.INVISIBLE);
                     avatarLayout4.setVisibility(View.INVISIBLE);
@@ -269,7 +265,7 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
                     name2.setText(superMomModel.getName());
                 }
 
-                if(size >= 3){
+                if (size >= 3) {
                     avatarLayout3.setVisibility(View.VISIBLE);
                     avatarLayout4.setVisibility(View.INVISIBLE);
                     avatarLayout5.setVisibility(View.INVISIBLE);
@@ -280,7 +276,7 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
                     name3.setText(superMomModel.getName());
                 }
 
-                if(size >= 4){
+                if (size >= 4) {
                     avatarLayout4.setVisibility(View.VISIBLE);
                     avatarLayout5.setVisibility(View.INVISIBLE);
                     avatarLayout6.setVisibility(View.INVISIBLE);
@@ -290,7 +286,7 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
                     name4.setText(superMomModel.getName());
                 }
 
-                if(size >= 5){
+                if (size >= 5) {
                     avatarLayout5.setVisibility(View.VISIBLE);
                     avatarLayout6.setVisibility(View.INVISIBLE);
 
@@ -299,9 +295,11 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
                     name5.setText(superMomModel.getName());
                 }
 
-                if(size > 5){
+                if (size > 5) {
                     avatarLayout6.setVisibility(View.VISIBLE);
                 }
+                // TODO:test
+                avatarLayout6.setVisibility(View.VISIBLE);
             } else {
                 superMomLayout.setVisibility(View.GONE);
             }
@@ -309,20 +307,20 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
         }
     }
 
-    private void updateNewPlay(){
+    private void updateNewPlay() {
         newActivityModels = mSmallPartnerModel.getNewActivityList();
-        if(newActivityModels != null && newActivityModels.size() > 0){
+        if (newActivityModels != null && newActivityModels.size() > 0) {
             newPlayLayout.setVisibility(View.VISIBLE);
             int size = newActivityModels.size();
-            if(size >= 1){
+            if (size >= 1) {
                 playLayout1.setVisibility(View.VISIBLE);
                 playLayout2.setVisibility(View.INVISIBLE);
 
                 NewActivityModel newActivityModel = newActivityModels.get(0);
-                AndTools.displayImage(null , newActivityModel.getUrl() , playImage1);
+                AndTools.displayImage(null, newActivityModel.getUrl(), playImage1);
                 playContent1.setText(newActivityModel.getTitle());
             }
-            if(size >= 2){
+            if (size >= 2) {
                 playLayout1.setVisibility(View.VISIBLE);
                 playLayout2.setVisibility(View.VISIBLE);
 
@@ -336,12 +334,12 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
         }
     }
 
-    private void updateFleaView(){
+    private void updateFleaView() {
         fleaActivityModels = mSmallPartnerModel.gettActivityList();
-        if(fleaActivityModels != null && fleaActivityModels.size() > 0){
+        if (fleaActivityModels != null && fleaActivityModels.size() > 0) {
             FleaActivityModel fleaActivityModel = fleaActivityModels.get(0);
             fleaLayout.setVisibility(View.VISIBLE);
-            AndTools.displayImage(null , fleaActivityModel.getUrl() , fleaImage);
+            AndTools.displayImage(null, fleaActivityModel.getUrl(), fleaImage);
         } else {
             fleaLayout.setVisibility(View.GONE);
         }
@@ -350,7 +348,7 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.avatar_layout1:
                 onAvatar1Click();
                 break;
@@ -377,43 +375,53 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
         }
     }
 
-    private void onAvatar1Click(){
-        if(superMomModels != null && superMomModels.size() > 0){
+    private void onAvatar1Click() {
+        if (superMomModels != null && superMomModels.size() > 0) {
             SuperMomModel superMomModel = superMomModels.get(0);
-
+            intent2UserInfo(superMomModel);
         }
     }
 
-    private void onAvatar2Click(){
-        if(superMomModels != null && superMomModels.size() > 1){
+    private void onAvatar2Click() {
+        if (superMomModels != null && superMomModels.size() > 1) {
             SuperMomModel superMomModel = superMomModels.get(1);
-
+            intent2UserInfo(superMomModel);
         }
     }
 
-    private void onAvatar3Click(){
-        if(superMomModels != null && superMomModels.size() > 2){
+    private void onAvatar3Click() {
+        if (superMomModels != null && superMomModels.size() > 2) {
             SuperMomModel superMomModel = superMomModels.get(0);
-
+            intent2UserInfo(superMomModel);
         }
     }
 
-    private void onAvatar4Click(){
-        if(superMomModels != null && superMomModels.size() > 3){
+    private void onAvatar4Click() {
+        if (superMomModels != null && superMomModels.size() > 3) {
             SuperMomModel superMomModel = superMomModels.get(3);
-
+            intent2UserInfo(superMomModel);
         }
     }
 
-    private void onAvatar5Click(){
-        if(superMomModels != null && superMomModels.size() > 4){
+    private void onAvatar5Click() {
+        if (superMomModels != null && superMomModels.size() > 4) {
             SuperMomModel superMomModel = superMomModels.get(4);
-
+            intent2UserInfo(superMomModel);
         }
     }
 
-    private void onAvatar6Click(){
-        if(superMomModels != null && superMomModels.size() > 5){
+    private void intent2UserInfo(SuperMomModel superMomModel) {
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), UserInfoActivity.class);
+        intent.putExtra(UserInfoActivity.KEY_INTENT_ID, superMomModel.getId());
+        intent.putExtra(UserInfoActivity.KEY_INTENT_NAME, superMomModel.getName());
+        getActivity().startActivity(intent);
+    }
+
+    private void onAvatar6Click() {
+        // TODO:
+        SuperMomActivity.launch(getActivity());
+        if (superMomModels != null && superMomModels.size() > 5) {
 
             SuperMomActivity.launch(getActivity());
         }
@@ -424,7 +432,7 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
         fetchData();
     }
 
-    class Adapter extends BaseAdapter{
+    class Adapter extends BaseAdapter {
 
         @Override
         public int getCount() {
@@ -443,38 +451,38 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
 
         @Override
         public View getView(int position, View convertView, ViewGroup viewGroup) {
-            if(convertView == null){
-                convertView = View.inflate(getActivity() , R.layout.small_partner_list_item_layout , null);
+            if (convertView == null) {
+                convertView = View.inflate(getActivity(), R.layout.small_partner_list_item_layout, null);
             }
 
             TheCommunityActivityModel theCommunityActivityModel = theCommunityActivityModels.get(position);
 
-            RelativeLayout imageLayout = (RelativeLayout)convertView.findViewById(R.id.image_layout);
+            RelativeLayout imageLayout = (RelativeLayout) convertView.findViewById(R.id.image_layout);
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) imageLayout.getLayoutParams();
             layoutParams.height = AndTools.getScreenWidth(getActivity()) * 9 / 16;
             imageLayout.setLayoutParams(layoutParams);
 
-            ImageView imageView = CommonViewHolder.get(convertView , R.id.image);
+            ImageView imageView = CommonViewHolder.get(convertView, R.id.image);
             AndTools.displayImage(null, theCommunityActivityModel.getUrl(), imageView);
 
-            TextView signUpStatus = CommonViewHolder.get(convertView , R.id.sign_up_status);
+            TextView signUpStatus = CommonViewHolder.get(convertView, R.id.sign_up_status);
 
-            TextView description = CommonViewHolder.get(convertView , R.id.description);
+            TextView description = CommonViewHolder.get(convertView, R.id.description);
             description.setText(theCommunityActivityModel.getTitle());
 
-            TextView price = CommonViewHolder.get(convertView , R.id.price);
+            TextView price = CommonViewHolder.get(convertView, R.id.price);
             price.setText(getString(R.string.price, theCommunityActivityModel.getMoney()));
 
-            TextView topic = CommonViewHolder.get(convertView , R.id.topic);
+            TextView topic = CommonViewHolder.get(convertView, R.id.topic);
             topic.setText(theCommunityActivityModel.getName());
 
-            TextView address = CommonViewHolder.get(convertView , R.id.address);
+            TextView address = CommonViewHolder.get(convertView, R.id.address);
             address.setText(theCommunityActivityModel.getDetailAddress());
 
-            TextView distance = CommonViewHolder.get(convertView , R.id.distance);
+            TextView distance = CommonViewHolder.get(convertView, R.id.distance);
             distance.setText(getString(R.string.distance, theCommunityActivityModel.getDistance()));
 
-            TextView signUp = CommonViewHolder.get(convertView , R.id.sign_up);
+            TextView signUp = CommonViewHolder.get(convertView, R.id.sign_up);
             signUp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -485,19 +493,19 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
             TextView time = CommonViewHolder.get(convertView, R.id.time);
             String startTime = DateUtil.convertLongToString(theCommunityActivityModel.getStratTime());
             String endTime = DateUtil.convertLongToString(theCommunityActivityModel.getEndTime());
-            time.setText(getString(R.string.small_partner_time , startTime , endTime));
+            time.setText(getString(R.string.small_partner_time, startTime, endTime));
 
-            TextView peopleCount = CommonViewHolder.get(convertView , R.id.people_count);
-            peopleCount.setText(getString(R.string.people_count , theCommunityActivityModel.getMaxRoles()));
+            TextView peopleCount = CommonViewHolder.get(convertView, R.id.people_count);
+            peopleCount.setText(getString(R.string.people_count, theCommunityActivityModel.getMaxRoles()));
 
-            TextView signUoPeople = CommonViewHolder.get(convertView , R.id.sign_up_count);
-            LinearLayout avatarLayout = CommonViewHolder.get(convertView , R.id.avatar_layout);
-            CircleImageView avatar1 = CommonViewHolder.get(convertView , R.id.avatar1);
-            CircleImageView avatar2 = CommonViewHolder.get(convertView , R.id.avatar2);
-            CircleImageView avatar3 = CommonViewHolder.get(convertView , R.id.avatar3);
-            CircleImageView avatar4 = CommonViewHolder.get(convertView , R.id.avatar4);
-            CircleImageView avatar5 = CommonViewHolder.get(convertView , R.id.avatar5);
-            CircleImageView avatar6 = CommonViewHolder.get(convertView , R.id.avatar6);
+            TextView signUoPeople = CommonViewHolder.get(convertView, R.id.sign_up_count);
+            LinearLayout avatarLayout = CommonViewHolder.get(convertView, R.id.avatar_layout);
+            CircleImageView avatar1 = CommonViewHolder.get(convertView, R.id.avatar1);
+            CircleImageView avatar2 = CommonViewHolder.get(convertView, R.id.avatar2);
+            CircleImageView avatar3 = CommonViewHolder.get(convertView, R.id.avatar3);
+            CircleImageView avatar4 = CommonViewHolder.get(convertView, R.id.avatar4);
+            CircleImageView avatar5 = CommonViewHolder.get(convertView, R.id.avatar5);
+            CircleImageView avatar6 = CommonViewHolder.get(convertView, R.id.avatar6);
             avatar6.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -506,10 +514,10 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
             });
 
             List<RoleModel> roleModels = theCommunityActivityModel.getRoleList();
-            if(roleModels != null){
+            if (roleModels != null) {
                 int size = roleModels.size();
-                signUoPeople.setText(getString(R.string.sign_up_people_count , size));
-                if(size >= 1){
+                signUoPeople.setText(getString(R.string.sign_up_people_count, size));
+                if (size >= 1) {
                     avatar1.setVisibility(View.VISIBLE);
                     avatar2.setVisibility(View.GONE);
                     avatar3.setVisibility(View.GONE);
@@ -517,9 +525,9 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
                     avatar5.setVisibility(View.GONE);
                     avatar6.setVisibility(View.VISIBLE);
 
-                    AndTools.displayImage(null , roleModels.get(0).getUrl() , avatar1);
+                    AndTools.displayImage(null, roleModels.get(0).getUrl(), avatar1);
                 }
-                if(size >= 2){
+                if (size >= 2) {
                     avatar1.setVisibility(View.VISIBLE);
                     avatar2.setVisibility(View.VISIBLE);
                     avatar3.setVisibility(View.GONE);
@@ -530,7 +538,7 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
                     AndTools.displayImage(null, roleModels.get(1).getUrl(), avatar2);
                 }
 
-                if(size >= 3){
+                if (size >= 3) {
                     avatar1.setVisibility(View.VISIBLE);
                     avatar2.setVisibility(View.VISIBLE);
                     avatar3.setVisibility(View.VISIBLE);
@@ -541,7 +549,7 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
                     AndTools.displayImage(null, roleModels.get(2).getUrl(), avatar3);
                 }
 
-                if(size >= 4){
+                if (size >= 4) {
                     avatar1.setVisibility(View.VISIBLE);
                     avatar2.setVisibility(View.VISIBLE);
                     avatar3.setVisibility(View.VISIBLE);
@@ -552,7 +560,7 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
                     AndTools.displayImage(null, roleModels.get(3).getUrl(), avatar4);
                 }
 
-                if(size >= 4){
+                if (size >= 4) {
                     avatar1.setVisibility(View.VISIBLE);
                     avatar2.setVisibility(View.VISIBLE);
                     avatar3.setVisibility(View.VISIBLE);
@@ -574,7 +582,6 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
                 avatar6.setVisibility(View.VISIBLE);
 
             }
-
 
 
             return convertView;
