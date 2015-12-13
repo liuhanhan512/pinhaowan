@@ -1,11 +1,13 @@
 package com.hwand.pinhaowanr.mine;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -40,7 +42,6 @@ public class MessageActivity extends BaseActivity {
     private TextView mSend;
 
     private MultiTypeAdapter mAdapter;
-    List<MsgInfo> datas = new ArrayList<MsgInfo>();
 
     private int mID;
 
@@ -53,12 +54,12 @@ public class MessageActivity extends BaseActivity {
         mID = getIntent().getIntExtra(KEY_INTENT_ID, 0);
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-//        layoutManager.setStackFromEnd(true);
+        layoutManager.setStackFromEnd(true);
         mMsgInput = (EditText) findViewById(R.id.msg_input);
         mSend = (TextView) findViewById(R.id.btn_send);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(layoutManager);
-        mAdapter = new MultiTypeAdapter(this, datas);
+        mAdapter = new MultiTypeAdapter(this, new ArrayList<MsgInfo>());
         mRecyclerView.setAdapter(mAdapter);
         request();
         mSend.setOnClickListener(new View.OnClickListener() {
@@ -84,12 +85,10 @@ public class MessageActivity extends BaseActivity {
                     List<MsgInfo> msgs = MsgInfo.arrayFromData(response);
                     if (msgs != null && msgs.size() > 0) {
                         LogUtil.d("dxz", msgs.size() + "");
-                        datas.clear();
-                        datas.addAll(msgs);
-                        mAdapter.update(datas);
+                        mAdapter.update(msgs);
                     }
                 } else {
-                    LogUtil.d("dxz","null");
+                    LogUtil.d("dxz", "null");
                 }
 
 
@@ -146,8 +145,10 @@ public class MessageActivity extends BaseActivity {
                         msgInfo.setName(DataCacheHelper.getInstance().getUserInfo().getName());
                         msgInfo.setTime(System.currentTimeMillis());
                         msgInfo.setType(1);
-                        datas.add(msgInfo);
-                        mAdapter.update(datas);
+                        mAdapter.update(msgInfo);
+                        mRecyclerView.scrollToPosition(mAdapter.getItemCount()-1);
+                        mMsgInput.setText("");
+                        hideImm();
                     } else {
                         new DDAlertDialog.Builder(MessageActivity.this)
                                 .setTitle("提示").setMessage("网络问题请重试！")
@@ -175,6 +176,14 @@ public class MessageActivity extends BaseActivity {
                             }).show();
                 }
             });
+        }
+    }
+
+    private void hideImm() {
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm.isActive()) {
+            imm.hideSoftInputFromWindow(mMsgInput.getApplicationWindowToken(), 0);
+
         }
     }
 }
