@@ -16,14 +16,21 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.hwand.pinhaowanr.CommonViewHolder;
+import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.adapter.AgeFilterAdapter;
+import com.hwand.pinhaowanr.adapter.RegionFilterAdpter;
+import com.hwand.pinhaowanr.model.AgeModel;
+import com.hwand.pinhaowanr.model.ConfigModel;
+import com.hwand.pinhaowanr.model.RegionModel;
 import com.hwand.pinhaowanr.model.SpellDCategoryModel;
 import com.hwand.pinhaowanr.model.SpellDEntity;
 import com.hwand.pinhaowanr.model.SpellDModel;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
+import com.hwand.pinhaowanr.widget.FilterListView;
 import com.hwand.pinhaowanr.widget.SubGridView;
 import com.hwand.pinhaowanr.widget.SubListView;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
@@ -57,6 +64,18 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
     private List<SpellDCategoryModel> spellDCategoryModels = new ArrayList<SpellDCategoryModel>();
     private List<SpellDModel> spellDModels = new ArrayList<SpellDModel>();
 
+    private FilterListView mRegionFilterListView , mAgeFilterListView;
+
+    private List<RegionModel> mRegionList = new ArrayList<RegionModel>();
+
+    private List<AgeModel> mAgeList = new ArrayList<AgeModel>();
+
+    private RegionFilterAdpter mRegionFilterAdpter;
+
+    private AgeFilterAdapter mAgeFilterAdapter;
+
+    private View mIndicatorView;
+
     public static BaseCommunityFragment newInstance(){
         SpellDFragment fragment = new SpellDFragment();
         Bundle bundle = new Bundle();
@@ -72,6 +91,7 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
     @Override
     protected void initViews() {
         super.initViews();
+        initData();
         mSwipeRefreshLayout = (SwipeRefreshLayout)mFragmentView. findViewById(R.id.container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         //加载颜色是循环播放的，只要没有完成刷新就会一直循环，color1>color2>color3>color4
@@ -96,11 +116,14 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
                     SpellDCategoryModel spellDCategoryModel = spellDCategoryModels.get(i);
                     if(i == position){
                         spellDCategoryModel.setIsSelected(true);
+                        mClassType = spellDCategoryModel.getClassType();
+                        filterData();
                     } else {
                         spellDCategoryModel.setIsSelected(false);
                     }
                 }
                 mGridAdapter.notifyDataSetChanged();
+
             }
         });
         mGridAdapter = new GridAdapter();
@@ -109,7 +132,49 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
         mEmptyView = mFragmentView.findViewById(R.id.empty_layout);
         mFragmentView.findViewById(R.id.empty_text).setOnClickListener(this);
 
+        mIndicatorView = mFragmentView.findViewById(R.id.indicator);
+        mFragmentView.findViewById(R.id.area_layout).setOnClickListener(this);
+        mFragmentView.findViewById(R.id.age_layout).setOnClickListener(this);
+
         fetchData();
+    }
+
+    private void initData(){
+
+        List<ConfigModel> configModels = DataCacheHelper.getInstance().getConfigModel();
+
+        int configModelSize = configModels.size();
+        for (int i = 0 ; i < configModelSize ; i++){
+            ConfigModel configModel = configModels.get(i);
+            if(configModel.getCityType() == MainApplication.getInstance().getCityType()){
+                List<RegionModel> regionModels = configModel.getRegionMap();
+                if(regionModels != null ){
+                    mRegionList .addAll(regionModels);
+                }
+                break;
+            }
+        }
+
+        AgeModel ageModel1 = new AgeModel();
+        ageModel1.setMinAge(1);
+        ageModel1.setMaxAge(3);
+
+        AgeModel ageModel2 = new AgeModel();
+        ageModel2.setMinAge(4);
+        ageModel2.setMaxAge(6);
+
+        AgeModel ageModel3 = new AgeModel();
+        ageModel3.setMinAge(7);
+        ageModel3.setMaxAge(9);
+
+        AgeModel ageModel4 = new AgeModel();
+        ageModel4.setMinAge(10);
+        ageModel4.setMaxAge(12);
+
+        mAgeList.add(ageModel1);
+        mAgeList.add(ageModel2);
+        mAgeList.add(ageModel3);
+        mAgeList.add(ageModel4);
     }
 
     final AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
@@ -133,8 +198,59 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
                 mSwipeRefreshLayout.setRefreshing(true);
                 fetchData();
                 break;
+            case R.id.area_layout:
+                triggerRegionFilterListView();
+                break;
+            case R.id.age_layout:
+                triggerAgeFilterListView();
+                break;
         }
 
+    }
+
+    private void triggerRegionFilterListView(){
+        if(mRegionFilterListView == null){
+            mRegionFilterListView = new FilterListView(getActivity(),mRegionList.size());
+            mRegionFilterAdpter = new RegionFilterAdpter(getActivity() , mRegionList);
+            mRegionFilterListView.setAdapter(mRegionFilterAdpter);
+            mRegionFilterListView.setOnItemClickListener(new FilterListView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    RegionModel regionModel = mRegionList.get(position);
+                    mRegionType = regionModel.getType();
+                    filterData();
+                }
+            });
+        }
+        if(!mRegionFilterListView.isShowing()){
+            mRegionFilterListView.showAsDropDown(mIndicatorView,0, 0);
+        } else {
+            mRegionFilterListView.dismiss();
+        }
+    }
+
+    private void triggerAgeFilterListView(){
+        if(mAgeFilterListView == null){
+            mAgeFilterListView = new FilterListView(getActivity(),mAgeList.size());
+            mAgeFilterAdapter = new AgeFilterAdapter(getActivity() , mAgeList);
+            mAgeFilterListView.setAdapter(mAgeFilterAdapter);
+            mAgeFilterListView.setOnItemClickListener(new FilterListView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    AgeModel ageModel = mAgeList.get(position);
+                    mMinAge = ageModel.getMinAge();
+                    mMaxAge = ageModel.getMaxAge();
+                    filterData();
+
+                }
+            });
+        }
+        if(!mAgeFilterListView.isShowing()){
+            mAgeFilterListView.showAsDropDown(mIndicatorView,0,0);
+        } else {
+            mAgeFilterListView.dismiss();
+        }
     }
 
     @Override
@@ -183,14 +299,20 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
         });
     }
 
+    private int mRegionType = 0;
+    private int mClassType = 0;
+    private int mMinAge;
+    private int mMaxAge;
+
     public void filterData(){
+        mSwipeRefreshLayout.setRefreshing(true);
         // TODO:
         Map<String, String> params = new HashMap<String, String>();
         params.put("cityType" , MainApplication.getInstance().getCityType() + "");
-        params.put("classType" , 0 + "");
-        params.put("type" , 0 + "");
-        params.put("minAge" , 0 + "");
-        params.put("maxAge" , 0 + "");
+        params.put("classType" , mClassType + "");
+        params.put("type" , mRegionType + "");
+        params.put("minAge" , mMinAge + "");
+        params.put("maxAge" , mMaxAge + "");
         params.put("startIndex" , 0 + "");
         params.put("endIndex" , 0 + "");
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_PIN_CLASS, params);
