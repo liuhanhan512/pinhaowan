@@ -8,11 +8,6 @@
     <include
         android:id="@+id/empty_layout"
         layout="@layout/empty_layout"></include>
-    <com.hwand.pinhaowanr.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:background="@color/divider_light_gray"
@@ -21,6 +16,5 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:overScrollMode="never"/>
-    </com.hwand.pinhaowanr.widget.SwipeRefreshLayout>
 
 </LinearLayout>

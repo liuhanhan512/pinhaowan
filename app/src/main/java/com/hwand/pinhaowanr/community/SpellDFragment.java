@@ -44,7 +44,7 @@ import java.util.Map;
  * 社区--拼拼页面
  * Created by hanhanliu on 15/11/30.
  */
-public class SpellDFragment extends BaseCommunityFragment implements SwipeRefreshLayout.OnRefreshListener{
+public class SpellDFragment extends BaseCommunityFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ScrollView mScrollView;
@@ -64,7 +64,7 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
     private List<SpellDCategoryModel> spellDCategoryModels = new ArrayList<SpellDCategoryModel>();
     private List<SpellDModel> spellDModels = new ArrayList<SpellDModel>();
 
-    private FilterListView mRegionFilterListView , mAgeFilterListView;
+    private FilterListView mRegionFilterListView, mAgeFilterListView;
 
     private List<RegionModel> mRegionList = new ArrayList<RegionModel>();
 
@@ -76,7 +76,7 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
 
     private View mIndicatorView;
 
-    public static BaseCommunityFragment newInstance(){
+    public static BaseCommunityFragment newInstance() {
         SpellDFragment fragment = new SpellDFragment();
         Bundle bundle = new Bundle();
         fragment.setArguments(bundle);
@@ -92,15 +92,15 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
     protected void initViews() {
         super.initViews();
         initData();
-        mSwipeRefreshLayout = (SwipeRefreshLayout)mFragmentView. findViewById(R.id.container);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) mFragmentView.findViewById(R.id.container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         //加载颜色是循环播放的，只要没有完成刷新就会一直循环，color1>color2>color3>color4
         mSwipeRefreshLayout.setColorScheme(android.R.color.white, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
-        mScrollView = (ScrollView)mFragmentView.findViewById(R.id.scrollview);
+        mScrollView = (ScrollView) mFragmentView.findViewById(R.id.scrollview);
 
-        mListView = (SubListView)mFragmentView . findViewById(R.id.listview);
+        mListView = (SubListView) mFragmentView.findViewById(R.id.listview);
 //        mListView.addHeaderView(initHeaderView());
 
         mAdapter = new Adapter();
@@ -112,9 +112,9 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int categorySize = spellDCategoryModels.size();
-                for (int i= 0 ; i < categorySize ; i++){
+                for (int i = 0; i < categorySize; i++) {
                     SpellDCategoryModel spellDCategoryModel = spellDCategoryModels.get(i);
-                    if(i == position){
+                    if (i == position) {
                         spellDCategoryModel.setIsSelected(true);
                         mClassType = spellDCategoryModel.getClassType();
                         filterData();
@@ -139,17 +139,17 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
         fetchData();
     }
 
-    private void initData(){
+    private void initData() {
 
         List<ConfigModel> configModels = DataCacheHelper.getInstance().getConfigModel();
 
         int configModelSize = configModels.size();
-        for (int i = 0 ; i < configModelSize ; i++){
+        for (int i = 0; i < configModelSize; i++) {
             ConfigModel configModel = configModels.get(i);
-            if(configModel.getCityType() == MainApplication.getInstance().getCityType()){
+            if (configModel.getCityType() == MainApplication.getInstance().getCityType()) {
                 List<RegionModel> regionModels = configModel.getRegionMap();
-                if(regionModels != null ){
-                    mRegionList .addAll(regionModels);
+                if (regionModels != null) {
+                    mRegionList.addAll(regionModels);
                 }
                 break;
             }
@@ -181,13 +181,13 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
             SpellDModel spellDModel = spellDModels.get(position);
-            SpellDClassActivity.launch(getActivity() , spellDModel);
+            SpellDClassActivity.launch(getActivity(), spellDModel);
 
         }
     };
 
-    private View initHeaderView(){
-        View headerView = View.inflate(getActivity() , R.layout.spell_d_list_header_layout , null);
+    private View initHeaderView() {
+        View headerView = View.inflate(getActivity(), R.layout.spell_d_list_header_layout, null);
 
         return headerView;
     }
@@ -195,7 +195,7 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.empty_text:
                 mSwipeRefreshLayout.setRefreshing(true);
                 fetchData();
@@ -210,10 +210,10 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
 
     }
 
-    private void triggerRegionFilterListView(){
-        if(mRegionFilterListView == null){
-            mRegionFilterListView = new FilterListView(getActivity(),mRegionList.size());
-            mRegionFilterAdpter = new RegionFilterAdpter(getActivity() , mRegionList);
+    private void triggerRegionFilterListView() {
+        if (mRegionFilterListView == null) {
+            mRegionFilterListView = new FilterListView(getActivity(), mRegionList.size());
+            mRegionFilterAdpter = new RegionFilterAdpter(getActivity(), mRegionList);
             mRegionFilterListView.setAdapter(mRegionFilterAdpter);
             mRegionFilterListView.setOnItemClickListener(new FilterListView.OnItemClickListener() {
                 @Override
@@ -225,17 +225,17 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
                 }
             });
         }
-        if(!mRegionFilterListView.isShowing()){
-            mRegionFilterListView.showAsDropDown(mIndicatorView,0, 0);
+        if (!mRegionFilterListView.isShowing()) {
+            mRegionFilterListView.showAsDropDown(mIndicatorView, 0, 0);
         } else {
             mRegionFilterListView.dismiss();
         }
     }
 
-    private void triggerAgeFilterListView(){
-        if(mAgeFilterListView == null){
-            mAgeFilterListView = new FilterListView(getActivity(),mAgeList.size());
-            mAgeFilterAdapter = new AgeFilterAdapter(getActivity() , mAgeList);
+    private void triggerAgeFilterListView() {
+        if (mAgeFilterListView == null) {
+            mAgeFilterListView = new FilterListView(getActivity(), mAgeList.size());
+            mAgeFilterAdapter = new AgeFilterAdapter(getActivity(), mAgeList);
             mAgeFilterListView.setAdapter(mAgeFilterAdapter);
             mAgeFilterListView.setOnItemClickListener(new FilterListView.OnItemClickListener() {
                 @Override
@@ -248,17 +248,17 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
                 }
             });
         }
-        if(!mAgeFilterListView.isShowing()){
-            mAgeFilterListView.showAsDropDown(mIndicatorView,0,0);
+        if (!mAgeFilterListView.isShowing()) {
+            mAgeFilterListView.showAsDropDown(mIndicatorView, 0, 0);
         } else {
             mAgeFilterListView.dismiss();
         }
     }
 
     @Override
-    public void fetchData(){
+    public void fetchData() {
         Map<String, String> params = new HashMap<String, String>();
-        params.put("cityType" ,  "1");
+        params.put("cityType", "1");
 //        params.put("cityType" , MainApplication.getInstance().getCityType() + "");
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_PINPIN_INFO, params);
         NetworkRequest.get(url, new Response.Listener<String>() {
@@ -306,17 +306,17 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
     private int mMinAge;
     private int mMaxAge;
 
-    public void filterData(){
+    public void filterData() {
         mSwipeRefreshLayout.setRefreshing(true);
         // TODO:
         Map<String, String> params = new HashMap<String, String>();
-        params.put("cityType" , MainApplication.getInstance().getCityType() + "");
-        params.put("classType" , mClassType + "");
-        params.put("type" , mRegionType + "");
-        params.put("minAge" , mMinAge + "");
-        params.put("maxAge" , mMaxAge + "");
-        params.put("startIndex" , 0 + "");
-        params.put("endIndex" , 0 + "");
+        params.put("cityType", MainApplication.getInstance().getCityType() + "");
+        params.put("classType", mClassType + "");
+        params.put("type", mRegionType + "");
+        params.put("minAge", mMinAge + "");
+        params.put("maxAge", mMaxAge + "");
+        params.put("startIndex", 0 + "");
+        params.put("endIndex", 0 + "");
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_PIN_CLASS, params);
         NetworkRequest.get(url, new Response.Listener<String>() {
             @Override
@@ -325,10 +325,10 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
                 mSwipeRefreshLayout.setRefreshing(false);
                 if (!TextUtils.isEmpty(response)) {
                     List<SpellDModel> spellDModels = SpellDModel.arrayFromData(response);
-                    if(spellDModels != null){
+                    if (spellDModels != null) {
                         updatePinView(spellDModels);
 
-                        if((spellDCategoryModels != null && spellDCategoryModels.size() > 0) || (spellDModels != null && spellDModels.size() > 0) ){
+                        if ((spellDCategoryModels != null && spellDCategoryModels.size() > 0) || (spellDModels != null && spellDModels.size() > 0)) {
                             mEmptyView.setVisibility(View.GONE);
                             mScrollView.setVisibility(View.VISIBLE);
                         } else {
@@ -353,8 +353,8 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
         });
     }
 
-    private void wrapperSpellDCategoryData(List<SpellDCategoryModel> spellDCategoryModels){
-        if(spellDCategoryModels != null){
+    private void wrapperSpellDCategoryData(List<SpellDCategoryModel> spellDCategoryModels) {
+        if (spellDCategoryModels != null) {
             SpellDCategoryModel all = new SpellDCategoryModel();
             all.setClassName(getString(R.string.all));
             all.setClassType(-1);
@@ -367,8 +367,8 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
         }
     }
 
-    private void updatePinView(List<SpellDModel> spellDModels){
-        if(spellDModels != null){
+    private void updatePinView(List<SpellDModel> spellDModels) {
+        if (spellDModels != null) {
             this.spellDModels.clear();
             this.spellDModels.addAll(spellDModels);
             mAdapter.notifyDataSetChanged();
@@ -399,12 +399,12 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
 
         @Override
         public View getView(int position, View convertView, ViewGroup viewGroup) {
-            if(convertView == null){
-                convertView = View.inflate(getActivity() , R.layout.spell_d_list_item_layout , null);
+            if (convertView == null) {
+                convertView = View.inflate(getActivity(), R.layout.spell_d_list_item_layout, null);
             }
             final SpellDModel spellDModel = spellDModels.get(position);
 
-            RelativeLayout imageLayout = CommonViewHolder.get(convertView , R.id.image_layout);
+            RelativeLayout imageLayout = CommonViewHolder.get(convertView, R.id.image_layout);
             final int screenWidth = AndTools.getScreenWidth(getActivity());
             int height = screenWidth * 9 / 16;
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) imageLayout.getLayoutParams();
@@ -414,26 +414,26 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
             ImageView imageView = CommonViewHolder.get(convertView, R.id.image);
             AndTools.displayImage(null, spellDModel.getPictureUrl(), imageView);
 
-            TextView description = CommonViewHolder.get(convertView , R.id.description);
+            TextView description = CommonViewHolder.get(convertView, R.id.description);
             description.setText(spellDModel.getSubtitle());
 
-            TextView className = CommonViewHolder.get(convertView , R.id.class_name);
+            TextView className = CommonViewHolder.get(convertView, R.id.class_name);
             className.setText(spellDModel.getClassName());
 
-            TextView address = CommonViewHolder.get(convertView , R.id.address);
+            TextView address = CommonViewHolder.get(convertView, R.id.address);
             address.setText(spellDModel.getDetailAddress());
 
             convertView.findViewById(R.id.view_pin_class).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SpellDListActivity.launch(getActivity() , spellDModel.getId());
+                    SpellDListActivity.launch(getActivity(), spellDModel.getId(), spellDModel.getClassName());
                 }
             });
             return convertView;
         }
     }
 
-    class GridAdapter extends BaseAdapter{
+    class GridAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
@@ -452,17 +452,17 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null){
-                convertView = View.inflate(getActivity() , R.layout.spell_d_category_item_layout ,null);
+            if (convertView == null) {
+                convertView = View.inflate(getActivity(), R.layout.spell_d_category_item_layout, null);
             }
 
             SpellDCategoryModel spellDCategoryModel = spellDCategoryModels.get(position);
-            TextView category = CommonViewHolder.get(convertView , R.id.category_text);
+            TextView category = CommonViewHolder.get(convertView, R.id.category_text);
             category.setText(spellDCategoryModel.getClassName());
             category.setSelected(spellDCategoryModel.isSelected());
 
-            RelativeLayout categoryLayout = CommonViewHolder.get(convertView , R.id.category_layout);
-            if(spellDCategoryModel.isSelected()){
+            RelativeLayout categoryLayout = CommonViewHolder.get(convertView, R.id.category_layout);
+            if (spellDCategoryModel.isSelected()) {
                 categoryLayout.setBackgroundResource(R.drawable.red_solid_corner_bg);
             } else {
                 categoryLayout.setBackgroundResource(R.drawable.red_corner_bg);

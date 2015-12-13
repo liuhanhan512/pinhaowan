@@ -26,6 +26,8 @@ public class PinClass implements NonProguard {
     private int money;
     private String title;
 
+    private List<PinClassPeopleModel> attendList;
+
     public static List<PinClass> arrayFromData(String str) {
 
         Type listType = new TypeToken<ArrayList<PinClass>>() {
@@ -136,5 +138,13 @@ public class PinClass implements NonProguard {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<PinClassPeopleModel> getAttendList() {
+        return attendList;
+    }
+
+    public void setAttendList(List<PinClassPeopleModel> attendList) {
+        this.attendList = attendList;
     }
 }
