@@ -19,7 +19,9 @@ import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.CommonViewHolder;
 import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.adapter.AgeFilterAdapter;
 import com.hwand.pinhaowanr.adapter.RegionFilterAdpter;
+import com.hwand.pinhaowanr.model.AgeModel;
 import com.hwand.pinhaowanr.model.ConfigModel;
 import com.hwand.pinhaowanr.model.HomePageModel;
 import com.hwand.pinhaowanr.model.RegionModel;
@@ -71,7 +73,11 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
 
     private List<RegionModel> mRegionList = new ArrayList<RegionModel>();
 
+    private List<AgeModel> mAgeList = new ArrayList<AgeModel>();
+
     private RegionFilterAdpter mRegionFilterAdpter;
+
+    private AgeFilterAdapter mAgeFilterAdapter;
 
     private View mIndicatorView;
 
@@ -114,7 +120,26 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
             }
         }
 
+        AgeModel ageModel1 = new AgeModel();
+        ageModel1.setMinAge(1);
+        ageModel1.setMaxAge(3);
 
+        AgeModel ageModel2 = new AgeModel();
+        ageModel2.setMinAge(4);
+        ageModel2.setMaxAge(6);
+
+        AgeModel ageModel3 = new AgeModel();
+        ageModel3.setMinAge(7);
+        ageModel3.setMaxAge(9);
+
+        AgeModel ageModel4 = new AgeModel();
+        ageModel4.setMinAge(10);
+        ageModel4.setMaxAge(12);
+
+        mAgeList.add(ageModel1);
+        mAgeList.add(ageModel2);
+        mAgeList.add(ageModel3);
+        mAgeList.add(ageModel4);
     }
 
     private void initIntentValues(){
@@ -174,8 +199,8 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
             public void onResponse(String response) {
                 mSwipeRefreshLayout.setRefreshing(false);
                 if (!TextUtils.isEmpty(response)) {
-                    List<HomePageModel> homePageModels  = HomePageModel.arrayHomePageModelFromData(response);
-                    if(homePageModels != null){
+                    List<HomePageModel> homePageModels = HomePageModel.arrayHomePageModelFromData(response);
+                    if (homePageModels != null) {
                         mHomePageModels.clear();
                         mHomePageModels.addAll(homePageModels);
                         mAdapter.notifyDataSetChanged();
@@ -204,12 +229,9 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
                 triggerRegionFilterListView();
                 break;
             case R.id.age_layout:
+                triggerAgeFilterListView();
                 break;
         }
-    }
-
-    private void onAreaClick(){
-
     }
 
     private void triggerRegionFilterListView(){
@@ -221,7 +243,10 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-
+                    RegionModel regionModel = mRegionList.get(position);
+                    mRegionType = regionModel.getType();
+                    mSwipeRefreshLayout.setRefreshing(true);
+                    fetchData();
                 }
             });
         }
@@ -234,25 +259,26 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
 
     private void triggerAgeFilterListView(){
         if(mAgeFilterListView == null){
-            mAgeFilterListView = new FilterListView(this,mRegionList.size());
-            mRegionFilterAdpter = new RegionFilterAdpter(this , mRegionList);
-            mRegionFilterListView.setOnItemClickListener(new FilterListView.OnItemClickListener() {
+            mAgeFilterListView = new FilterListView(this,mAgeList.size());
+            mAgeFilterAdapter = new AgeFilterAdapter(this , mAgeList);
+            mAgeFilterListView.setAdapter(mAgeFilterAdapter);
+            mAgeFilterListView.setOnItemClickListener(new FilterListView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                    AgeModel ageModel = mAgeList.get(position);
+                    mMinAge = ageModel.getMinAge();
+                    mMaxAge = ageModel.getMaxAge();
+                    mSwipeRefreshLayout.setRefreshing(true);
+                    fetchData();
 
                 }
             });
         }
         if(!mAgeFilterListView.isShowing()){
-            mAgeFilterListView.showAsDropDown(mIndicatorView,0,0);
+            mAgeFilterListView.showAsDropDown(mIndicatorView,0,AndTools.dp2px(this , 1));
         } else {
             mAgeFilterListView.dismiss();
         }
-    }
-
-    private void onAgeClick(){
-
     }
 
     class Adapter extends BaseAdapter{

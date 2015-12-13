@@ -6,14 +6,14 @@ import java.io.Serializable;
  * Created by hanhanliu on 15/12/2.
  */
 public class RegionModel implements Serializable{
-    private String type;
+    private int type;
     private String typeName;
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 
