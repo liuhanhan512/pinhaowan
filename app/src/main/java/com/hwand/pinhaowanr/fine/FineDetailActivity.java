@@ -2,8 +2,6 @@ package com.hwand.pinhaowanr.fine;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -34,7 +32,6 @@ import com.hwand.pinhaowanr.share.channel.WeixinFriendShareUnit;
 import com.hwand.pinhaowanr.share.channel.WeixinGroupShareUnit;
 import com.hwand.pinhaowanr.share.view.ShareActionBox;
 import com.hwand.pinhaowanr.utils.AndTools;
-import com.hwand.pinhaowanr.utils.BizUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
@@ -191,7 +188,7 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
 
             mTel.setText(getString(R.string.fine_detail_tel, mClassDetailModel.getTelephone()));
             mHour.setText(getString(R.string.fine_detail_hour, mClassDetailModel.getBusineTime()));
-            mAge.setText(getString(R.string.fine_detail_age, mClassDetailModel.getMinAge(), mClassDetailModel.getMinAge()));
+            mAge.setText(getString(R.string.fine_detail_age, mClassDetailModel.getMinAge(), mClassDetailModel.getMaxAge()));
 
             List<ClassDetailTitleModel> classDetailTitleModels = mClassDetailModel.getTitleList();
             if (classDetailTitleModels != null) {
