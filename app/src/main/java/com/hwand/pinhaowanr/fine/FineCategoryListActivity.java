@@ -280,13 +280,16 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
             }
             HomePageModel homePageModel = mHomePageModels.get(position);
             ImageView imageView = CommonViewHolder.get(convertView, R.id.image);
-            AndTools.displayImage(null,homePageModel.getPictureUrl() ,imageView);
+            AndTools.displayImage(null, homePageModel.getPictureUrl(), imageView);
 
             TextView title = CommonViewHolder.get(convertView , R.id.title);
             title.setText(homePageModel.getTitle());
 
             TextView address = CommonViewHolder.get(convertView , R.id.address);
-            address.setText(homePageModel.getDetailAddress());
+            address.setText(homePageModel.getClassName());
+
+            TextView distance = CommonViewHolder.get(convertView , R.id.distance);
+//            distance.setText(homePageModel.ge);
 
             TextView ticket = CommonViewHolder.get(convertView , R.id.tickets);
             ticket.setText(getString(R.string.remainder_tickets , homePageModel.getRemainTicket()));
