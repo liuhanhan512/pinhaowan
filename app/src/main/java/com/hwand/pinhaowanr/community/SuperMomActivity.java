@@ -169,6 +169,8 @@ public class SuperMomActivity extends BaseActivity implements SwipeRefreshLayout
         if (isLoading) {
             LogUtil.d("dxz", "ignore manually update!");
         } else {
+            mCount = 0;
+            noData = false;
             fetchData();//这里多线程也要手动控制isLoading
         }
     }

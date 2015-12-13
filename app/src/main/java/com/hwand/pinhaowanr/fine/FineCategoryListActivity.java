@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -41,8 +42,9 @@ import java.util.Map;
  * 好玩分类列表
  * Created by hanhanliu on 15/11/22.
  */
-public class FineCategoryListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener{
+public class FineCategoryListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
+    public final static int SIZE = 20;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -63,16 +65,16 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
 
     private int mMinAge = 0;
 
-    private int mMaxAge = 100;
+    private int mMaxAge = 12;
 
-    private int mStartIndex = 0;
+    private int mCount = 0;
+    private boolean isLoading;
+    private boolean noData;
 
-    private int mEndIndex = 20;
 
+    List<HomePageModel> mHomePageModels = new ArrayList<HomePageModel>();
 
-    List<HomePageModel> mHomePageModels  = new ArrayList<HomePageModel>();
-
-    private FilterListView mRegionFilterListView , mAgeFilterListView;
+    private FilterListView mRegionFilterListView, mAgeFilterListView;
 
     private List<RegionModel> mRegionList = new ArrayList<RegionModel>();
 
@@ -84,24 +86,24 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
 
     private View mIndicatorView;
 
-    public static void launch(Context context){
+    public static void launch(Context context) {
         Intent intent = new Intent();
         intent.setClass(context, FineCategoryListActivity.class);
         context.startActivity(intent);
     }
 
-    public static void launch(Context context, int viewType){
+    public static void launch(Context context, int viewType) {
         Intent intent = new Intent();
         intent.setClass(context, FineCategoryListActivity.class);
         intent.putExtra(VIEW_TYPE_KEY, viewType);
         context.startActivity(intent);
     }
 
-    public static void launch(Context context, int viewType , String typeName){
+    public static void launch(Context context, int viewType, String typeName) {
         Intent intent = new Intent();
         intent.setClass(context, FineCategoryListActivity.class);
         intent.putExtra(VIEW_TYPE_KEY, viewType);
-        intent.putExtra(VIEW_NAME_KEY , typeName);
+        intent.putExtra(VIEW_NAME_KEY, typeName);
         context.startActivity(intent);
     }
 
@@ -116,16 +118,16 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
         fetchData();
     }
 
-    private void initData(){
+    private void initData() {
         List<ConfigModel> configModels = DataCacheHelper.getInstance().getConfigModel();
 
         int configModelSize = configModels.size();
-        for (int i = 0 ; i < configModelSize ; i++){
+        for (int i = 0; i < configModelSize; i++) {
             ConfigModel configModel = configModels.get(i);
-            if(configModel.getCityType() == mCityType){
+            if (configModel.getCityType() == mCityType) {
                 List<RegionModel> regionModels = configModel.getRegionMap();
-                if(regionModels != null ){
-                    mRegionList .addAll(regionModels);
+                if (regionModels != null) {
+                    mRegionList.addAll(regionModels);
                 }
                 break;
             }
@@ -153,18 +155,18 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
         mAgeList.add(ageModel4);
     }
 
-    private void initIntentValues(){
-        mViewType = getIntent().getIntExtra(VIEW_TYPE_KEY , -1);
-        mViewName = getIntent().getStringExtra(VIEW_NAME_KEY );
+    private void initIntentValues() {
+        mViewType = getIntent().getIntExtra(VIEW_TYPE_KEY, -1);
+        mViewName = getIntent().getStringExtra(VIEW_NAME_KEY);
     }
 
-    private void initTitle(){
+    private void initTitle() {
         // 显示类型（viewType）1 兴趣益教 2 演出展览 3 游乐
         setActionBarTtile(mViewName);
 
     }
 
-    private void initViews(){
+    private void initViews() {
 
         mIndicatorView = findViewById(R.id.indicator);
 
@@ -178,12 +180,26 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
         mSwipeRefreshLayout.setColorScheme(android.R.color.white, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
-        mListView = (ListView)findViewById(R.id.listview);
+        mListView = (ListView) findViewById(R.id.listview);
 
         mAdapter = new Adapter();
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(mOnItemClickListener);
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
+                        && view.getLastVisiblePosition() > (mAdapter
+                        .getCount() - 2) && !isLoading) {
+                    fetchData();
+                }
+            }
 
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
 
     }
 
@@ -191,32 +207,46 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             HomePageModel homePageModel = mHomePageModels.get(i);
-            FineDetailActivity.launch(FineCategoryListActivity.this , homePageModel);
+            FineDetailActivity.launch(FineCategoryListActivity.this, homePageModel);
         }
     };
 
-    private void fetchData(){
+    private void fetchData() {
+        if (noData) {
+            mSwipeRefreshLayout.setRefreshing(false);
+            AndTools.showToast("已经没有更多内容");
+            return;
+        }
+        isLoading = true;
         Map<String, String> params = new HashMap<String, String>();
-        params.put("viewType" , mViewType+"");
-        params.put("cityType" , mCityType + "");
-        params.put("type" , mRegionType + "");
-        params.put("minAge" ,mMinAge + "");
-        params.put("maxAge" , mMaxAge + "");
-        params.put("startIndex" , mStartIndex + "");
-        params.put("endIndex" , mEndIndex + "");
+        params.put("viewType", mViewType + "");
+        params.put("cityType", mCityType + "");
+        params.put("type", mRegionType + "");
+        params.put("minAge", mMinAge + "");
+        params.put("maxAge", mMaxAge + "");
+        params.put("startIndex", mCount + "");
+        params.put("endIndex", mCount + SIZE + "");
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_SEARCH_MORE, params);
-        LogUtil.d("dxz",url);
+        LogUtil.d("dxz", url);
         NetworkRequest.get(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 mSwipeRefreshLayout.setRefreshing(false);
+                isLoading = false;
                 if (!TextUtils.isEmpty(response)) {
                     List<HomePageModel> homePageModels = HomePageModel.arrayHomePageModelFromData(response);
-                    if (homePageModels != null) {
+                    if (homePageModels != null && homePageModels.size() > 0) {
+                        mCount += homePageModels.size();
                         mHomePageModels.clear();
                         mHomePageModels.addAll(homePageModels);
                         mAdapter.notifyDataSetChanged();
+                    } else {
+                        AndTools.showToast("已经没有更多内容");
+                        noData = true;
                     }
+                } else {
+                    AndTools.showToast("已经没有更多内容");
+                    noData = true;
                 }
 
             }
@@ -224,19 +254,26 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
             @Override
             public void onErrorResponse(VolleyError error) {
                 mSwipeRefreshLayout.setRefreshing(false);
+                isLoading = false;
             }
         });
     }
 
     @Override
     public void onRefresh() {
-        fetchData();
+        if (isLoading) {
+            LogUtil.d("dxz", "ignore manually update!");
+        } else {
+            mCount = 0;
+            noData = false;
+            fetchData();//这里多线程也要手动控制isLoading
+        }
     }
 
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.area_layout:
                 triggerRegionFilterListView();
                 break;
@@ -246,10 +283,10 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
         }
     }
 
-    private void triggerRegionFilterListView(){
-        if(mRegionFilterListView == null){
-            mRegionFilterListView = new FilterListView(this,mRegionList.size());
-            mRegionFilterAdpter = new RegionFilterAdpter(this , mRegionList);
+    private void triggerRegionFilterListView() {
+        if (mRegionFilterListView == null) {
+            mRegionFilterListView = new FilterListView(this, mRegionList.size());
+            mRegionFilterAdpter = new RegionFilterAdpter(this, mRegionList);
             mRegionFilterListView.setAdapter(mRegionFilterAdpter);
             mRegionFilterListView.setOnItemClickListener(new FilterListView.OnItemClickListener() {
                 @Override
@@ -262,17 +299,17 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
                 }
             });
         }
-        if(!mRegionFilterListView.isShowing()){
-            mRegionFilterListView.showAsDropDown(mIndicatorView,0, AndTools.dp2px(this , 1));
+        if (!mRegionFilterListView.isShowing()) {
+            mRegionFilterListView.showAsDropDown(mIndicatorView, 0, AndTools.dp2px(this, 1));
         } else {
             mRegionFilterListView.dismiss();
         }
     }
 
-    private void triggerAgeFilterListView(){
-        if(mAgeFilterListView == null){
-            mAgeFilterListView = new FilterListView(this,mAgeList.size());
-            mAgeFilterAdapter = new AgeFilterAdapter(this , mAgeList);
+    private void triggerAgeFilterListView() {
+        if (mAgeFilterListView == null) {
+            mAgeFilterListView = new FilterListView(this, mAgeList.size());
+            mAgeFilterAdapter = new AgeFilterAdapter(this, mAgeList);
             mAgeFilterListView.setAdapter(mAgeFilterAdapter);
             mAgeFilterListView.setOnItemClickListener(new FilterListView.OnItemClickListener() {
                 @Override
@@ -286,14 +323,14 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
                 }
             });
         }
-        if(!mAgeFilterListView.isShowing()){
-            mAgeFilterListView.showAsDropDown(mIndicatorView,0,AndTools.dp2px(this , 1));
+        if (!mAgeFilterListView.isShowing()) {
+            mAgeFilterListView.showAsDropDown(mIndicatorView, 0, AndTools.dp2px(this, 1));
         } else {
             mAgeFilterListView.dismiss();
         }
     }
 
-    class Adapter extends BaseAdapter{
+    class Adapter extends BaseAdapter {
 
         @Override
         public int getCount() {
@@ -320,19 +357,19 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
             ImageView imageView = CommonViewHolder.get(convertView, R.id.image);
             AndTools.displayImage(null, homePageModel.getPictureUrl(), imageView);
 
-            TextView title = CommonViewHolder.get(convertView , R.id.title);
+            TextView title = CommonViewHolder.get(convertView, R.id.title);
             title.setText(homePageModel.getTitle());
 
-            TextView address = CommonViewHolder.get(convertView , R.id.address);
+            TextView address = CommonViewHolder.get(convertView, R.id.address);
             address.setText(homePageModel.getClassName());
 
-            TextView distance = CommonViewHolder.get(convertView , R.id.distance);
+            TextView distance = CommonViewHolder.get(convertView, R.id.distance);
 //            distance.setText(homePageModel.ge);
 
-            TextView ticket = CommonViewHolder.get(convertView , R.id.tickets);
-            ticket.setText(getString(R.string.remainder_tickets , homePageModel.getRemainTicket()));
+            TextView ticket = CommonViewHolder.get(convertView, R.id.tickets);
+            ticket.setText(getString(R.string.remainder_tickets, homePageModel.getRemainTicket()));
 
-            TextView payment = CommonViewHolder.get(convertView , R.id.payment);
+            TextView payment = CommonViewHolder.get(convertView, R.id.payment);
             return convertView;
         }
     }
