@@ -179,7 +179,9 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
 
     final AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            SpellDModel spellDModel = spellDModels.get(position);
+            SpellDClassActivity.launch(getActivity() , spellDModel);
 
         }
     };

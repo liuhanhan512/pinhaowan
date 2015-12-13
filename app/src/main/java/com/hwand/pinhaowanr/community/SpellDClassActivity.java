@@ -11,6 +11,8 @@ import com.google.gson.Gson;
 import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.ActivityModel;
+import com.hwand.pinhaowanr.model.SpellDCategoryModel;
+import com.hwand.pinhaowanr.model.SpellDModel;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
@@ -30,10 +32,21 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
 
     private int mClassId;
 
+    private static final String SPELL_D_CATEGORY_KEY = "SPELL_D_CATEGORY_KEY";
+
+    private SpellDModel mSpellDModel;
+
     public static void launch(Context context , int id){
         Intent intent = new Intent();
         intent.setClass(context , SpellDClassActivity.class);
         intent.putExtra(ACTIVITY_ID_KEY, id);
+        context.startActivity(intent);
+    }
+
+    public static void launch(Context context , SpellDModel spellDModel){
+        Intent intent = new Intent();
+        intent.setClass(context , SpellDClassActivity.class);
+        intent.putExtra(SPELL_D_CATEGORY_KEY ,spellDModel);
         context.startActivity(intent);
     }
 
@@ -51,10 +64,14 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
 
     private void initIntentValue(){
         mClassId = getIntent().getIntExtra(ACTIVITY_ID_KEY ,0);
+        mSpellDModel = (SpellDModel) getIntent().getSerializableExtra(SPELL_D_CATEGORY_KEY);
+        if(mSpellDModel != null){
+            mClassId = mSpellDModel.getId();
+        }
     }
 
     private void initTitle(){
-
+        setActionBarTtile(getString(R.string.class_detail));
     }
 
     private void initViews(){

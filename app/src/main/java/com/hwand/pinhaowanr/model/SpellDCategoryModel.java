@@ -1,9 +1,11 @@
 package com.hwand.pinhaowanr.model;
 
+import java.io.Serializable;
+
 /**
  * Created by hanhanliu on 15/12/6.
  */
-public class SpellDCategoryModel {
+public class SpellDCategoryModel implements Serializable{
     private String className;
     private int classType;
     private boolean isSelected;

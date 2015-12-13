@@ -89,6 +89,7 @@
     <string name="launch_spell_d">发起拼拼</string>
     <string name="sign_up_fail_tips">报名失败！</string>
     <string name="sign_up_success_tips">报名成功!</string>
+    <string name="class_detail">课程详情</string>
 
     <string name="calendar_sunday">日</string>
     <string name="calendar_monday">一</string>
