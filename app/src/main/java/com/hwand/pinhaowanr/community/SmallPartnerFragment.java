@@ -210,6 +210,26 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
         });
     }
 
+    private void signUp(int activityId){
+        Map<String, String> params = new HashMap<String, String>();
+
+        params.put("id", activityId + "");
+
+        String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_APPLY_ACTIVITY, params);
+
+        NetworkRequest.get(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                AndTools.showToast(getString(R.string.sign_up_success_tips));
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                AndTools.showToast(getString(R.string.sign_up_fail_tips));
+            }
+        });
+    }
+
     private void updateViews() {
         if (mSmallPartnerModel != null) {
             // update listview
@@ -455,7 +475,7 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
                 convertView = View.inflate(getActivity(), R.layout.small_partner_list_item_layout, null);
             }
 
-            TheCommunityActivityModel theCommunityActivityModel = theCommunityActivityModels.get(position);
+            final TheCommunityActivityModel theCommunityActivityModel = theCommunityActivityModels.get(position);
 
             RelativeLayout imageLayout = (RelativeLayout) convertView.findViewById(R.id.image_layout);
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) imageLayout.getLayoutParams();
@@ -486,7 +506,7 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
             signUp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    signUp(theCommunityActivityModel.getId());
                 }
             });
 

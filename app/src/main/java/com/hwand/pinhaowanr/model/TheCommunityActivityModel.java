@@ -20,6 +20,16 @@ public class TheCommunityActivityModel implements Serializable{
     private long creatTime;
     private int distance;
 
+    private boolean isSign;
+
+    public boolean isSign() {
+        return isSign;
+    }
+
+    public void setIsSign(boolean isSign) {
+        this.isSign = isSign;
+    }
+
     private List<RoleModel> roleList;
 
     public int getId() {
