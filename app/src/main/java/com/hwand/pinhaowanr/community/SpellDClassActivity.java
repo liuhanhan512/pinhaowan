@@ -30,10 +30,13 @@ import com.hwand.pinhaowanr.model.SpellDClassStageModel;
 import com.hwand.pinhaowanr.model.SpellDClassTtileModel;
 import com.hwand.pinhaowanr.model.SpellDModel;
 import com.hwand.pinhaowanr.utils.AndTools;
+import com.hwand.pinhaowanr.utils.DateUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
+import com.hwand.pinhaowanr.widget.SpellDTimeView;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -146,6 +149,7 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
         return headerView;
     }
 
+    private TextView mOnceCost, mStageCost, mAllYearCost;
     private View initFooterView(){
         View footerView = View.inflate(this , R.layout.spell_d_class_detail_listview_footer_layout , null);
 
@@ -192,6 +196,19 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
 
     private void updateViews(){
         mAge.setText(getString(R.string.fine_detail_age , mSpellDClassModel.getMinAge() , mSpellDClassModel.getMaxAge()));
+
+        List<SpellDClassStageModel> spellDClassStageModels = mSpellDClassModel.getStageTimeList();
+        if(spellDClassStageModels != null){
+            for(SpellDClassStageModel spellDClassStageModel : spellDClassStageModels){
+                SpellDTimeView spellDTimeView = new SpellDTimeView(this);
+                long startTime = spellDClassStageModel.getStartTime();
+                long endTime = spellDClassStageModel.getEndTime();
+                SimpleDateFormat formatter = new SimpleDateFormat("E  hh:mm");
+                spellDTimeView.setTimeText(getString(R.string.reservation_time ,
+                        DateUtil.convertLongToString(startTime , formatter), DateUtil.convertLongToString(endTime , formatter)));
+                mTimeContainer.addView(spellDTimeView);
+            }
+        }
     }
 
     @Override

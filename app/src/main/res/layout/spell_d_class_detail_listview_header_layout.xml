@@ -62,6 +62,7 @@
             android:id="@+id/time_container"
             android:layout_toRightOf="@+id/time"
             android:layout_marginLeft="6dp"
+            android:layout_alignTop="@+id/time"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
