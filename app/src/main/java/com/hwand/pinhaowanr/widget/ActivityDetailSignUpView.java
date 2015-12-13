@@ -5,20 +5,35 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.utils.AndTools;
+import com.hwand.pinhaowanr.utils.NetworkRequest;
+import com.hwand.pinhaowanr.utils.UrlConfig;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by hanhanliu on 15/12/12.
  */
 public class ActivityDetailSignUpView extends LinearLayout {
 
-    private TextView mTime , mTickets;
+    public void setId(int id) {
+        this.mId = id;
+    }
+
+    private int mId;
+    private Context mContext;
+    private TextView mTime, mTickets;
+    private TextView mSignUp;
 
     public ActivityDetailSignUpView(Context context) {
         super(context);
+        mContext = context;
         initViews(context);
     }
 
@@ -32,37 +47,47 @@ public class ActivityDetailSignUpView extends LinearLayout {
         initViews(context);
     }
 
-    private void initViews(Context context){
+    private void initViews(Context context) {
         LayoutInflater.from(context).inflate(R.layout.activity_detail_sign_up_layout, this);
-        mTime = (TextView)findViewById(R.id.time);
-        mTickets = (TextView)findViewById(R.id.tickets);
-        TextView signUp = (TextView)findViewById(R.id.sign_up);
-        signUp.setOnClickListener(new OnClickListener() {
+        mTime = (TextView) findViewById(R.id.time);
+        mTickets = (TextView) findViewById(R.id.tickets);
+        mSignUp = (TextView) findViewById(R.id.sign_up);
+        mSignUp.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mOnSignUpClickListener != null){
-                    mOnSignUpClickListener.onSignUpClick();
-                }
+                signUp(mId);
             }
         });
     }
 
-    private OnSignUpClickListener mOnSignUpClickListener;
-
-    public void setOnSignUpClickListener(OnSignUpClickListener onSignUpClickListener){
-        mOnSignUpClickListener = onSignUpClickListener;
-    }
-
-    public void setTimeText(String text){
+    public void setTimeText(String text) {
         mTime.setText(text);
     }
 
-    public void setTicketsText(String text){
+    public void setTicketsText(String text) {
         mTickets.setText(text);
     }
 
-    public interface OnSignUpClickListener{
-        public void onSignUpClick();
-    }
+    private void signUp(int activityId) {
+        Map<String, String> params = new HashMap<String, String>();
 
+        params.put("id", activityId + "");
+
+        String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_APPLY_ACTIVITY, params);
+
+        NetworkRequest.get(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                AndTools.showToast(mContext.getString(R.string.sign_up_success_tips));
+                // TODO:
+                mSignUp.setText("已报名");
+                mSignUp.setEnabled(false);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                AndTools.showToast(mContext.getString(R.string.sign_up_fail_tips));
+            }
+        });
+    }
 }
