@@ -727,9 +727,6 @@ public class ReservationActivity extends BaseActivity {
         }
     }
 
-    ;
-
-
     class Adapter extends BaseExpandableListAdapter {
 
 

@@ -6,22 +6,22 @@ import java.io.Serializable;
  * Created by hanhanliu on 15/12/13.
  */
 public class SpellDClassStageModel implements Serializable {
-    private long startTime;
-    private long endTime;
+    private String startTime;
+    private String endTime;
 
-    public long getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(long startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public long getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(long endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 }

@@ -21,22 +21,16 @@ import com.google.gson.Gson;
 import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.CommonViewHolder;
 import com.hwand.pinhaowanr.R;
-import com.hwand.pinhaowanr.fine.FineDetailActivity;
-import com.hwand.pinhaowanr.model.ActivityModel;
-import com.hwand.pinhaowanr.model.ClassDetailTitleModel;
-import com.hwand.pinhaowanr.model.SpellDCategoryModel;
 import com.hwand.pinhaowanr.model.SpellDClassModel;
 import com.hwand.pinhaowanr.model.SpellDClassStageModel;
 import com.hwand.pinhaowanr.model.SpellDClassTtileModel;
 import com.hwand.pinhaowanr.model.SpellDModel;
 import com.hwand.pinhaowanr.utils.AndTools;
-import com.hwand.pinhaowanr.utils.DateUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.SpellDTimeView;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -205,11 +199,10 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
         if(spellDClassStageModels != null){
             for(SpellDClassStageModel spellDClassStageModel : spellDClassStageModels){
                 SpellDTimeView spellDTimeView = new SpellDTimeView(this);
-                long startTime = spellDClassStageModel.getStartTime();
-                long endTime = spellDClassStageModel.getEndTime();
-                SimpleDateFormat formatter = new SimpleDateFormat("E  hh:mm");
+                String startTime = spellDClassStageModel.getStartTime();
+                String endTime = spellDClassStageModel.getEndTime();
                 spellDTimeView.setTimeText(getString(R.string.reservation_time ,
-                        DateUtil.convertLongToString(startTime , formatter), DateUtil.convertLongToString(endTime , formatter)));
+                        startTime, endTime));
                 mTimeContainer.addView(spellDTimeView);
             }
         }

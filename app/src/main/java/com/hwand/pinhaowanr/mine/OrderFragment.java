@@ -1,15 +1,12 @@
 package com.hwand.pinhaowanr.mine;
 
-import android.animation.ValueAnimator;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.SparseArray;
 import android.view.View;
 import android.widget.TextView;
 
@@ -26,8 +23,6 @@ import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.DDAlertDialog;
 import com.hwand.pinhaowanr.widget.OrderSlidingAdapter;
 import com.hwand.pinhaowanr.widget.calendar.CalendarGridView;
-import com.hwand.pinhaowanr.widget.calendar.CalendarUtils;
-import com.hwand.pinhaowanr.widget.calendar.CalendarViewPager;
 import com.hwand.pinhaowanr.widget.calendar.UniformGridView;
 
 import java.util.HashMap;
@@ -38,27 +33,6 @@ import java.util.Map;
  * Created by dxz on 15/12/01.
  */
 public class OrderFragment extends BaseFragment {
-
-    private CalendarViewPager mCalendarPager;
-
-    private int mCurrentDateInt = CalendarUtils.DEFAULT_DATE_INT;
-    private int mInitDateInt = CalendarUtils.getToday();
-
-    private boolean mDisableCalendar = false;
-    private int mCurrentDayLine;
-
-    private ValueAnimator mCalendarAnimator;
-    private ValueAnimator mDetailAnimator;
-
-    private int mCalendarHeight;
-    private int mCalendarLineHeight;
-    private int mAttendanceDetailMariginTop;
-
-    private SparseArray<Boolean> mCalendarCache = new SparseArray<Boolean>();
-    private SparseArray<Integer> mCalendarMonthDataStatus = new SparseArray<Integer>();
-
-    private Drawable mCalendarItemTodayTip;
-    private Drawable mCalendarItemCurrentTip;
 
     public static OrderFragment newInstance() {
         OrderFragment fragment = new OrderFragment();
@@ -138,10 +112,6 @@ public class OrderFragment extends BaseFragment {
                 return view;
             }
         });
-
-        mCalendarPager = (CalendarViewPager) mFragmentView.findViewById(R.id.calendar_body);
-        mCalendarPager.setCurrentItem(CalendarViewPager.monthIntToPageIndex(mInitDateInt), false);
-        mCalendarPager.notifyDataChanged(mInitDateInt);
 
     }
 
