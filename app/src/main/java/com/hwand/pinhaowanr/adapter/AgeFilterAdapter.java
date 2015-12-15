@@ -21,6 +21,6 @@ public class AgeFilterAdapter extends FilterListAdapter<AgeModel> {
 
     @Override
     protected void bindData(AgeModel object, ViewHolder viewHolder) {
-        viewHolder.mFilterText.setText(mContext.getString(R.string.age_text , object.getMinAge() , object.getMaxAge()));
+        viewHolder.mFilterText.setText(mContext.getString(R.string.age_text , object.getMinAge() , object.getMaxAge()) + "岁");
     }
 }
