@@ -88,9 +88,9 @@ public class ClassFragment extends BaseFragment {
     protected void initViews() {
         super.initViews();
         mRecyclerView = (RecyclerView) mFragmentView.findViewById(R.id.recycler_view);
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(layoutManager);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new CardAdapter(getActivity(), mDatas);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());

@@ -59,7 +59,7 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
 
     private List<NewActivityModel> newActivityModels;
 
-    private List<FleaActivityModel> fleaActivityModels;
+    private FleaActivityModel fleaActivityModel;
 
     public static BaseCommunityFragment newInstance() {
         SmallPartnerFragment fragment = new SmallPartnerFragment();
@@ -210,7 +210,7 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
         });
     }
 
-    private void signUp(int activityId){
+    private void signUp(int activityId) {
         Map<String, String> params = new HashMap<String, String>();
 
         params.put("id", activityId + "");
@@ -355,9 +355,8 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
     }
 
     private void updateFleaView() {
-        fleaActivityModels = mSmallPartnerModel.gettActivityList();
-        if (fleaActivityModels != null && fleaActivityModels.size() > 0) {
-            FleaActivityModel fleaActivityModel = fleaActivityModels.get(0);
+        fleaActivityModel = mSmallPartnerModel.getMarket();
+        if (fleaActivityModel != null && !TextUtils.isEmpty(fleaActivityModel.getUrl())) {
             fleaLayout.setVisibility(View.VISIBLE);
             AndTools.displayImage(null, fleaActivityModel.getUrl(), fleaImage);
         } else {

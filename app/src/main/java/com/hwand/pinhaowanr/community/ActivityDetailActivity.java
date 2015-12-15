@@ -242,26 +242,6 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
          */
     }
 
-    private void signUp(int activityId) {
-        Map<String, String> params = new HashMap<String, String>();
-
-        params.put("id", activityId + "");
-
-        String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_APPLY_ACTIVITY, params);
-
-        NetworkRequest.get(url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                AndTools.showToast(getString(R.string.sign_up_success_tips));
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                AndTools.showToast(getString(R.string.sign_up_fail_tips));
-            }
-        });
-    }
-
     private void fetchData() {
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", mActivityId + "");

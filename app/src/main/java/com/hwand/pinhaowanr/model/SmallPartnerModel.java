@@ -8,7 +8,7 @@ import java.util.List;
 public class SmallPartnerModel {
     private List<SuperMomModel> roleList;
     private List<NewActivityModel> newActivityList;
-    private List<FleaActivityModel> tActivityList;
+    private FleaActivityModel market;
     private List<TheCommunityActivityModel> naActivityList;
 
 
@@ -28,12 +28,12 @@ public class SmallPartnerModel {
         this.newActivityList = newActivityList;
     }
 
-    public List<FleaActivityModel> gettActivityList() {
-        return tActivityList;
+    public FleaActivityModel getMarket() {
+        return market;
     }
 
-    public void settActivityList(List<FleaActivityModel> tActivityList) {
-        this.tActivityList = tActivityList;
+    public void setMarket(FleaActivityModel market) {
+        this.market = market;
     }
 
     public List<TheCommunityActivityModel> getNaActivityList() {

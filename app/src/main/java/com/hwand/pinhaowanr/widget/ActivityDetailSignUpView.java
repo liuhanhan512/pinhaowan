@@ -1,6 +1,8 @@
 package com.hwand.pinhaowanr.widget;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,9 +81,23 @@ public class ActivityDetailSignUpView extends LinearLayout {
             @Override
             public void onResponse(String response) {
                 AndTools.showToast(mContext.getString(R.string.sign_up_success_tips));
-                // TODO:
-                mSignUp.setText("已报名");
-                mSignUp.setEnabled(false);
+                // 结果（result）0 已经报过名了 1 成功
+                if (!TextUtils.isEmpty(response) && response.contains("1")) {
+                    mSignUp.setText("已报名");
+                    mSignUp.setEnabled(false);
+
+                } else {
+                    new DDAlertDialog.Builder(mContext)
+                            .setTitle("提示").setMessage("已经报过名了")
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
+                }
+
+
             }
         }, new Response.ErrorListener() {
             @Override
