@@ -42,10 +42,17 @@ import com.hwand.pinhaowanr.widget.calendar.CalendarUtils;
 import com.hwand.pinhaowanr.widget.calendar.CalendarViewPager;
 import com.hwand.pinhaowanr.widget.calendar.UniformGridView;
 
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.TimeZone;
+import java.util.TreeSet;
 
 /**
  * 预约界面
@@ -901,17 +908,27 @@ public class ReservationActivity extends BaseActivity {
         }
     }
 
-    private void getTimeList() {
+    private void getTimeList(String month) {
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", mId + "");
         // TODO
-        params.put("month", "yyyy-MM");
+//        Date date = new Date(System.currentTimeMillis());
+//        Locale aLocale = Locale.US;
+//        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM", new DateFormatSymbols(aLocale));
+//        fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+//        String month = fmt.format(date);
+        params.put("month", month);
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_APPLY_TIMES, params);
         NetworkRequest.get(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 if (!TextUtils.isEmpty(response)) {
                     List<ClassDetailSubTitleModel> list = ClassDetailSubTitleModel.arrayFromData(response);
+                    if (list != null && list.size() > 0) {
+                        filterData(list);
+                    } else {
+
+                    }
                 } else {
                 }
 
@@ -923,8 +940,40 @@ public class ReservationActivity extends BaseActivity {
         });
     }
 
-    private void apply(int subscribeId) {
+    private void filterData(List<ClassDetailSubTitleModel> list) {
+        Set<String> keys = new TreeSet<String>();
+        for (ClassDetailSubTitleModel order : list) {
+            Date start = new Date(order.getStartTime());
+            Locale aLocale = Locale.US;
+            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-DD", new DateFormatSymbols(aLocale));
+            fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+            String day = fmt.format(start);
+            keys.add(day);
+        }
+        for (String key : keys) {
+            ClassDetailGroupTitleModel classDetailGroupTitleModel = new ClassDetailGroupTitleModel();
+            List<ClassDetailSubTitleModel> orders = new ArrayList<ClassDetailSubTitleModel>();
+            for (ClassDetailSubTitleModel order : list) {
+                Date start = new Date(order.getStartTime());
+                Locale aLocale = Locale.US;
+                SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-DD", new DateFormatSymbols(aLocale));
+                fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+                String month = fmt.format(start);
+                if (TextUtils.equals(key, month)) {
+                    orders.add(order);
+                }
+            }
+            classDetailGroupTitleModel.setClassDetailSubTitleModelList(orders);
+            // TODO:key转化为文字
+            classDetailGroupTitleModel.setTime(key);
+        }
+
+    }
+
+    private void apply(int classId, String month, int subscribeId) {
         Map<String, String> params = new HashMap<String, String>();
+        params.put("id", classId + "");
+        params.put("month", month + "");
         params.put("subscribeId", subscribeId + "");
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_APPLY_CLASS, params);
         NetworkRequest.get(url, new Response.Listener<String>() {

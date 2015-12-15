@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -25,9 +26,17 @@ import com.hwand.pinhaowanr.widget.OrderSlidingAdapter;
 import com.hwand.pinhaowanr.widget.calendar.CalendarGridView;
 import com.hwand.pinhaowanr.widget.calendar.UniformGridView;
 
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.TimeZone;
+import java.util.TreeSet;
 
 /**
  * Created by dxz on 15/12/01.
@@ -155,6 +164,35 @@ public class OrderFragment extends BaseFragment {
                         }).show();
             }
         });
+    }
+
+    private void filterData(List<OrderModel> datas) {
+        Map<String, List<OrderModel>> map = new ArrayMap<String, List<OrderModel>>();
+        Set<String> keys = new TreeSet<String>();
+        for (OrderModel order : datas) {
+            Date start = new Date(order.getStartTime());
+            Locale aLocale = Locale.US;
+            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM", new DateFormatSymbols(aLocale));
+            fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+            String month = fmt.format(start);
+            keys.add(month);
+        }
+
+        for (String key : keys) {
+            List<OrderModel> orders = new ArrayList<OrderModel>();
+            for (OrderModel order : datas) {
+                Date start = new Date(order.getStartTime());
+                Locale aLocale = Locale.US;
+                SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM", new DateFormatSymbols(aLocale));
+                fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+                String month = fmt.format(start);
+                if (TextUtils.equals(key, month)) {
+                    orders.add(order);
+                }
+            }
+            map.put(key, orders);
+        }
+
     }
 
 }
