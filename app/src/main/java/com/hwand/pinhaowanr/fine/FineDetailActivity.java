@@ -1,5 +1,6 @@
 package com.hwand.pinhaowanr.fine;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -150,8 +151,12 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
         TextView tickets = (TextView) headerView.findViewById(R.id.tickets);
         tickets.setText(getString(R.string.remainder_tickets, mHomePageModel.getRemainTicket()));
 
+        headerView.findViewById(R.id.location_layout).setOnClickListener(this);
+
         TextView address = (TextView) headerView.findViewById(R.id.address);
         address.setText(mHomePageModel.getDetailAddress());
+
+
 
         mTel = (TextView) headerView.findViewById(R.id.tel);
         mHour = (TextView) headerView.findViewById(R.id.hours);
@@ -219,7 +224,31 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
             case R.id.gift_ticket_layout:
                 onGiftTicketClick();
                 break;
+            case R.id.location_layout:
+                onLocationClick();
+                break;
         }
+    }
+
+    private void onLocationClick(){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("geo:");
+        stringBuilder.append(mHomePageModel.getLat());
+        stringBuilder.append(",");
+        stringBuilder.append(mHomePageModel.getLng());
+        stringBuilder.append("?q=");
+        stringBuilder.append(mHomePageModel.getDetailAddress());
+        Uri uri = Uri.parse(stringBuilder.toString());
+        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+        try {
+            startActivity(intent);
+        } catch (ActivityNotFoundException exception ) {
+            exception.printStackTrace();
+        } catch (Exception exception){
+            exception.printStackTrace();
+        }
+
+
     }
 
     private void onContactClick() {
