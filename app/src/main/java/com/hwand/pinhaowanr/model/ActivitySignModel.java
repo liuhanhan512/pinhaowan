@@ -11,6 +11,8 @@ public class ActivitySignModel implements Serializable {
     private long startTime;
     private long endTime;
     private int remainTicket;
+    // 这个活动是否报名 0 没有报名 1 已经报名
+    private int isSignUp;
 
     public int getId() {
         return id;
@@ -42,5 +44,13 @@ public class ActivitySignModel implements Serializable {
 
     public void setRemainTicket(int remainTicket) {
         this.remainTicket = remainTicket;
+    }
+
+    public int getIsSignUp() {
+        return isSignUp;
+    }
+
+    public void setIsSignUp(int isSignUp) {
+        this.isSignUp = isSignUp;
     }
 }

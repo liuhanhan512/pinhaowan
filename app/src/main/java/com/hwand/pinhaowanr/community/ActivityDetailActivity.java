@@ -268,6 +268,7 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
     }
 
     private void updateViews() {
+        updateInfo();
         String url = mActivityModel.getUrl();
         String content = mActivityModel.getContent();
         if (TextUtils.isEmpty(url) && TextUtils.isEmpty(content)) {
@@ -297,7 +298,7 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
                 String time = getString(R.string.time, DateUtil.convertLongToString(activitySignModel.getStartTime(), myFmt),
                         DateUtil.convertLongToString(activitySignModel.getEndTime(), myFmt));
                 activityDetailSignUpView.setTimeText(time);
-
+                activityDetailSignUpView.isSignUped(activitySignModel.getIsSignUp() == 1);
                 activityDetailSignUpView.setTicketsText(getString(R.string.remainder_tickets, activitySignModel.getRemainTicket()));
                 mSignUpContainer.addView(activityDetailSignUpView);
             }
@@ -314,6 +315,35 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
         }
 
 
+    }
+
+    private void updateInfo() {
+        if (mTheCommunityActivityModel == null) {
+            LinearLayout activityInfoLayout = (LinearLayout) findViewById(R.id.activity_info_layout);
+            activityInfoLayout.setVisibility(View.VISIBLE);
+            ImageView imageView = (ImageView) findViewById(R.id.image);
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) imageView.getLayoutParams();
+            layoutParams.height = AndTools.getScreenWidth(this) * 9 / 16;
+            imageView.setLayoutParams(layoutParams);
+            AndTools.displayImage(null, mActivityModel.getUrl(), imageView);
+            TextView address = (TextView) findViewById(R.id.address);
+            address.setText(mActivityModel.getDetailAddress());
+            TextView time = (TextView) findViewById(R.id.time);
+            time.setText(getString(R.string.sign_up_times, DateUtil.convertLongToString(mActivityModel.getStratTime()),
+                    DateUtil.convertLongToString(mActivityModel.getEndTime())));
+
+            // TODO:显示活动时间
+            TextView age = (TextView) findViewById(R.id.age);
+//            age.setText(getString(R.string.fine_detail_age , mTheCommunityActivityModel.get));
+
+            TextView peopleCount = (TextView) findViewById(R.id.people_count);
+            int maxRoles = mActivityModel.getMaxRoles();
+            if (maxRoles <= 0) {
+                peopleCount.setText("不限");
+            } else {
+                peopleCount.setText(getString(R.string.activity_people_count, mActivityModel.getMaxRoles()));
+            }
+        }
     }
 
     @Override

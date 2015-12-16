@@ -13,8 +13,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.utils.AndTools;
+import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
+
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,9 +60,19 @@ public class ActivityDetailSignUpView extends LinearLayout {
         mSignUp.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                signUp(mId);
+                signUp();
             }
         });
+    }
+
+    public void isSignUped(boolean is) {
+        if (is) {
+            mSignUp.setText("已报名");
+            mSignUp.setEnabled(false);
+        } else {
+            mSignUp.setText("报名");
+            mSignUp.setEnabled(true);
+        }
     }
 
     public void setTimeText(String text) {
@@ -70,10 +83,10 @@ public class ActivityDetailSignUpView extends LinearLayout {
         mTickets.setText(text);
     }
 
-    private void signUp(int activityId) {
+    private void signUp() {
         Map<String, String> params = new HashMap<String, String>();
 
-        params.put("id", activityId + "");
+        params.put("id", mId + "");
 
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_APPLY_ACTIVITY, params);
 
@@ -85,6 +98,16 @@ public class ActivityDetailSignUpView extends LinearLayout {
                 if (!TextUtils.isEmpty(response) && response.contains("1")) {
                     mSignUp.setText("已报名");
                     mSignUp.setEnabled(false);
+                    try {
+                        JSONObject json = new JSONObject(response);
+                        int id = json.optInt("id");
+                        int ticket = json.optInt("remainTicket");
+                        LogUtil.d("dxz", id + "    " + ticket);
+                        if (id == mId) {
+                            mTickets.setText(mContext.getString(R.string.remainder_tickets, ticket));
+                        }
+                    } catch (Exception e) {
+                    }
 
                 } else {
                     new DDAlertDialog.Builder(mContext)
