@@ -72,6 +72,7 @@ public class UserInfoActivity extends BaseActivity {
                     Intent intent = new Intent();
                     intent.setClass(UserInfoActivity.this, MessageActivity.class);
                     intent.putExtra(MessageActivity.KEY_INTENT_ID, mID);
+                    intent.putExtra(MessageActivity.KEY_INTENT_TYPE, 1);
                     startActivity(intent);
                 } else {
                     AndTools.showToast("发私信需要登录");

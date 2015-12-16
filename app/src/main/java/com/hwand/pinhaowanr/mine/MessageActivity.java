@@ -36,14 +36,17 @@ import java.util.Map;
 public class MessageActivity extends BaseActivity {
 
     public static final String KEY_INTENT_ID = "key_id";
+    public static final String KEY_INTENT_TYPE = "key_type";
     // UI references.
     private RecyclerView mRecyclerView;
+    private View mBottomView;
     private EditText mMsgInput;
     private TextView mSend;
 
     private MultiTypeAdapter mAdapter;
 
     private int mID;
+    private int type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +55,16 @@ public class MessageActivity extends BaseActivity {
         setActionBarTtile("消息");
 
         mID = getIntent().getIntExtra(KEY_INTENT_ID, 0);
+        type = getIntent().getIntExtra(KEY_INTENT_TYPE, 1);
 
+        mBottomView = findViewById(R.id.rl_bottom);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setStackFromEnd(true);
+        if (type == 1) {
+            layoutManager.setStackFromEnd(true);
+            mBottomView.setVisibility(View.VISIBLE);
+        } else {
+            mBottomView.setVisibility(View.GONE);
+        }
         mMsgInput = (EditText) findViewById(R.id.msg_input);
         mSend = (TextView) findViewById(R.id.btn_send);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -84,11 +94,9 @@ public class MessageActivity extends BaseActivity {
                     // TODO:
                     List<MsgInfo> msgs = MsgInfo.arrayFromData(response);
                     if (msgs != null && msgs.size() > 0) {
-                        LogUtil.d("dxz", msgs.size() + "");
                         mAdapter.update(msgs);
                     }
                 } else {
-                    LogUtil.d("dxz", "null");
                 }
 
 
@@ -146,7 +154,7 @@ public class MessageActivity extends BaseActivity {
                         msgInfo.setTime(System.currentTimeMillis());
                         msgInfo.setType(1);
                         mAdapter.update(msgInfo);
-                        mRecyclerView.scrollToPosition(mAdapter.getItemCount()-1);
+                        mRecyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
                         mMsgInput.setText("");
                         hideImm();
                     } else {
