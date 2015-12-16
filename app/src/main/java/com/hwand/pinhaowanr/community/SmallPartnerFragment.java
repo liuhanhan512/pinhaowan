@@ -90,6 +90,7 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
         mListView.setOnItemClickListener(mOnItemClickListener);
 
         mEmptyView = mFragmentView.findViewById(R.id.empty_layout);
+        mEmptyView.setVisibility(View.GONE);
         mFragmentView.findViewById(R.id.empty_text).setOnClickListener(this);
 
         fetchData();
