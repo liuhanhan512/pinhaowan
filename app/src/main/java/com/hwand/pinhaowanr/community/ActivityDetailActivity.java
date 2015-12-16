@@ -332,10 +332,6 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
             time.setText(getString(R.string.sign_up_times, DateUtil.convertLongToString(mActivityModel.getStratTime()),
                     DateUtil.convertLongToString(mActivityModel.getEndTime())));
 
-            // TODO:显示活动时间
-            TextView age = (TextView) findViewById(R.id.age);
-//            age.setText(getString(R.string.fine_detail_age , mTheCommunityActivityModel.get));
-
             TextView peopleCount = (TextView) findViewById(R.id.people_count);
             int maxRoles = mActivityModel.getMaxRoles();
             if (maxRoles <= 0) {

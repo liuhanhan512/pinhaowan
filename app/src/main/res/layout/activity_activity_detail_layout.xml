@@ -77,15 +77,6 @@
                         android:text="@string/activity_detail" />
 
                     <TextView
-                        android:id="@+id/age"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="12dp"
-                        android:layout_marginTop="6dp"
-                        android:gravity="left|center"
-                        android:text="@string/activity_detail" />
-
-                    <TextView
                         android:id="@+id/people_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

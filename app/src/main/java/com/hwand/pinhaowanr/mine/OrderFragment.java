@@ -43,6 +43,8 @@ import java.util.TreeSet;
  */
 public class OrderFragment extends BaseFragment {
 
+    private Map<String, List<OrderModel>> mDataMap = new ArrayMap<String, List<OrderModel>>();
+
     public static OrderFragment newInstance() {
         OrderFragment fragment = new OrderFragment();
         Bundle bundle = new Bundle();
@@ -167,7 +169,7 @@ public class OrderFragment extends BaseFragment {
     }
 
     private void filterData(List<OrderModel> datas) {
-        Map<String, List<OrderModel>> map = new ArrayMap<String, List<OrderModel>>();
+        mDataMap.clear();
         Set<String> keys = new TreeSet<String>();
         for (OrderModel order : datas) {
             Date start = new Date(order.getStartTime());
@@ -190,7 +192,7 @@ public class OrderFragment extends BaseFragment {
                     orders.add(order);
                 }
             }
-            map.put(key, orders);
+            mDataMap.put(key, orders);
         }
 
     }
