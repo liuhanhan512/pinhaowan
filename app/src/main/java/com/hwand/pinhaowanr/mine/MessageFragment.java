@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
+import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.event.DeleteAllEvent;
 import com.hwand.pinhaowanr.main.MineFragment;
@@ -224,7 +225,14 @@ public class MessageFragment extends BaseFragment implements SwipeRefreshLayout.
     public void onItemClick(View view, int position) {
         Intent intent = new Intent();
         intent.setClass(getActivity(), MessageActivity.class);
-        intent.putExtra(MessageActivity.KEY_INTENT_ID, (int) mAdapter.getItemId(position));
+        final MsgInfo msg = mAdapter.getItem(position);
+
+        if (msg.getSendId() == DataCacheHelper.getInstance().getUserInfo().getRoleId()) {
+            intent.putExtra(MessageActivity.KEY_INTENT_ID, msg.getAcceptId());
+        } else {
+            intent.putExtra(MessageActivity.KEY_INTENT_ID, msg.getSendId());
+        }
+        intent.putExtra(MessageActivity.KEY_INTENT_TYPE, msg.getType());
         startActivity(intent);
     }
 

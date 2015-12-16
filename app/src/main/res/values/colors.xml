@@ -53,6 +53,7 @@
     <color name="umeng_socialize_text_ucenter">#595959</color>
     <color name="umeng_socialize_edit_bg">#C4C4C4</color>
     <color name="umeng_socialize_grid_divider_line">#F8F8F8</color>
+    <color name="indicator_bg">#ebd457</color>
 
     <drawable name="default_divider">#d9d9d9</drawable>
 </resources>
