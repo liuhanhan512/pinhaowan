@@ -85,7 +85,6 @@ public class SuperMomActivity extends BaseActivity implements SwipeRefreshLayout
         mAdapter = new Adapter();
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(mOnItemClickListener);
-        mListView.setOnItemClickListener(mOnItemClickListener);
         mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
