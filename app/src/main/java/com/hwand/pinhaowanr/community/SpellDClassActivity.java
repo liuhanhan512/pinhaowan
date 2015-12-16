@@ -26,6 +26,7 @@ import com.hwand.pinhaowanr.model.SpellDClassStageModel;
 import com.hwand.pinhaowanr.model.SpellDClassTtileModel;
 import com.hwand.pinhaowanr.model.SpellDModel;
 import com.hwand.pinhaowanr.utils.AndTools;
+import com.hwand.pinhaowanr.utils.Constant;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.SpellDTimeView;
@@ -151,7 +152,27 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
         mStageCost = (TextView)footerView.findViewById(R.id.stage_visit_cost);
         mAllYearCost = (TextView)footerView.findViewById(R.id.all_visit_cost);
 
+        footerView.findViewById(R.id.one_visit_launch).setOnClickListener(this);
+        footerView.findViewById(R.id.stage_visit_launch).setOnClickListener(this);
+        footerView.findViewById(R.id.all_visit_launch).setOnClickListener(this);
+
         return footerView;
+    }
+
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        switch (v.getId()){
+            case R.id.one_visit_launch:
+                LaunchSpellDActivity.launch(this , Constant.SPELL_D_CLASS_ONE , mSpellDModel , mSpellDClassModel);
+                break;
+            case R.id.stage_visit_launch:
+                LaunchSpellDActivity.launch(this , Constant.SPELL_D_CLASS_STAGE , mSpellDModel , mSpellDClassModel);
+                break;
+            case R.id.all_visit_launch:
+                LaunchSpellDActivity.launch(this , Constant.SPELL_D_CLASS_ALL , mSpellDModel , mSpellDClassModel);
+                break;
+        }
     }
 
     final AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {

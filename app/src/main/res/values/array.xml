@@ -16,4 +16,40 @@
         <item>演出展览</item>
         <item>游乐</item>
     </string-array>
+
+    <string-array name="once_first_array">
+        <item>单次上门</item>
+        <item>阶段上门</item>
+        <item>全年上门</item>
+    </string-array>
+
+
+    <string-array name="stage_first_array">
+        <item>阶段上门</item>
+        <item>单次上门</item>
+        <item>全年上门</item>
+    </string-array>
+
+
+    <string-array name="all_first_array">
+        <item>全年上门</item>
+        <item>单次上门</item>
+        <item>阶段上门</item>
+    </string-array>
+
+    <string-array name="once_time_array">
+        <item>周日</item>
+        <item>周一</item>
+        <item>周二</item>
+        <item>周三</item>
+        <item>周四</item>
+        <item>周五</item>
+        <item>周六</item>
+
+    </string-array>
+
+    <string-array name="all_time_array">
+        <item>全年</item>
+    </string-array>
+
 </resources>

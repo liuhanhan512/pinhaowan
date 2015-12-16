@@ -91,6 +91,7 @@
     <string name="sign_up_success_tips">报名成功!</string>
     <string name="class_detail">课程详情</string>
     <string name="spell_d_time">营业时间：</string>
+    <string name="people_cost">人均价格：%d</string>
 
     <string name="calendar_sunday">日</string>
     <string name="calendar_monday">一</string>
