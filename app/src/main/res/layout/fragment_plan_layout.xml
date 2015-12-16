@@ -28,6 +28,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:includeFontPadding="true"
+                android:layout_centerHorizontal="true"
                 android:padding="0dp"
                 android:singleLine="true"
                 android:text="@string/title_order"
@@ -36,11 +37,10 @@
 
             <View
                 android:id="@+id/bottom_week_indicator"
-                android:layout_width="match_parent"
+                android:layout_width="50dp"
                 android:layout_height="2dp"
-                android:layout_alignLeft="@+id/text_order"
+                android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
-                android:layout_alignRight="@+id/text_order"
                 android:background="@drawable/indicator_bottom_selector" />
 
         </RelativeLayout>
@@ -73,17 +73,19 @@
 
             <View
                 android:id="@+id/bottom_near_indicator"
-                android:layout_width="match_parent"
+                android:layout_width="50dp"
                 android:layout_height="2dp"
-                android:layout_alignLeft="@+id/text_class"
+                android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
-                android:layout_alignRight="@+id/text_class"
                 android:background="@drawable/indicator_bottom_selector" />
 
         </RelativeLayout>
 
-
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_light_gray" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"

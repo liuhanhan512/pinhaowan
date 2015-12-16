@@ -8,7 +8,6 @@ import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.R;
@@ -55,8 +54,6 @@ public class MinePlanFragment extends BaseFragment {
         super.initViews();
 
         setTitleBarTtile("我的安排");
-        TextView city = (TextView) mFragmentView.findViewById(R.id.city);
-        TextView region = (TextView) mFragmentView.findViewById(R.id.region);
         initViewPager();
     }
 

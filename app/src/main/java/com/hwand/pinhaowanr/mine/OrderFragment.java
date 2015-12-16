@@ -1,10 +1,10 @@
 package com.hwand.pinhaowanr.mine;
 
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -17,33 +17,28 @@ import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.main.MineFragment;
 import com.hwand.pinhaowanr.model.OrderModel;
-import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.DDAlertDialog;
 import com.hwand.pinhaowanr.widget.OrderSlidingAdapter;
 import com.hwand.pinhaowanr.widget.calendar.CalendarGridView;
+import com.hwand.pinhaowanr.widget.calendar.CalendarUtils;
 import com.hwand.pinhaowanr.widget.calendar.UniformGridView;
 
-import java.text.DateFormatSymbols;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.TreeSet;
 
 /**
  * Created by dxz on 15/12/01.
  */
-public class OrderFragment extends BaseFragment {
+public class OrderFragment extends BaseFragment implements OrderSlidingAdapter.OnSlidingViewClickListener {
 
-    private Map<String, List<OrderModel>> mDataMap = new ArrayMap<String, List<OrderModel>>();
+    private List<Integer> mDays = new ArrayList<Integer>();
+    private List<OrderModel> orders = new ArrayList<OrderModel>();
+    private int curMonthInt;
 
     public static OrderFragment newInstance() {
         OrderFragment fragment = new OrderFragment();
@@ -67,9 +62,16 @@ public class OrderFragment extends BaseFragment {
         }
     };
 
+    private View mEmptyView;
+    private TextView mEmptyText;
+    private CalendarGridView mCalendarGridView;
+    private View mContentView;
     private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
 
     private OrderSlidingAdapter mAdapter;
+
+    private Drawable mCalendarItemSelectedTip;
 
     private static final int[] WEEK_WORDS = new int[]{
             R.string.calendar_sunday,
@@ -90,12 +92,24 @@ public class OrderFragment extends BaseFragment {
     protected void initViews() {
         super.initViews();
 
+        mEmptyView = mFragmentView.findViewById(R.id.empty_layout);
+        mEmptyText = (TextView) mFragmentView.findViewById(R.id.empty_text);
+        mEmptyText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                request();
+            }
+        });
+        mEmptyView.setVisibility(View.GONE);
+        mContentView = mFragmentView.findViewById(R.id.content_layout);
+        mCalendarGridView = (CalendarGridView) mFragmentView.findViewById(R.id.calendar_body);
         mRecyclerView = (RecyclerView) mFragmentView.findViewById(R.id.recycler_view);
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(layoutManager);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new OrderSlidingAdapter(getActivity(), this);
 
-//        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapter);
 
         UniformGridView calendarTitle = (UniformGridView) mFragmentView.findViewById(R.id.calendar_title);
 
@@ -124,6 +138,56 @@ public class OrderFragment extends BaseFragment {
             }
         });
 
+
+        mCalendarGridView.setCalendarGridViewAdapter(new CalendarGridView.CalendarGridViewAdapter() {
+            @Override
+            public View getView(int dayInt, boolean isCurrentMonth, View oldView) {
+                View view;
+                CalendarItemHolder holder;
+                if (oldView == null) {
+                    view = View.inflate(getActivity(), R.layout.item_calendar_day, null);
+                    holder = new CalendarItemHolder(view);
+                    view.setTag(holder);
+                } else {
+                    view = oldView;
+                    holder = (CalendarItemHolder) view.getTag();
+                }
+                holder.setText(String.valueOf(CalendarUtils.getDisplayDay(dayInt)));
+                LogUtil.d("dxz", curMonthInt + "");
+                LogUtil.d("dxz",CalendarUtils.getPureMonthInt(dayInt)+"");
+                holder.setIsYesterday(dayInt < CalendarUtils.getToday());
+                holder.setIsCurrentMonth(CalendarUtils.getPureMonthInt(dayInt) == curMonthInt);
+                holder.setSeletedTip(mDays.contains(dayInt));
+
+                return view;
+            }
+        });
+        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                try {
+                    super.onScrolled(recyclerView, dx, dy);
+                    int lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
+                    OrderModel order = orders.get(lastVisibleItem);
+                    int datInt = CalendarUtils.getDateInt(order.getStartTime());
+                    int monthInt = CalendarUtils.getPureMonthInt(datInt);
+                    if (monthInt != curMonthInt) {
+                        switchMonth(monthInt);
+                    }
+                } catch (Exception ex) {
+
+                }
+            }
+        });
+        mCalendarGridView.setMonthInt(CalendarUtils.getPureMonthInt(CalendarUtils.getToday()));
+        request();
+
+    }
+
+    private void switchMonth(int monthInt) {
+        LogUtil.d("dxz", monthInt + "");
+        this.curMonthInt = monthInt;
+        mCalendarGridView.setMonthInt(curMonthInt);
     }
 
     @Override
@@ -140,61 +204,108 @@ public class OrderFragment extends BaseFragment {
             @Override
             public void onResponse(String response) {
                 LogUtil.d("dxz", response);
-                // TODO:
                 if (!TextUtils.isEmpty(response)) {
                     List<OrderModel> datas = OrderModel.arrayFromData(response);
                     if (datas != null && datas.size() > 0) {
-                        mRecyclerView.setVisibility(View.VISIBLE);
+                        LogUtil.d("dxz", datas.size() + "");
+                        mDays.clear();
+                        for (OrderModel order : datas) {
+                            int datInt = CalendarUtils.getDateInt(order.getStartTime());
+                            mDays.add(datInt);
+                        }
+                        orders.clear();
+                        orders.addAll(datas);
+                        mEmptyView.setVisibility(View.GONE);
+                        mContentView.setVisibility(View.VISIBLE);
+                        int datInt = CalendarUtils.getDateInt(orders.get(0).getStartTime());
+                        int monthInt = CalendarUtils.getPureMonthInt(datInt);
+                        switchMonth(monthInt);
+                        mAdapter.update(orders);
                     } else {
-                        AndTools.showToast("已经没有更多预约");
+                        mEmptyView.setVisibility(View.VISIBLE);
+                        mEmptyText.setText("还没有预约,快去首页看看吧！");
+                        mContentView.setVisibility(View.GONE);
                     }
                 } else {
-                    AndTools.showToast("已经没有更多预约");
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    mEmptyText.setText("还没有预约,快去首页看看吧！");
+                    mContentView.setVisibility(View.GONE);
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                LogUtil.d("dxz", error.toString());
                 new DDAlertDialog.Builder(getActivity())
                         .setTitle("提示").setMessage("网络问题请重试！")
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+                                mEmptyView.setVisibility(View.VISIBLE);
+                                mEmptyText.setText("内容为空,点击刷新");
+                                mContentView.setVisibility(View.GONE);
                             }
                         }).show();
             }
         });
     }
 
-    private void filterData(List<OrderModel> datas) {
-        mDataMap.clear();
-        Set<String> keys = new TreeSet<String>();
-        for (OrderModel order : datas) {
-            Date start = new Date(order.getStartTime());
-            Locale aLocale = Locale.US;
-            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM", new DateFormatSymbols(aLocale));
-            fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
-            String month = fmt.format(start);
-            keys.add(month);
-        }
-
-        for (String key : keys) {
-            List<OrderModel> orders = new ArrayList<OrderModel>();
-            for (OrderModel order : datas) {
-                Date start = new Date(order.getStartTime());
-                Locale aLocale = Locale.US;
-                SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM", new DateFormatSymbols(aLocale));
-                fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
-                String month = fmt.format(start);
-                if (TextUtils.equals(key, month)) {
-                    orders.add(order);
-                }
-            }
-            mDataMap.put(key, orders);
-        }
+    @Override
+    public void onItemClick(View view, int position) {
 
     }
 
+    @Override
+    public void onDeleteBtnCilck(View view, int position) {
+        mAdapter.removeData(position);
+    }
+
+    private class CalendarItemHolder {
+
+        private TextView mDateText;
+
+        private boolean mIsSelected;
+
+        public CalendarItemHolder(View v) {
+            mDateText = (TextView) v.findViewById(R.id.calendar_date_text);
+        }
+
+        public void setText(String text) {
+            mDateText.setText(text);
+        }
+
+        private void setSelectedBackground() {
+            if (mCalendarItemSelectedTip == null) {
+                mCalendarItemSelectedTip = getActivity().getResources().getDrawable(R.drawable.circle_solid_red_bg);
+            }
+            mDateText.setBackgroundDrawable(mCalendarItemSelectedTip);
+            mDateText.setSelected(true);
+        }
+
+        public void setSeletedTip(boolean isSelected) {
+            mIsSelected = isSelected;
+            if (isSelected) {
+                setSelectedBackground();
+            } else {
+                mDateText.setBackgroundDrawable(null);
+                mDateText.setSelected(false);
+            }
+        }
+
+        public void setIsCurrentMonth(boolean isCurrentMonth) {
+            if (isCurrentMonth) {
+                mDateText.setAlpha(1);
+            } else {
+                mDateText.setAlpha(0.5f);
+            }
+        }
+
+        public void setIsYesterday(boolean isYesterday) {
+            if (isYesterday) {
+                mDateText.setAlpha(0.5f);
+            } else {
+                mDateText.setAlpha(1);
+            }
+        }
+    }
 }

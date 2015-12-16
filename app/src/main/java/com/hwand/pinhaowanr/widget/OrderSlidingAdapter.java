@@ -55,14 +55,13 @@ public class OrderSlidingAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             R.string.calendar_saturday
     };
 
-    public OrderSlidingAdapter(Context context, List<OrderModel> datas, OnSlidingViewClickListener listener) {
+    public OrderSlidingAdapter(Context context, OnSlidingViewClickListener listener) {
         mContext = context;
         mIDeleteBtnClickListener = listener;
-        mDatas = datas;
-
     }
 
     public void update(List<OrderModel> datas) {
+        mDatas.clear();
         mDatas.addAll(datas);
         this.notifyDataSetChanged();
     }
@@ -88,13 +87,14 @@ public class OrderSlidingAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             Date dateE = new Date(endTime);
             Calendar cal = Calendar.getInstance();
             cal.setTime(dateS);
-            int month = cal.get(Calendar.MONTH);
+            int month = cal.get(Calendar.MONTH) + 1;
             int day = cal.get(Calendar.DAY_OF_MONTH);
             int weekday = cal.get(Calendar.DAY_OF_WEEK);
             SimpleDateFormat fmt = new SimpleDateFormat("hh:mm", Locale.US);
             fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
             orderViewHolder.tv_time.setText(fmt.format(dateS) + "-" + fmt.format(dateE));
-            orderViewHolder.tv_day.setText(month + "月" + day + "日" + "星期" + WEEK_WORDS[weekday]);
+            String str_day = "" + month + "月" + day + "日" + "星期" + mContext.getResources().getString(WEEK_WORDS[weekday - 1]);
+            orderViewHolder.tv_day.setText(str_day);
 
             orderViewHolder.layout_content.setOnClickListener(new OnClickListener() {
                 @Override
@@ -197,6 +197,9 @@ public class OrderSlidingAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+                                if (menuIsOpen()) {
+                                    closeMenu();
+                                }
                             }
                         }).show();
             }

@@ -153,21 +153,23 @@ public class ClassFragment extends BaseFragment {
                         mRecyclerView.setVisibility(View.VISIBLE);
                         mAdapter.update(datas);
                     } else {
-                        AndTools.showToast("已经没有更多课程");
                         if (mCount == 0) {
                             mEmptyView.setVisibility(View.VISIBLE);
+                            mEmptyText.setText("还没有拼课,快去社区看看吧！");
                             mRecyclerView.setVisibility(View.GONE);
                             return;
                         }
+                        AndTools.showToast("已经没有更多课程");
                         noData = true;
                     }
                 } else {
-                    AndTools.showToast("已经没有更多课程");
                     if (mCount == 0) {
                         mEmptyView.setVisibility(View.VISIBLE);
                         mRecyclerView.setVisibility(View.GONE);
+                        mEmptyText.setText("还没有拼课,快去社区看看吧！");
                         return;
                     }
+                    AndTools.showToast("已经没有更多课程");
                     noData = true;
                 }
             }
