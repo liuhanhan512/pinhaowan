@@ -423,7 +423,13 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
             TextView address = CommonViewHolder.get(convertView, R.id.address);
             address.setText(spellDModel.getDetailAddress());
 
-            convertView.findViewById(R.id.view_pin_class).setOnClickListener(new View.OnClickListener() {
+            TextView btnPin = CommonViewHolder.get(convertView, R.id.view_pin_class);
+            if (spellDModel.getIsPinClass() == 0) {
+                btnPin.setVisibility(View.GONE);
+            } else {
+                btnPin.setVisibility(View.VISIBLE);
+            }
+            btnPin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     SpellDListActivity.launch(getActivity(), spellDModel.getId(), spellDModel.getClassName());

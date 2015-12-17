@@ -72,7 +72,7 @@
     <string name="fine_detail_hour">营业时间：%s</string>
     <string name="fine_detail_age">适合年龄 : %1$d - %2$d</string>
     <string name="share_text">分享</string>
-    <string name="reservation_time">%1$s - %2$s</string>
+    <string name="reservation_time">%1$s 至 %2$s</string>
     <string name="reserved">已预约</string>
     <string name="fully_booked">已约满</string>
     <string name="sign_up_time">报名时段</string>
@@ -91,7 +91,7 @@
     <string name="sign_up_success_tips">报名成功!</string>
     <string name="class_detail">课程详情</string>
     <string name="spell_d_time">营业时间：</string>
-    <string name="people_cost">人均价格：%d</string>
+    <string name="people_cost">人均价格：%1.2f元</string>
 
     <string name="calendar_sunday">日</string>
     <string name="calendar_monday">一</string>

@@ -1,9 +1,14 @@
 package com.hwand.pinhaowanr.community;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -13,6 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.R;
@@ -21,10 +28,17 @@ import com.hwand.pinhaowanr.model.SpellDClassStageModel;
 import com.hwand.pinhaowanr.model.SpellDModel;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.Constant;
-import com.hwand.pinhaowanr.utils.DateUtil;
+import com.hwand.pinhaowanr.utils.LogUtil;
+import com.hwand.pinhaowanr.utils.NetworkRequest;
+import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.CircleImageView;
+import com.hwand.pinhaowanr.widget.DDAlertDialog;
 
+import java.net.URLEncoder;
+import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 发起拼拼页面
@@ -36,24 +50,25 @@ public class LaunchSpellDActivity extends BaseActivity {
     private SpellDClassModel mSpellDClassModel;
     private int mType;
     private int mCurrentType;
+    private double mCurrentPrice;
     private String mCurrentTime;
 
     private static final String SPELL_D_KEY = "SPELL_D_KEY";
     private static final String SPELL_D_CLASS_KEY = "SPELL_D_CLASS_KEY";
     private static final String SPELL_TYPE_KEY = "SPELL_TYPE_KEY";
 
-    public static void launch(Context context){
+    public static void launch(Context context) {
         Intent intent = new Intent();
-        intent.setClass(context , LaunchSpellDActivity.class);
+        intent.setClass(context, LaunchSpellDActivity.class);
         context.startActivity(intent);
     }
 
-    public static void launch(Context context , int type , SpellDModel spellDModel , SpellDClassModel spellDClassModel){
+    public static void launch(Context context, int type, SpellDModel spellDModel, SpellDClassModel spellDClassModel) {
         Intent intent = new Intent();
-        intent.setClass(context , LaunchSpellDActivity.class);
+        intent.setClass(context, LaunchSpellDActivity.class);
         intent.putExtra(SPELL_D_KEY, spellDModel);
         intent.putExtra(SPELL_TYPE_KEY, type);
-        intent.putExtra(SPELL_D_CLASS_KEY , spellDClassModel);
+        intent.putExtra(SPELL_D_CLASS_KEY, spellDClassModel);
         context.startActivity(intent);
     }
 
@@ -66,43 +81,62 @@ public class LaunchSpellDActivity extends BaseActivity {
         initViews();
     }
 
-    private void initIntentValues(){
+    private void initIntentValues() {
         mSpellDModel = (SpellDModel) getIntent().getSerializableExtra(SPELL_D_KEY);
-        mSpellDClassModel = (SpellDClassModel)getIntent().getSerializableExtra(SPELL_D_CLASS_KEY);
-        mType = getIntent().getIntExtra(SPELL_TYPE_KEY , -1);
+        mSpellDClassModel = (SpellDClassModel) getIntent().getSerializableExtra(SPELL_D_CLASS_KEY);
+        mType = getIntent().getIntExtra(SPELL_TYPE_KEY, -1);
         mCurrentType = mType;
     }
 
-    private void initTitle(){
-        if(mSpellDModel != null){
+    private void initTitle() {
+        if (mSpellDModel != null) {
             setActionBarTtile(mSpellDModel.getClassName());
         }
     }
 
     private TextView peopleCost;
-    private EditText mAddress , mPeople;
-    private Spinner mCategorySpinner , mTimeSpinner;
-    private void initViews(){
+    private EditText mAddress, mPeople;
+    private Spinner mCategorySpinner, mTimeSpinner;
+    private TextView create;
 
-        RelativeLayout headerLayout = (RelativeLayout)findViewById(R.id.header_layout);
+    private void initViews() {
+
+        RelativeLayout headerLayout = (RelativeLayout) findViewById(R.id.header_layout);
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) headerLayout.getLayoutParams();
-        layoutParams.height = AndTools.getScreenWidth(this) * 9 / 16 + AndTools.dp2px(this , 40);
+        layoutParams.height = AndTools.getScreenWidth(this) * 9 / 16 + AndTools.dp2px(this, 40);
         headerLayout.setLayoutParams(layoutParams);
 
-        ImageView imageView = (ImageView)findViewById(R.id.pin_image);
-        AndTools.displayImage(null , mSpellDModel.getPictureUrl() , imageView);
+        ImageView imageView = (ImageView) findViewById(R.id.pin_image);
+        AndTools.displayImage(null, mSpellDModel.getPictureUrl(), imageView);
 
-        CircleImageView avatar = (CircleImageView)findViewById(R.id.avatar);
-        AndTools.displayImage(null , DataCacheHelper.getInstance().getUserInfo().getUrl() , avatar);
+        CircleImageView avatar = (CircleImageView) findViewById(R.id.avatar);
+        AndTools.displayImage(null, DataCacheHelper.getInstance().getUserInfo().getUrl(), avatar);
 
-        mAddress = (EditText)findViewById(R.id.address);
-        mPeople = (EditText)findViewById(R.id.people_count);
+        mAddress = (EditText) findViewById(R.id.address);
+        mPeople = (EditText) findViewById(R.id.people_count);
+        mPeople.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        mCategorySpinner = (Spinner)findViewById(R.id.category_spinner);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String countStr = mPeople.getText().toString().trim();
+                updatePeopleCostView(countStr);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        mCategorySpinner = (Spinner) findViewById(R.id.category_spinner);
         // 建立数据源
         String[] items = getCategorys();
         // 建立Adapter并且绑定数据源
-        ArrayAdapter<String> _Adapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, items);
+        ArrayAdapter<String> _Adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
         //绑定 Adapter到控件
         mCategorySpinner.setAdapter(_Adapter);
         mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -117,11 +151,11 @@ public class LaunchSpellDActivity extends BaseActivity {
             }
         });
 
-        mTimeSpinner = (Spinner)findViewById(R.id.time_spinner);
+        mTimeSpinner = (Spinner) findViewById(R.id.time_spinner);
         // 建立数据源
         String[] timeItems = getTimes(mType);
         // 建立Adapter并且绑定数据源
-        ArrayAdapter<String> timeAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, timeItems);
+        ArrayAdapter<String> timeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, timeItems);
         //绑定 Adapter到控件
         mTimeSpinner.setAdapter(timeAdapter);
         mTimeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -136,20 +170,97 @@ public class LaunchSpellDActivity extends BaseActivity {
 
             }
         });
+        create = (TextView) findViewById(R.id.launch_spell_d);
+        peopleCost = (TextView) findViewById(R.id.people_cost);
+        String count = mPeople.getText().toString().trim();
+        updatePeopleCostView(count);
 
-        peopleCost = (TextView)findViewById(R.id.people_cost);
-        updatePeopleCostView();
+        create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                request();
+
+            }
+        });
 
     }
 
-    private void onCategoryClick(int position){
-        int type =  Constant.SPELL_D_CLASS_ONE;
-        switch (mType){
+    private void request() {
+        final String count = mPeople.getText().toString().trim();
+        final String address = mAddress.getText().toString().trim();
+        boolean cancel = false;
+        View focusView = null;
+        if (TextUtils.isEmpty(address)) {
+            mAddress.setError(getString(R.string.error_field_required));
+            focusView = mAddress;
+            cancel = true;
+        } else if (TextUtils.isEmpty(count)) {
+            mPeople.setError(getString(R.string.error_field_required));
+            focusView = mPeople;
+            cancel = true;
+        }
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+        } else {
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("id", mSpellDModel.getId() + "");
+            params.put("type", mCurrentType + "");
+            params.put("pinTime", URLEncoder.encode(mCurrentTime));
+            params.put("roles", count);
+            params.put("detailAddress", URLEncoder.encode(address));
+            params.put("money", new DecimalFormat("0.00").format(mCurrentPrice));
+            String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_CREAT_PIN_CLASS, params);
+            LogUtil.d("dxz", url);
+            NetworkRequest.get(url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    // TODO:
+                    LogUtil.d("dxz", response);
+                    // 结果（result）0 失败（ConfirmVerifyCode 接口验证没有通过） 1 成功 2 密码不合法
+                    if (!TextUtils.isEmpty(response) && response.contains("1")) {
+                        AndTools.showToast("成功发起拼课！");
+                        hideImm();
+                        finish();
+                    } else {
+                        new DDAlertDialog.Builder(LaunchSpellDActivity.this)
+                                .setTitle("提示").setMessage("网络问题请重试！")
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }).show();
+                    }
+
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    LogUtil.d("dxz", error.toString());
+                    new DDAlertDialog.Builder(LaunchSpellDActivity.this)
+                            .setTitle("提示").setMessage("网络问题请重试！")
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
+                }
+            });
+        }
+    }
+
+    private void onCategoryClick(int position) {
+        int type = Constant.SPELL_D_CLASS_ONE;
+        switch (mType) {
             case Constant.SPELL_D_CLASS_ONE:
 
-                if(position == 0){
+                if (position == 0) {
                     type = Constant.SPELL_D_CLASS_ONE;
-                } else if(position == 1) {
+                } else if (position == 1) {
                     type = Constant.SPELL_D_CLASS_STAGE;
                 } else {
                     type = Constant.SPELL_D_CLASS_ALL;
@@ -158,27 +269,27 @@ public class LaunchSpellDActivity extends BaseActivity {
 
                 break;
             case Constant.SPELL_D_CLASS_STAGE:
-                if(position == 0){
+                if (position == 0) {
                     type = Constant.SPELL_D_CLASS_STAGE;
-                } else if(position == 1) {
+                } else if (position == 1) {
                     type = Constant.SPELL_D_CLASS_ONE;
                 } else {
                     type = Constant.SPELL_D_CLASS_ALL;
                 }
                 break;
             case Constant.SPELL_D_CLASS_ALL:
-                if(position == 0){
+                if (position == 0) {
                     type = Constant.SPELL_D_CLASS_ALL;
-                } else if(position == 1) {
+                } else if (position == 1) {
                     type = Constant.SPELL_D_CLASS_ONE;
                 } else {
                     type = Constant.SPELL_D_CLASS_STAGE;
                 }
                 break;
             default:
-                if(position == 0){
+                if (position == 0) {
                     type = Constant.SPELL_D_CLASS_ONE;
-                } else if(position == 1) {
+                } else if (position == 1) {
                     type = Constant.SPELL_D_CLASS_STAGE;
                 } else {
                     type = Constant.SPELL_D_CLASS_ALL;
@@ -187,11 +298,11 @@ public class LaunchSpellDActivity extends BaseActivity {
         }
         mCurrentType = type;
         String[] timeItems = getTimes(type);
-        mTimeSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, timeItems));
+        mTimeSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, timeItems));
     }
 
-    private String[] getCategorys(){
-        switch (mType){
+    private String[] getCategorys() {
+        switch (mType) {
             case Constant.SPELL_D_CLASS_ONE:
                 return getResources().getStringArray(R.array.once_first_array);
             case Constant.SPELL_D_CLASS_STAGE:
@@ -203,8 +314,8 @@ public class LaunchSpellDActivity extends BaseActivity {
         }
     }
 
-    private String[] getTimes(int type){
-        switch (type){
+    private String[] getTimes(int type) {
+        switch (type) {
             case Constant.SPELL_D_CLASS_ONE:
                 return getResources().getStringArray(R.array.once_time_array);
             case Constant.SPELL_D_CLASS_STAGE:
@@ -216,16 +327,16 @@ public class LaunchSpellDActivity extends BaseActivity {
         }
     }
 
-    private String[] getStateTime(){
+    private String[] getStateTime() {
 
-        List<SpellDClassStageModel> spellDClassStageModels =  mSpellDClassModel.getStageTimeList();
-        if(spellDClassStageModels != null){
+        List<SpellDClassStageModel> spellDClassStageModels = mSpellDClassModel.getStageTimeList();
+        if (spellDClassStageModels != null) {
 
             int size = spellDClassStageModels.size();
             String[] s = new String[size];
-            for(int i = 0 ;i < size ; i++){
+            for (int i = 0; i < size; i++) {
                 SpellDClassStageModel spellDClassStageModel = spellDClassStageModels.get(i);
-                s[i] = getString(R.string.reservation_time , spellDClassStageModel.getStartTime(),
+                s[i] = getString(R.string.reservation_time, spellDClassStageModel.getStartTime(),
                         spellDClassStageModel.getEndTime());
             }
 
@@ -234,18 +345,31 @@ public class LaunchSpellDActivity extends BaseActivity {
         return new String[0];
     }
 
-    private void updatePeopleCostView(){
-        switch (mType){
+    private void updatePeopleCostView(String countStr) {
+        double count = 1.00;
+        if (!TextUtils.isEmpty(countStr)) {
+            count = Double.valueOf(countStr);
+        }
+        switch (mType) {
             case Constant.SPELL_D_CLASS_ONE:
-                peopleCost.setText(getString(R.string.people_cost , mSpellDClassModel.getOncePrice()));
+                mCurrentPrice = mSpellDClassModel.getOncePrice() / count;
                 break;
             case Constant.SPELL_D_CLASS_STAGE:
-                peopleCost.setText(getString(R.string.people_cost , mSpellDClassModel.getStagePrice()));
+                mCurrentPrice = mSpellDClassModel.getStagePrice() / count;
                 break;
             case Constant.SPELL_D_CLASS_ALL:
-                peopleCost.setText(getString(R.string.people_cost , mSpellDClassModel.getYearPrice()));
+                mCurrentPrice = mSpellDClassModel.getYearPrice() / count;
                 break;
         }
+        peopleCost.setText(getString(R.string.people_cost, mCurrentPrice));
 
+    }
+
+    private void hideImm() {
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm.isActive()) {
+            imm.hideSoftInputFromWindow(create.getApplicationWindowToken(), 0);
+
+        }
     }
 }

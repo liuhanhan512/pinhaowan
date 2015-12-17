@@ -20,6 +20,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.CommonViewHolder;
+import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.SpellDClassModel;
 import com.hwand.pinhaowanr.model.SpellDClassStageModel;
@@ -41,7 +42,7 @@ import java.util.Map;
  * 主页--社区--拼拼--课程详情
  * Created by hanhanliu on 15/12/12.
  */
-public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener{
+public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -67,14 +68,14 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
 
     private List<SpellDClassTtileModel> spellDClassTtileModels = new ArrayList<SpellDClassTtileModel>();
 
-    public static void launch(Context context , int id){
+    public static void launch(Context context, int id) {
         Intent intent = new Intent();
-        intent.setClass(context , SpellDClassActivity.class);
+        intent.setClass(context, SpellDClassActivity.class);
         intent.putExtra(ACTIVITY_ID_KEY, id);
         context.startActivity(intent);
     }
 
-    public static void launch(Context context , SpellDModel spellDModel){
+    public static void launch(Context context, SpellDModel spellDModel) {
         Intent intent = new Intent();
         intent.setClass(context, SpellDClassActivity.class);
         intent.putExtra(SPELL_D_CATEGORY_KEY, spellDModel);
@@ -93,19 +94,23 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
 
     }
 
-    private void initIntentValue(){
-        mClassId = getIntent().getIntExtra(ACTIVITY_ID_KEY ,0);
+    private void initIntentValue() {
+        mClassId = getIntent().getIntExtra(ACTIVITY_ID_KEY, 0);
         mSpellDModel = (SpellDModel) getIntent().getSerializableExtra(SPELL_D_CATEGORY_KEY);
-        if(mSpellDModel != null){
+        if (mSpellDModel != null) {
             mClassId = mSpellDModel.getId();
         }
     }
 
-    private void initTitle(){
+    private void initTitle() {
         setActionBarTtile(getString(R.string.class_detail));
+        if (mSpellDModel != null && !TextUtils.isEmpty(mSpellDModel.getClassName())) {
+            setActionBarTtile(mSpellDModel.getClassName());
+        }
+
     }
 
-    private void initViews(){
+    private void initViews() {
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         //加载颜色是循环播放的，只要没有完成刷新就会一直循环，color1>color2>color3>color4
@@ -129,13 +134,13 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mImage.getLayoutParams();
         layoutParams.height = AndTools.getScreenWidth(this) * 9 / 16;
         mImage.setLayoutParams(layoutParams);
-        mAge = (TextView)headerView .findViewById(R.id.age);
-        TextView address = (TextView)headerView.findViewById(R.id.address);
+        mAge = (TextView) headerView.findViewById(R.id.age);
+        TextView address = (TextView) headerView.findViewById(R.id.address);
 
-        mTimeContainer = (LinearLayout)headerView.findViewById(R.id.time_container);
+        mTimeContainer = (LinearLayout) headerView.findViewById(R.id.time_container);
 
-        if(mSpellDModel != null){
-            AndTools.displayImage(null , mSpellDModel.getPictureUrl() , mImage);
+        if (mSpellDModel != null) {
+            AndTools.displayImage(null, mSpellDModel.getPictureUrl(), mImage);
 
             address.setText(mSpellDModel.getDetailAddress());
 
@@ -145,16 +150,21 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
     }
 
     private TextView mOnceCost, mStageCost, mAllYearCost;
-    private View initFooterView(){
-        View footerView = View.inflate(this , R.layout.spell_d_class_detail_listview_footer_layout , null);
 
-        mOnceCost = (TextView)footerView.findViewById(R.id.one_visit_cost);
-        mStageCost = (TextView)footerView.findViewById(R.id.stage_visit_cost);
-        mAllYearCost = (TextView)footerView.findViewById(R.id.all_visit_cost);
+    private View initFooterView() {
+        View footerView = View.inflate(this, R.layout.spell_d_class_detail_listview_footer_layout, null);
+
+        mOnceCost = (TextView) footerView.findViewById(R.id.one_visit_cost);
+        mStageCost = (TextView) footerView.findViewById(R.id.stage_visit_cost);
+        mAllYearCost = (TextView) footerView.findViewById(R.id.all_visit_cost);
 
         footerView.findViewById(R.id.one_visit_launch).setOnClickListener(this);
         footerView.findViewById(R.id.stage_visit_launch).setOnClickListener(this);
         footerView.findViewById(R.id.all_visit_launch).setOnClickListener(this);
+
+        footerView.findViewById(R.id.one_visit_view).setOnClickListener(this);
+        footerView.findViewById(R.id.stage_visit_view).setOnClickListener(this);
+        footerView.findViewById(R.id.all_visit_view).setOnClickListener(this);
 
         return footerView;
     }
@@ -162,16 +172,34 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.one_visit_launch:
-                LaunchSpellDActivity.launch(this , Constant.SPELL_D_CLASS_ONE , mSpellDModel , mSpellDClassModel);
+                if (MainApplication.getInstance().isLogin()) {
+                    LaunchSpellDActivity.launch(this, Constant.SPELL_D_CLASS_ONE, mSpellDModel, mSpellDClassModel);
+                } else {
+                    AndTools.showToast("发起拼课需要登录");
+                }
                 break;
             case R.id.stage_visit_launch:
-                LaunchSpellDActivity.launch(this , Constant.SPELL_D_CLASS_STAGE , mSpellDModel , mSpellDClassModel);
+                if (MainApplication.getInstance().isLogin()) {
+                    LaunchSpellDActivity.launch(this, Constant.SPELL_D_CLASS_STAGE, mSpellDModel, mSpellDClassModel);
+                } else {
+                    AndTools.showToast("发起拼课需要登录");
+                }
                 break;
             case R.id.all_visit_launch:
-                LaunchSpellDActivity.launch(this , Constant.SPELL_D_CLASS_ALL , mSpellDModel , mSpellDClassModel);
+                if (MainApplication.getInstance().isLogin()) {
+                    LaunchSpellDActivity.launch(this, Constant.SPELL_D_CLASS_ALL, mSpellDModel, mSpellDClassModel);
+                } else {
+                    AndTools.showToast("发起拼课需要登录");
+                }
                 break;
+            case R.id.one_visit_view:
+            case R.id.stage_visit_view:
+            case R.id.all_visit_view:
+                SpellDListActivity.launch(this, mSpellDModel.getId(), mSpellDModel.getClassName());
+                break;
+
         }
     }
 
@@ -182,7 +210,7 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
         }
     };
 
-    private void fetchData(){
+    private void fetchData() {
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", mClassId + "");
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_PIN_CLASS_DETAIL, params);
@@ -192,10 +220,10 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
                 mSwipeRefreshLayout.setRefreshing(false);
                 if (!TextUtils.isEmpty(response)) {
                     Gson gson = new Gson();
-                    mSpellDClassModel = gson.fromJson(response , SpellDClassModel.class);
-                    if(mSpellDClassModel != null){
+                    mSpellDClassModel = gson.fromJson(response, SpellDClassModel.class);
+                    if (mSpellDClassModel != null) {
                         List<SpellDClassTtileModel> spellDClassTtileModelList = mSpellDClassModel.getTitleList();
-                        if(spellDClassTtileModelList != null){
+                        if (spellDClassTtileModelList != null) {
                             spellDClassTtileModels.clear();
                             spellDClassTtileModels.addAll(spellDClassTtileModelList);
                             mAdapter.notifyDataSetChanged();
@@ -213,24 +241,24 @@ public class SpellDClassActivity extends BaseActivity implements SwipeRefreshLay
         });
     }
 
-    private void updateViews(){
-        mAge.setText(getString(R.string.fine_detail_age , mSpellDClassModel.getMinAge() , mSpellDClassModel.getMaxAge()));
+    private void updateViews() {
+        mAge.setText(getString(R.string.fine_detail_age, mSpellDClassModel.getMinAge(), mSpellDClassModel.getMaxAge()));
 
         List<SpellDClassStageModel> spellDClassStageModels = mSpellDClassModel.getStageTimeList();
-        if(spellDClassStageModels != null){
-            for(SpellDClassStageModel spellDClassStageModel : spellDClassStageModels){
+        if (spellDClassStageModels != null) {
+            for (SpellDClassStageModel spellDClassStageModel : spellDClassStageModels) {
                 SpellDTimeView spellDTimeView = new SpellDTimeView(this);
                 String startTime = spellDClassStageModel.getStartTime();
                 String endTime = spellDClassStageModel.getEndTime();
-                spellDTimeView.setTimeText(getString(R.string.reservation_time ,
+                spellDTimeView.setTimeText(getString(R.string.reservation_time,
                         startTime, endTime));
                 mTimeContainer.addView(spellDTimeView);
             }
         }
 
-        mOnceCost.setText(mSpellDClassModel.getOncePrice() +"");
-        mStageCost.setText(mSpellDClassModel.getStagePrice() +"");
-        mAllYearCost.setText(mSpellDClassModel.getYearPrice() + "");
+        mOnceCost.setText(mSpellDClassModel.getOncePrice() + "元");
+        mStageCost.setText(mSpellDClassModel.getStagePrice() + "元");
+        mAllYearCost.setText(mSpellDClassModel.getYearPrice() + "元");
     }
 
     @Override
