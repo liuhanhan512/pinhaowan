@@ -89,50 +89,29 @@
         android:layout_width="match_parent"
         android:layout_height="48dp">
 
-        <ImageView
-            android:id="@+id/image_more"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
+        <TextView
+            android:id="@+id/address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/more"
+            android:text="address"
+            android:drawableRight="@mipmap/location"
+            android:drawablePadding="8dp"
+            android:singleLine="true"
+            android:lines="1"
+            android:ellipsize="end"
+            android:textSize="12sp"
             />
 
-        <RelativeLayout
-            android:id="@+id/left_layout"
-            android:layout_width="match_parent"
+
+        <TextView
+            android:id="@+id/tel"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/image_more"
-            android:gravity="left|center"
-            >
-
-            <TextView
-                android:id="@+id/address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="address"
-                android:drawableRight="@mipmap/location"
-                android:drawablePadding="8dp"
-                android:singleLine="true"
-                android:lines="1"
-                android:ellipsize="end"
-                android:textSize="12sp"
-                />
-
-
-            <TextView
-                android:id="@+id/tel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/address"
-                android:layout_marginTop="4dp"
-                android:textSize="12sp"
-                android:text="Tel"
-                />
-
-
-        </RelativeLayout>
+            android:layout_below="@+id/address"
+            android:layout_marginTop="4dp"
+            android:textSize="12sp"
+            android:text="Tel"
+            />
 
     </RelativeLayout>
 

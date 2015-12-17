@@ -15,3 +15,18 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keep class com.tencent.mm.sdk.modelmsg.WXMediaMessage { *;}
+-keep class com.tencent.mm.sdk.modelmsg.** implements com.tencent.mm.sdk.modelmsg.WXMediaMessage$IMediaObject {*;}
+
+-keep class com.hwand.pinhaowanr.utils.NonProguard
+-keep class * implements com.hwand.pinhaowanr.utils.NonProguard { *; }
+
+-keep class com.google.gson.** { *; }
+-keep class com.android.volley.** { *; }
+
+-keep class android.support.v4.app.** { *; }
+-keep interface android.support.v4.app.** { *; }
+-keepclassmembers class ** {
+    public void onEvent*(**);
+}
