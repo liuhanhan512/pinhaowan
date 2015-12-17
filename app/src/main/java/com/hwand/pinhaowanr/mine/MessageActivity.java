@@ -60,7 +60,7 @@ public class MessageActivity extends BaseActivity {
         mBottomView = findViewById(R.id.rl_bottom);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         if (type == 1) {
-            layoutManager.setStackFromEnd(true);
+//            layoutManager.setStackFromEnd(true);
             mBottomView.setVisibility(View.VISIBLE);
         } else {
             mBottomView.setVisibility(View.GONE);
@@ -95,6 +95,7 @@ public class MessageActivity extends BaseActivity {
                     List<MsgInfo> msgs = MsgInfo.arrayFromData(response);
                     if (msgs != null && msgs.size() > 0) {
                         mAdapter.update(msgs);
+                        mRecyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
                     }
                 } else {
                 }

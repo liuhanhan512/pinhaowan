@@ -9,7 +9,8 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/rl_bottom"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="42dp"
         android:orientation="vertical"
         android:overScrollMode="never"
         android:scrollbars="none" />
