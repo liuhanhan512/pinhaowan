@@ -12,6 +12,8 @@ public class ClassDetailModel implements Serializable {
     private String institutionName;
     private String busineTime;
     private String telephone;
+    private String startMonth;
+    private String endMonth;
 
     private List<ClassDetailTitleModel> titleList;
     private List<ClassDetailSubTitleModel> subTimeList;
@@ -70,5 +72,21 @@ public class ClassDetailModel implements Serializable {
 
     public void setSubTimeList(List<ClassDetailSubTitleModel> subTimeList) {
         this.subTimeList = subTimeList;
+    }
+
+    public String getStartMonth() {
+        return startMonth;
+    }
+
+    public void setStartMonth(String startMonth) {
+        this.startMonth = startMonth;
+    }
+
+    public String getEndMonth() {
+        return endMonth;
+    }
+
+    public void setEndMonth(String endMonth) {
+        this.endMonth = endMonth;
     }
 }

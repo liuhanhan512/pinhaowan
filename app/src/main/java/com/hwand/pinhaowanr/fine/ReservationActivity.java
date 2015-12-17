@@ -45,6 +45,7 @@ import com.hwand.pinhaowanr.widget.calendar.UniformGridView;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -140,6 +141,7 @@ public class ReservationActivity extends BaseActivity {
         initIntentValues();
         initTitle();
         initViews();
+        getTimeList(mClassDetailModel.getStartMonth());
     }
 
     private void initIntentValues() {
@@ -965,8 +967,19 @@ public class ReservationActivity extends BaseActivity {
             }
             classDetailGroupTitleModel.setClassDetailSubTitleModelList(orders);
             // TODO:key转化为文字
-            classDetailGroupTitleModel.setTime(key);
+            Date date = new Date(key);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            int month = cal.get(Calendar.MONTH) + 1;
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+            int weekday = cal.get(Calendar.DAY_OF_WEEK);
+            SimpleDateFormat fmt = new SimpleDateFormat("hh:mm", Locale.US);
+            fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+            String str_day = "" + month + "月" + day + "日" + "星期" + getResources().getString(WEEK_WORDS[weekday - 1]);
+            classDetailGroupTitleModel.setTime(str_day);
+            classDetailGroupTitleModels.add(classDetailGroupTitleModel);
         }
+
 
     }
 
@@ -982,6 +995,7 @@ public class ReservationActivity extends BaseActivity {
                 //结果（result） 1 已经预约  2 人已经满 3 你不是会员 4 成功
                 if (!TextUtils.isEmpty(response) && response.contains("4")) {
                     AndTools.showToast("成功预约！");
+                    // TODO:设置已预约
                 } else {
                     String msg = "网络问题请重试！";
                     if (TextUtils.isEmpty(response)) {
