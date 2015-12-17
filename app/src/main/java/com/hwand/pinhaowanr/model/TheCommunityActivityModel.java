@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by hanhanliu on 15/12/5.
  */
-public class TheCommunityActivityModel implements Serializable{
+public class TheCommunityActivityModel implements Serializable {
     private int id;
     private String url;
     private String title;
@@ -18,16 +18,17 @@ public class TheCommunityActivityModel implements Serializable{
     private int currRoles;
     private int money;
     private long creatTime;
-    private int distance;
+    private double distance;
+    private double lng;
+    private double lat;
+    private String describe;
 
-    private boolean isSign;
-
-    public boolean isSign() {
-        return isSign;
+    public String getDescribe() {
+        return describe;
     }
 
-    public void setIsSign(boolean isSign) {
-        this.isSign = isSign;
+    public void setDescribe(String describe) {
+        this.describe = describe;
     }
 
     private List<RoleModel> roleList;
@@ -120,11 +121,11 @@ public class TheCommunityActivityModel implements Serializable{
         this.creatTime = creatTime;
     }
 
-    public int getDistance() {
+    public double getDistance() {
         return distance;
     }
 
-    public void setDistance(int distance) {
+    public void setDistance(double distance) {
         this.distance = distance;
     }
 
@@ -134,5 +135,21 @@ public class TheCommunityActivityModel implements Serializable{
 
     public void setRoleList(List<RoleModel> roleList) {
         this.roleList = roleList;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
     }
 }

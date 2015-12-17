@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseActivity;
+import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.UserInfoModel;
@@ -69,11 +70,15 @@ public class UserInfoActivity extends BaseActivity {
             public void onClick(View v) {
                 // TODO
                 if (MainApplication.getInstance().isLogin()) {
-                    Intent intent = new Intent();
-                    intent.setClass(UserInfoActivity.this, MessageActivity.class);
-                    intent.putExtra(MessageActivity.KEY_INTENT_ID, mID);
-                    intent.putExtra(MessageActivity.KEY_INTENT_TYPE, 1);
-                    startActivity(intent);
+                    if (mID == DataCacheHelper.getInstance().getUserInfo().getRoleId()) {
+                        AndTools.showToast("别给自己发消息啊！亲");
+                    } else {
+                        Intent intent = new Intent();
+                        intent.setClass(UserInfoActivity.this, MessageActivity.class);
+                        intent.putExtra(MessageActivity.KEY_INTENT_ID, mID);
+                        intent.putExtra(MessageActivity.KEY_INTENT_TYPE, 1);
+                        startActivity(intent);
+                    }
                 } else {
                     AndTools.showToast("发私信需要登录");
                 }
@@ -83,7 +88,11 @@ public class UserInfoActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (MainApplication.getInstance().isLogin()) {
-                    focus();
+                    if (mID == DataCacheHelper.getInstance().getUserInfo().getRoleId()) {
+                        AndTools.showToast("不能关注自己的哟！亲");
+                    } else {
+                        focus();
+                    }
                 } else {
                     AndTools.showToast("关注需要登录");
                 }

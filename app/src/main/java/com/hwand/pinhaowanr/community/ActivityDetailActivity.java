@@ -1,7 +1,9 @@
 package com.hwand.pinhaowanr.community;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -68,19 +70,6 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
 
     private List<BaseShareUnit> mShareList = new ArrayList<BaseShareUnit>();
 
-    public static void launch(Context context) {
-        Intent intent = new Intent();
-        intent.setClass(context, ActivityDetailActivity.class);
-        context.startActivity(intent);
-    }
-
-    public static void launch(Context context, int id) {
-        Intent intent = new Intent();
-        intent.setClass(context, ActivityDetailActivity.class);
-        intent.putExtra(ACTIVITY_ID_KEY, id);
-        context.startActivity(intent);
-    }
-
     public static void launch(Context context, TheCommunityActivityModel theCommunityActivityModel) {
         Intent intent = new Intent();
         intent.setClass(context, ActivityDetailActivity.class);
@@ -138,15 +127,24 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
             AndTools.displayImage(null, mTheCommunityActivityModel.getUrl(), imageView);
             TextView address = (TextView) findViewById(R.id.address);
             address.setText(mTheCommunityActivityModel.getDetailAddress());
+            address.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onLocationClick();
+                }
+            });
             TextView time = (TextView) findViewById(R.id.time);
             time.setText(getString(R.string.sign_up_times, DateUtil.convertLongToString(mTheCommunityActivityModel.getStratTime()),
                     DateUtil.convertLongToString(mTheCommunityActivityModel.getEndTime())));
 
-            TextView age = (TextView) findViewById(R.id.age);
-//            age.setText(getString(R.string.fine_detail_age , mTheCommunityActivityModel.get));
 
             TextView peopleCount = (TextView) findViewById(R.id.people_count);
-            peopleCount.setText(getString(R.string.activity_people_count, mTheCommunityActivityModel.getMaxRoles()));
+            int maxRoles = mTheCommunityActivityModel.getMaxRoles();
+            if (maxRoles <= 0) {
+                peopleCount.setText("不限");
+            } else {
+                peopleCount.setText(getString(R.string.activity_people_count, mTheCommunityActivityModel.getMaxRoles()));
+            }
 
         }
         mActivityDescriptionLayout = (LinearLayout) findViewById(R.id.activity_description_layout);
@@ -175,6 +173,28 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
                 onShare();
                 break;
         }
+    }
+
+
+    private void onLocationClick() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("geo:");
+        stringBuilder.append(mTheCommunityActivityModel.getLat());
+        stringBuilder.append(",");
+        stringBuilder.append(mTheCommunityActivityModel.getLng());
+        stringBuilder.append("?q=");
+        stringBuilder.append(mActivityModel.getDetailAddress());
+        Uri uri = Uri.parse(stringBuilder.toString());
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        try {
+            startActivity(intent);
+        } catch (ActivityNotFoundException exception) {
+            exception.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+
+
     }
 
     String PIC_URL = "https://t.alipayobjects.com/images/rmsweb/T1vs0gXXhlXXXXXXXX.jpg";
@@ -318,7 +338,7 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
     }
 
     private void updateInfo() {
-        if (mTheCommunityActivityModel == null) {
+        if (mTheCommunityActivityModel == null || TextUtils.isEmpty(mTheCommunityActivityModel.getDetailAddress())) {
             LinearLayout activityInfoLayout = (LinearLayout) findViewById(R.id.activity_info_layout);
             activityInfoLayout.setVisibility(View.VISIBLE);
             ImageView imageView = (ImageView) findViewById(R.id.image);
@@ -328,6 +348,12 @@ public class ActivityDetailActivity extends BaseActivity implements SwipeRefresh
             AndTools.displayImage(null, mActivityModel.getUrl(), imageView);
             TextView address = (TextView) findViewById(R.id.address);
             address.setText(mActivityModel.getDetailAddress());
+            address.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onLocationClick();
+                }
+            });
             TextView time = (TextView) findViewById(R.id.time);
             time.setText(getString(R.string.sign_up_times, DateUtil.convertLongToString(mActivityModel.getStratTime()),
                     DateUtil.convertLongToString(mActivityModel.getEndTime())));

@@ -117,6 +117,7 @@ public class MineNaviFragment extends BaseFragment {
         super.initViews();
 
         setTitleBarTtile("我的");
+        hideBack();
         mListView = (ListView) mFragmentView.findViewById(R.id.nv_list);
         mHeader = getActivity().getLayoutInflater().inflate(R.layout.mine_header_layout, null);
         mHeadImageView = (CircleImageView) mHeader.findViewById(R.id.head);
@@ -127,6 +128,7 @@ public class MineNaviFragment extends BaseFragment {
         list.add(new MineAdapter.NaviEntity("我的安排", MSG_INTENT_PLAN));
         list.add(new MineAdapter.NaviEntity("消息", MSG_INTENT_MSG));
         list.add(new MineAdapter.NaviEntity("修改密码", MSG_INTENT_PWD));
+        list.add(new MineAdapter.NaviEntity("", -1));
         list.add(new MineAdapter.NaviEntity("反馈", -1));
         list.add(new MineAdapter.NaviEntity("给个评价", -1));
         list.add(new MineAdapter.NaviEntity("清除缓存", -1));

@@ -59,6 +59,12 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         }
     }
 
+    protected void hideBack() {
+        if (mBack != null) {
+            mBack.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

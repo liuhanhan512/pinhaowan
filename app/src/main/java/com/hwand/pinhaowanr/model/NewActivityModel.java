@@ -5,12 +5,14 @@ import java.io.Serializable;
 /**
  * Created by hanhanliu on 15/12/5.
  */
-public class NewActivityModel implements Serializable{
+public class NewActivityModel implements Serializable {
     private int id;
     private String url;
     private String title;
     private String name;
     private long creatTime;
+    private double lng;
+    private double lat;
 
     public int getId() {
         return id;
@@ -50,5 +52,21 @@ public class NewActivityModel implements Serializable{
 
     public void setCreatTime(long creatTime) {
         this.creatTime = creatTime;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
     }
 }

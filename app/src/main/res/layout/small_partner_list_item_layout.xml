@@ -167,10 +167,11 @@
 
         <LinearLayout
             android:id="@+id/avatar_layout"
-            android:weightSum="6"
+            android:weightSum="5"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:layout_toRightOf="@+id/indicator2"
+            android:layout_toLeftOf="@+id/avatar6"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -200,14 +201,16 @@
                 android:id="@+id/avatar5"
                 android:layout_width="40dp"
                 android:layout_height="40dp" />
-            <com.hwand.pinhaowanr.widget.CircleImageView
-                android:layout_weight="1"
-                android:id="@+id/avatar6"
-                android:src="@mipmap/add"
-                android:layout_width="40dp"
-                android:layout_height="40dp" />
         </LinearLayout>
 
+        <com.hwand.pinhaowanr.widget.CircleImageView
+            android:id="@+id/avatar6"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@mipmap/add"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="12dp" />
     </RelativeLayout>
 
 

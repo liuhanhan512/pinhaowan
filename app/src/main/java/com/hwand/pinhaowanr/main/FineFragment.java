@@ -11,7 +11,6 @@ import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -39,6 +38,7 @@ import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
 import com.hwand.pinhaowanr.widget.hlistview.HListView;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +49,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by hanhanliu on 15/11/20.
  */
-public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener{
+public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -67,7 +67,7 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     private View mEmptyView;
 
-    public static FineFragment newInstance(){
+    public static FineFragment newInstance() {
         FineFragment fragment = new FineFragment();
         Bundle bundle = new Bundle();
         fragment.setArguments(bundle);
@@ -103,13 +103,17 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     public void onEventMainThread(LocationEvent event) {
         AMapLocation aMapLocation = MainApplication.getInstance().getAmapLocation();
-        if(aMapLocation != null){
+        if (aMapLocation != null) {
+            if (topList.size() > 0) {
+                headerView.setVisibility(View.VISIBLE);
+                updateHeaderView();
+            }
             mCity.setText(aMapLocation.getCity());
             mRegion.setText(aMapLocation.getDistrict());
 
             List<ConfigModel> configModels = DataCacheHelper.getInstance().getConfigModel();
-            for(ConfigModel configModel : configModels){
-                if(TextUtils.equals(configModel.getCityName() , aMapLocation.getCity())){
+            for (ConfigModel configModel : configModels) {
+                if (TextUtils.equals(configModel.getCityName(), aMapLocation.getCity())) {
                     mCityType = configModel.getCityType();
                     fetchData();
                     break;
@@ -120,13 +124,13 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     public void onEventMainThread(CityChooseEvent event) {
         ConfigModel configModel = event.configModel;
-        if(configModel != null){
+        if (configModel != null) {
             mCityType = configModel.getCityType();
             fetchData();
 
             mCity.setText(configModel.getCityName());
             List<RegionModel> regionModels = configModel.getRegionMap();
-            if(regionModels != null && regionModels.size() > 0){
+            if (regionModels != null && regionModels.size() > 0) {
                 mRegion.setText(regionModels.get(0).getTypeName());
             }
         }
@@ -134,15 +138,15 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     public void onEventMainThread(RegionChooseEvent event) {
         RegionModel regionModel = event.regionModel;
-        if(regionModel != null){
+        if (regionModel != null) {
             mRegion.setText(regionModel.getTypeName());
         }
     }
 
-    private TextView mCity , mRegion;
+    private TextView mCity, mRegion;
 
-    private void initView(){
-        mSwipeRefreshLayout = (SwipeRefreshLayout)mFragmentView.findViewById(R.id.swipe_container);
+    private void initView() {
+        mSwipeRefreshLayout = (SwipeRefreshLayout) mFragmentView.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         //加载颜色是循环播放的，只要没有完成刷新就会一直循环，color1>color2>color3>color4
         mSwipeRefreshLayout.setColorScheme(android.R.color.white, android.R.color.holo_green_light,
@@ -169,14 +173,14 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         mExpandableListView.setAdapter(mExpandAdapter);
 
 
-        mCity = (TextView)mFragmentView.findViewById(R.id.city);
-        mRegion = (TextView)mFragmentView.findViewById(R.id.region);
+        mCity = (TextView) mFragmentView.findViewById(R.id.city);
+        mRegion = (TextView) mFragmentView.findViewById(R.id.region);
 
         mCity.setOnClickListener(this);
         mRegion.setOnClickListener(this);
 
         AMapLocation aMapLocation = MainApplication.getInstance().getAmapLocation();
-        if(aMapLocation != null){
+        if (aMapLocation != null) {
             mCity.setText(aMapLocation.getCity());
             mRegion.setText(aMapLocation.getDistrict());
         }
@@ -186,12 +190,12 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.city:
                 CityChooseActivity.launch(getActivity());
                 break;
             case R.id.region:
-                RegionChooseActivity.launch(getActivity() , mCityType);
+                RegionChooseActivity.launch(getActivity(), mCityType);
                 break;
             case R.id.empty_text:
                 mSwipeRefreshLayout.setRefreshing(true);
@@ -201,23 +205,23 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     }
 
     private View headerView;
-    private TextView headerAddress,headerDistance,headerTitle,headerSubTitle,headerTickets,headerPayment;
+    private TextView headerAddress, headerDistance, headerTitle, headerSubTitle, headerTickets, headerPayment;
     private ImageView headerImage;
 
-    private View initHeaderView(){
-        headerView = View.inflate(getActivity() , R.layout.fine_expandlistview_header_layout2, null);
-        headerAddress = (TextView)headerView.findViewById(R.id.address);
-        headerDistance = (TextView)headerView.findViewById(R.id.distance);
-        headerTitle = (TextView)headerView.findViewById(R.id.title);
-        headerSubTitle = (TextView)headerView.findViewById(R.id.sub_title);
-        headerTickets = (TextView)headerView.findViewById(R.id.tickets);
+    private View initHeaderView() {
+        headerView = View.inflate(getActivity(), R.layout.fine_expandlistview_header_layout2, null);
+        headerAddress = (TextView) headerView.findViewById(R.id.address);
+        headerDistance = (TextView) headerView.findViewById(R.id.distance);
+        headerTitle = (TextView) headerView.findViewById(R.id.title);
+        headerSubTitle = (TextView) headerView.findViewById(R.id.sub_title);
+        headerTickets = (TextView) headerView.findViewById(R.id.tickets);
 
-        headerImage = (ImageView)headerView.findViewById(R.id.image);
+        headerImage = (ImageView) headerView.findViewById(R.id.image);
 
         headerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FineDetailActivity.launch(getActivity() , topList.get(0));
+                FineDetailActivity.launch(getActivity(), topList.get(0));
             }
         });
         return headerView;
@@ -236,22 +240,22 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         }
     }
 
-    private void fetchData(){
+    private void fetchData() {
 
         Map<String, String> params = new HashMap<String, String>();
-        params.put("cityType" , mCityType + "");
+        params.put("cityType", mCityType + "");
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_HOME_PAGE, params);
         NetworkRequest.get(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 mSwipeRefreshLayout.setRefreshing(false);
-                if(!TextUtils.isEmpty(response)){
-                    List<HomePageModel> homePageModels  = HomePageModel.arrayHomePageModelFromData(response);
-                    if(homePageModels != null && homePageModels.size() > 0){
+                if (!TextUtils.isEmpty(response)) {
+                    List<HomePageModel> homePageModels = HomePageModel.arrayHomePageModelFromData(response);
+                    if (homePageModels != null && homePageModels.size() > 0) {
                         mEmptyView.setVisibility(View.GONE);
                         mExpandableListView.setVisibility(View.VISIBLE);
                         wrapperData(homePageModels);
-                    }  else {
+                    } else {
                         mEmptyView.setVisibility(View.VISIBLE);
                         mExpandableListView.setVisibility(View.GONE);
                     }
@@ -276,30 +280,30 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     private static final int SHOW_TYPE = 2;
     private static final int PLEASURE_TYPE = 3;
 
-    private void wrapperData(List<HomePageModel> homePageModels){
+    private void wrapperData(List<HomePageModel> homePageModels) {
 
-        if(homePageModels != null && homePageModels.size() > 0){
+        if (homePageModels != null && homePageModels.size() > 0) {
             mListData.clear();
-            for(HomePageModel homePageModel : homePageModels){
-                if(homePageModel.getIsStick() == 1){//1置顶，0不置顶
+            for (HomePageModel homePageModel : homePageModels) {
+                if (homePageModel.getIsStick() == 1) {//1置顶，0不置顶
                     topList.add(homePageModel);
                 }
                 int type = homePageModel.getViewType();
                 int dataSize = mListData.size();
-                if(dataSize <= 0){
+                if (dataSize <= 0) {
                     addHomePageModel(homePageModel, type);
                 } else {
                     boolean isAdd = false;
-                    for (int i = 0 ; i < dataSize ; i++){
+                    for (int i = 0; i < dataSize; i++) {
                         HomePageEntity homePageEntity = mListData.get(i);
-                        if(homePageEntity.getType() == type){
+                        if (homePageEntity.getType() == type) {
                             homePageEntity.getHomePageModelList().add(homePageModel);
                             isAdd = true;
                             break;
                         }
                     }
-                    if(!isAdd){
-                        addHomePageModel(homePageModel ,type);
+                    if (!isAdd) {
+                        addHomePageModel(homePageModel, type);
                     }
 
                 }
@@ -307,7 +311,7 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             mExpandAdapter.notifyDataSetChanged();
             expandView();
 
-            if(topList.size() <= 0){
+            if (topList.size() <= 0) {
                 headerView.setVisibility(View.GONE);
             } else {
                 headerView.setVisibility(View.VISIBLE);
@@ -316,18 +320,31 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         }
     }
 
-    private void updateHeaderView(){
+    private void updateHeaderView() {
         HomePageModel homePageModel = topList.get(0);
         headerTitle.setText(homePageModel.getTitle());
         headerSubTitle.setText(homePageModel.getSubtitle());
         headerAddress.setText(homePageModel.getDetailAddress());
-//        headerDistance.setText(homePageModel.);
+
+        AMapLocation aMapLocation = MainApplication.getInstance().getAmapLocation();
+        if (aMapLocation != null) {
+            double dis = AndTools.getDistance(aMapLocation.getLatitude(), aMapLocation.getLongitude(), homePageModel.getLat(), homePageModel.getLng());
+            String unit = "m";
+            if (dis > 1000) {
+                dis = dis / 1000.0;
+                unit = "km";
+            }
+            BigDecimal bd = new BigDecimal(dis);
+            bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+            headerDistance.setText(bd.doubleValue() + unit);
+        }
+
         headerTickets.setText(getString(R.string.remainder_tickets, homePageModel.getRemainTicket()));
 
-        AndTools.displayImage(null , homePageModel.getPictureUrl(), headerImage);
+        AndTools.displayImage(null, homePageModel.getPictureUrl(), headerImage);
     }
 
-    private void addHomePageModel(HomePageModel homePageModel , int type){
+    private void addHomePageModel(HomePageModel homePageModel, int type) {
         HomePageEntity homePageEntity = new HomePageEntity();
         homePageEntity.setType(type);
         homePageEntity.setCategory(fineCategorys[type - 1]);
@@ -415,22 +432,24 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         }
 
         private void bindGroupView(final int groupPosition, View groupView) {
-            TextView title = (TextView)groupView.findViewById(R.id.title);
+            TextView title = (TextView) groupView.findViewById(R.id.title);
             title.setText(mListData.get(groupPosition).getCategory());
-            ImageView more = (ImageView)groupView.findViewById(R.id.image_more);
+            ImageView more = (ImageView) groupView.findViewById(R.id.image_more);
             more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FineCategoryListActivity.launch(getActivity() , mListData.get(groupPosition).getType(),
+                    FineCategoryListActivity.launch(getActivity(), mListData.get(groupPosition).getType(),
                             mListData.get(groupPosition).getCategory());
                 }
             });
         }
-        private void onViewMoreClick(int groupPosition){
+
+        private void onViewMoreClick(int groupPosition) {
 
         }
+
         @Override
-        public View getChildView(int groupPosition, int childPosition,boolean isLastChild,
+        public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
                                  View convertView, ViewGroup parent) {
             // TODO Auto-generated method stub
             View childView = null;
@@ -454,13 +473,13 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
             HListView listView = (HListView) groupView.findViewById(R.id.listview);
 
-            final FineItemAdpater adapter  = new FineItemAdpater(groupPosition);
+            final FineItemAdpater adapter = new FineItemAdpater(groupPosition);
 
             listView.setOnItemClickListener(new com.hwand.pinhaowanr.widget.hlistview.AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(com.hwand.pinhaowanr.widget.hlistview.AdapterView<?> parent, View view, int position, long id) {
                     HomePageModel homePageModel = mListData.get(groupPosition).getHomePageModelList().get(position);
-                    FineDetailActivity.launch(getActivity() , homePageModel);
+                    FineDetailActivity.launch(getActivity(), homePageModel);
                 }
             });
 
@@ -476,13 +495,13 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     }
 
-    class FineItemAdpater extends BaseAdapter{
+    class FineItemAdpater extends BaseAdapter {
 
         List<HomePageModel> homePageModels = new ArrayList<HomePageModel>();
 
-        public FineItemAdpater(int groupPosition ){
+        public FineItemAdpater(int groupPosition) {
             List<HomePageModel> models = mListData.get(groupPosition).getHomePageModelList();
-            if(models != null){
+            if (models != null) {
                 homePageModels.addAll(models);
             }
         }
@@ -509,15 +528,15 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                         .inflate(R.layout.fine_list_item_layout, viewGroup, false);
             }
             HomePageModel homePageModel = homePageModels.get(i);
-            ImageView imageView = CommonViewHolder.get(convertView , R.id.image);
-            AndTools.displayImage(null,homePageModel.getPictureUrl() ,imageView);
-            TextView title = CommonViewHolder.get(convertView , R.id.title);
+            ImageView imageView = CommonViewHolder.get(convertView, R.id.image);
+            AndTools.displayImage(null, homePageModel.getPictureUrl(), imageView);
+            TextView title = CommonViewHolder.get(convertView, R.id.title);
             title.setText(homePageModel.getTitle());
-            TextView address = CommonViewHolder.get(convertView , R.id.address);
+            TextView address = CommonViewHolder.get(convertView, R.id.address);
             address.setText(homePageModel.getDetailAddress());
-            TextView ticket = CommonViewHolder.get(convertView , R.id.tickets);
-            ticket.setText(getString(R.string.remainder_tickets , homePageModel.getRemainTicket()));
-            TextView payment = CommonViewHolder.get(convertView , R.id.payment);
+            TextView ticket = CommonViewHolder.get(convertView, R.id.tickets);
+            ticket.setText(getString(R.string.remainder_tickets, homePageModel.getRemainTicket()));
+            TextView payment = CommonViewHolder.get(convertView, R.id.payment);
             return convertView;
         }
     }

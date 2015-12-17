@@ -19,7 +19,6 @@ import com.google.gson.Gson;
 import com.hwand.pinhaowanr.CommonViewHolder;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.mine.UserInfoActivity;
-import com.hwand.pinhaowanr.model.FleaActivityModel;
 import com.hwand.pinhaowanr.model.NewActivityModel;
 import com.hwand.pinhaowanr.model.RoleModel;
 import com.hwand.pinhaowanr.model.SmallPartnerModel;
@@ -32,6 +31,7 @@ import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.CircleImageView;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +59,7 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
 
     private List<NewActivityModel> newActivityModels;
 
-    private FleaActivityModel fleaActivityModel;
+    private TheCommunityActivityModel fleaActivityModel;
 
     public static BaseCommunityFragment newInstance() {
         SmallPartnerFragment fragment = new SmallPartnerFragment();
@@ -113,7 +113,11 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
     final AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            ActivityDetailActivity.launch(getActivity(), theCommunityActivityModels.get(i - mListView.getHeaderViewsCount()));
+            try {
+                ActivityDetailActivity.launch(getActivity(), theCommunityActivityModels.get(i - mListView.getHeaderViewsCount()));
+            } catch (Exception e) {
+
+            }
         }
     };
 
@@ -360,6 +364,12 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
         if (fleaActivityModel != null && !TextUtils.isEmpty(fleaActivityModel.getUrl())) {
             fleaLayout.setVisibility(View.VISIBLE);
             AndTools.displayImage(null, fleaActivityModel.getUrl(), fleaImage);
+            fleaLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ActivityDetailActivity.launch(getActivity(), fleaActivityModel);
+                }
+            });
         } else {
             fleaLayout.setVisibility(View.GONE);
         }
@@ -486,6 +496,7 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
             AndTools.displayImage(null, theCommunityActivityModel.getUrl(), imageView);
 
             TextView signUpStatus = CommonViewHolder.get(convertView, R.id.sign_up_status);
+            signUpStatus.setText(theCommunityActivityModel.getDescribe());
 
             TextView description = CommonViewHolder.get(convertView, R.id.description);
             description.setText(theCommunityActivityModel.getTitle());
@@ -500,7 +511,9 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
             address.setText(theCommunityActivityModel.getDetailAddress());
 
             TextView distance = CommonViewHolder.get(convertView, R.id.distance);
-            distance.setText(getString(R.string.distance, theCommunityActivityModel.getDistance()));
+            BigDecimal bd = new BigDecimal(theCommunityActivityModel.getDistance());
+            bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+            distance.setText("距离" + bd.doubleValue() + "m");
 
             TextView signUp = CommonViewHolder.get(convertView, R.id.sign_up);
             signUp.setOnClickListener(new View.OnClickListener() {
