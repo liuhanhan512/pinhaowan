@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg_fragment_white">
 
     <RelativeLayout
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_width="match_parent"
         android:layout_height="40dp">
 
@@ -22,7 +23,7 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#12171a"
+            android:textColor="#6e6e6d"
             android:textSize="15sp"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/image_indicator"
@@ -36,12 +37,12 @@
 
         <ImageView
             android:id="@+id/image_more"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:scaleType="fitCenter"
-            android:src="@mipmap/more"
+            android:src="@mipmap/icon_more"
             />
 
     </RelativeLayout>

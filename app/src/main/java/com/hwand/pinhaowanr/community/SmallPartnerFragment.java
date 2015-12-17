@@ -17,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.hwand.pinhaowanr.CommonViewHolder;
+import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.mine.UserInfoActivity;
 import com.hwand.pinhaowanr.model.NewActivityModel;
@@ -519,7 +520,11 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
             signUp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    signUp(theCommunityActivityModel.getId());
+                    if (MainApplication.getInstance().isLogin()) {
+                        signUp(theCommunityActivityModel.getId());
+                    } else {
+                        AndTools.showToast("报名需要登录");
+                    }
                 }
             });
 

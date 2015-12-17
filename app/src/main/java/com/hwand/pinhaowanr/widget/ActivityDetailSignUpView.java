@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.LogUtil;
@@ -60,7 +61,11 @@ public class ActivityDetailSignUpView extends LinearLayout {
         mSignUp.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                signUp();
+                if (MainApplication.getInstance().isLogin()) {
+                    signUp();
+                } else{
+                    AndTools.showToast("报名需要登录");
+                }
             }
         });
     }

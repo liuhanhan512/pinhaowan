@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TabHost;
@@ -73,7 +72,7 @@ public class HomeActivity extends BaseActivity {
             ImageView curr_imageView = (ImageView) curr_view.findViewById(R.id.image);
             curr_imageView.setImageDrawable(getResources().getDrawable(unSelectedTabIcons[i]));
             TextView curr_textView = (TextView) curr_view.findViewById(R.id.text);
-            curr_textView.setTextColor(Color.parseColor("#333333"));
+            curr_textView.setTextColor(Color.parseColor("#a9a9a9"));
         }
         int curr = tabHost.getCurrentTab();
         View view1 = tabHost.getTabWidget().getChildAt(curr);
@@ -111,7 +110,7 @@ public class HomeActivity extends BaseActivity {
                 ImageView curr_imageView = (ImageView) curr_view.findViewById(R.id.image);
                 curr_imageView.setImageDrawable(getResources().getDrawable(unSelectedTabIcons[i]));
                 TextView curr_textView = (TextView) curr_view.findViewById(R.id.text);
-                curr_textView.setTextColor(Color.parseColor("#333333"));
+                curr_textView.setTextColor(Color.parseColor("#a9a9a9"));
             }
         }
     }

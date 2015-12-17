@@ -9,6 +9,7 @@
         android:id="@+id/image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/text"
         android:layout_centerInParent="true"
         android:paddingBottom="5dp" />
 
@@ -16,11 +17,12 @@
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/image"
         android:layout_centerInParent="true"
         android:layout_gravity="center_horizontal"
-        android:textColor="@color/text_black_new"
-        android:textSize="10sp" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="2dp"
+        android:textColor="#a9a9a9"
+        android:textSize="12sp" />
 
     <ImageView
         android:id="@+id/add"
@@ -31,6 +33,6 @@
         android:layout_toRightOf="@id/text"
         android:background="@mipmap/mesg"
         android:paddingBottom="5dp"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
 </RelativeLayout>

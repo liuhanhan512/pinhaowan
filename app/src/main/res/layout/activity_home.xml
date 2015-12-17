@@ -48,8 +48,8 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#e8e8e8"></View>
+                android:layout_height="1dp"
+                android:background="#eeeeee"></View>
 
             <TabWidget
                 android:id="@android:id/tabs"
