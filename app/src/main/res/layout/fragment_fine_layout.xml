@@ -21,6 +21,7 @@
             android:layout_centerVertical="true"
             android:drawablePadding="8dp"
             android:drawableRight="@mipmap/down_arrow"
+            android:textColor="#4e4e4d"
             android:gravity="center"
             android:text="上海市" />
 
@@ -32,6 +33,7 @@
             android:drawablePadding="8dp"
             android:drawableRight="@mipmap/down_arrow"
             android:gravity="center"
+            android:textColor="#4e4e4d"
             android:text="崇明岛" />
     </RelativeLayout>
 

@@ -31,7 +31,7 @@
         android:gravity="center"
         android:maxEms="8"
         android:maxLines="1"
-        android:textColor="@color/black"
+        android:textColor="#4e4e4d"
         android:textSize="18sp" />
 
 </RelativeLayout>
