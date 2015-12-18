@@ -11,6 +11,8 @@
         android:layout_centerVertical="true"
         android:paddingLeft="30dp"
         android:text="我的安排"
+        android:singleLine="true"
+        android:ellipsize="end"
         android:textColor="@color/black"
         android:textSize="14sp" />
 
@@ -24,6 +26,8 @@
         android:layout_toRightOf="@+id/tip"
         android:gravity="right"
         android:paddingRight="30dp"
+        android:singleLine="true"
+        android:ellipsize="end"
         android:text="女"
         android:textColor="@color/text_color_light"
         android:textSize="13sp" />

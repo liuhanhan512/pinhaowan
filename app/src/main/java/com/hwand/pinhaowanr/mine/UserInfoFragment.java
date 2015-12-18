@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.event.InfoChangeEvent;
 import com.hwand.pinhaowanr.main.MineFragment;
 import com.hwand.pinhaowanr.model.UserInfo;
 import com.hwand.pinhaowanr.utils.AndTools;
@@ -45,6 +46,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by dxz on 15/12/01.
@@ -143,6 +146,8 @@ public class UserInfoFragment extends BaseFragment {
 
     private MineAdapter mAdapter;
 
+    List<MineAdapter.NaviEntity> list = new ArrayList<MineAdapter.NaviEntity>();
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_mine_info_layout;
@@ -162,7 +167,6 @@ public class UserInfoFragment extends BaseFragment {
             String birthday = "";
             String address = "";
             String content = "";
-            List<MineAdapter.NaviEntity> list = new ArrayList<MineAdapter.NaviEntity>();
             if (DataCacheHelper.getInstance().getUserInfo() != null) {
                 childName = DataCacheHelper.getInstance().getUserInfo().getChildName();
                 sex = DataCacheHelper.getInstance().getUserInfo().getChildSex() == 1 ? "男" : "女";
@@ -196,6 +200,7 @@ public class UserInfoFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         MineFragment.setNoExit(true);
+        LogUtil.d("dxz", "onResume");
     }
 
     private void modifyHeadPic() {
@@ -398,4 +403,41 @@ public class UserInfoFragment extends BaseFragment {
 
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    public void onEventMainThread(InfoChangeEvent event) {
+        LogUtil.d("dxz", "InfoChangeEvent");
+        try {
+            String childName = "";
+            String sex = "";
+            String birthday = "";
+            String address = "";
+            String content = "";
+            if (DataCacheHelper.getInstance().getUserInfo() != null) {
+                childName = DataCacheHelper.getInstance().getUserInfo().getChildName();
+                sex = DataCacheHelper.getInstance().getUserInfo().getChildSex() == 1 ? "男" : "女";
+                birthday = DataCacheHelper.getInstance().getUserInfo().getBirthday();
+                address = DataCacheHelper.getInstance().getUserInfo().getFamilyAddress();
+                content = DataCacheHelper.getInstance().getUserInfo().getContent();
+            }
+            list.clear();
+            list.add(new MineAdapter.NaviEntity("宝宝名", childName, MSG_INTENT_CHILD_NAME));
+            list.add(new MineAdapter.NaviEntity("宝宝性别", sex, MSG_INTENT_CHILD_SEX));
+            list.add(new MineAdapter.NaviEntity("宝宝出生", birthday, MSG_INTENT_CHILD_BIRTH));
+            list.add(new MineAdapter.NaviEntity("家庭地址", address, MSG_INTENT_ADD));
+            list.add(new MineAdapter.NaviEntity("个人介绍", content, MSG_INTENT_CONTENT));
+            mAdapter.notifyDataSetChanged();
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

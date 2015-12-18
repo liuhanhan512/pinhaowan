@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.event.InfoChangeEvent;
 import com.hwand.pinhaowanr.main.MineFragment;
 import com.hwand.pinhaowanr.model.UserInfo;
 import com.hwand.pinhaowanr.utils.AndTools;
@@ -26,6 +27,8 @@ import com.hwand.pinhaowanr.widget.DDAlertDialog;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by dxz on 15/12/01.
@@ -100,6 +103,7 @@ public class ChildNameFragment extends BaseFragment {
                                     Gson gson = new Gson();
                                     String str = gson.toJson(info, UserInfo.class);
                                     DataCacheHelper.getInstance().saveUserInfo(str);
+                                    EventBus.getDefault().post(new InfoChangeEvent());
                                 } catch (Exception e) {
                                 }
                                 hideImm();
