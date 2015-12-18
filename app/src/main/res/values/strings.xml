@@ -69,8 +69,8 @@
     <string name="city_choose_title">地区选择</string>
     <string name="empty_content">内容为空,点击刷新</string>
     <string name="fine_detail_tel">电话：%s</string>
-    <string name="fine_detail_hour">营业时间：%s</string>
-    <string name="fine_detail_age">适合年龄 : %1$d - %2$d</string>
+    <string name="fine_detail_hour">营业时间 ：%s</string>
+    <string name="fine_detail_age">适合年龄 ：%1$d - %2$d</string>
     <string name="share_text">分享</string>
     <string name="reservation_time">%1$s 至 %2$s</string>
     <string name="reserved">已预约</string>

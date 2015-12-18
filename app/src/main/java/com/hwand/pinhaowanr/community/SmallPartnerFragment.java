@@ -544,34 +544,27 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
             CircleImageView avatar4 = CommonViewHolder.get(convertView, R.id.avatar4);
             CircleImageView avatar5 = CommonViewHolder.get(convertView, R.id.avatar5);
             CircleImageView avatar6 = CommonViewHolder.get(convertView, R.id.avatar6);
-            avatar6.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                }
-            });
-
+            avatar6.setVisibility(View.INVISIBLE);
             List<RoleModel> roleModels = theCommunityActivityModel.getRoleList();
             if (roleModels != null) {
                 int size = roleModels.size();
                 signUoPeople.setText(getString(R.string.sign_up_people_count, size));
                 if (size >= 1) {
                     avatar1.setVisibility(View.VISIBLE);
-                    avatar2.setVisibility(View.GONE);
-                    avatar3.setVisibility(View.GONE);
-                    avatar4.setVisibility(View.GONE);
-                    avatar5.setVisibility(View.GONE);
-                    avatar6.setVisibility(View.VISIBLE);
+                    avatar2.setVisibility(View.INVISIBLE);
+                    avatar3.setVisibility(View.INVISIBLE);
+                    avatar4.setVisibility(View.INVISIBLE);
+                    avatar5.setVisibility(View.INVISIBLE);
 
                     AndTools.displayImage(null, roleModels.get(0).getUrl(), avatar1);
                 }
                 if (size >= 2) {
                     avatar1.setVisibility(View.VISIBLE);
                     avatar2.setVisibility(View.VISIBLE);
-                    avatar3.setVisibility(View.GONE);
-                    avatar4.setVisibility(View.GONE);
-                    avatar5.setVisibility(View.GONE);
-                    avatar6.setVisibility(View.VISIBLE);
+                    avatar3.setVisibility(View.INVISIBLE);
+                    avatar4.setVisibility(View.INVISIBLE);
+                    avatar5.setVisibility(View.INVISIBLE);
 
                     AndTools.displayImage(null, roleModels.get(1).getUrl(), avatar2);
                 }
@@ -580,9 +573,8 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
                     avatar1.setVisibility(View.VISIBLE);
                     avatar2.setVisibility(View.VISIBLE);
                     avatar3.setVisibility(View.VISIBLE);
-                    avatar4.setVisibility(View.GONE);
-                    avatar5.setVisibility(View.GONE);
-                    avatar6.setVisibility(View.VISIBLE);
+                    avatar4.setVisibility(View.INVISIBLE);
+                    avatar5.setVisibility(View.INVISIBLE);
 
                     AndTools.displayImage(null, roleModels.get(2).getUrl(), avatar3);
                 }
@@ -592,8 +584,7 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
                     avatar2.setVisibility(View.VISIBLE);
                     avatar3.setVisibility(View.VISIBLE);
                     avatar4.setVisibility(View.VISIBLE);
-                    avatar5.setVisibility(View.GONE);
-                    avatar6.setVisibility(View.VISIBLE);
+                    avatar5.setVisibility(View.INVISIBLE);
 
                     AndTools.displayImage(null, roleModels.get(3).getUrl(), avatar4);
                 }
@@ -617,7 +608,6 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
                 avatar3.setVisibility(View.GONE);
                 avatar4.setVisibility(View.GONE);
                 avatar5.setVisibility(View.GONE);
-                avatar6.setVisibility(View.VISIBLE);
 
             }
 
