@@ -8,8 +8,13 @@ import android.support.v4.app.FragmentTransaction;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
+import com.hwand.pinhaowanr.event.LogoutEvent;
 import com.hwand.pinhaowanr.mine.LoginFragment;
 import com.hwand.pinhaowanr.mine.MineNaviFragment;
+import com.hwand.pinhaowanr.utils.AndTools;
+import com.hwand.pinhaowanr.utils.LogUtil;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by hanhanliu on 15/11/20.
@@ -54,6 +59,7 @@ public class MineFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -98,8 +104,28 @@ public class MineFragment extends BaseFragment {
 
     }
 
+    public void onEventMainThread(LogoutEvent event) {
+        LogUtil.d("dxz","LogoutEvent");
+        if (mFragmentManager != null) {
+            mFragmentManager.popBackStack();
+            AndTools.showToast("登录信息失效，请重新登录！");
+            if (!MainApplication.getInstance().isLogin()) {
+                FragmentTransaction tx = mFragmentManager.beginTransaction();
+                mLoginFragment = LoginFragment.newInstance();
+                if (mCurFragment != null && mCurFragment.isVisible()) {
+                    tx.hide(mCurFragment);
+                }
+                tx.add(R.id.fragment_container, mLoginFragment, "LoginFragment");
+                tx.addToBackStack(null);
+                mCurFragment = mLoginFragment;
+                tx.commit();
+            }
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

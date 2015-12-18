@@ -107,7 +107,7 @@ public class MainApplication extends Application {
         return versionName;
     }
 
-    private void getConfig(){
+    private void getConfig() {
         Map<String, String> params = new HashMap<String, String>();
 
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_CONFIG, params);
@@ -128,7 +128,7 @@ public class MainApplication extends Application {
         });
     }
 
-    private void getLocation(){
+    private void getLocation() {
         final LocationManager locationManager = LocationManager.newInstance(this);
         locationManager.setLocationDataFeedbackListener(new LocationDataFeedbackListener() {
             @Override
@@ -142,9 +142,9 @@ public class MainApplication extends Application {
             @Override
             public void onError(AMapLocation aMapLocation) {
                 locationManager.stopLocation();
-                if(mMaxLocation > 0){
+                if (mMaxLocation > 0) {
                     locationManager.startLocation();
-                    mMaxLocation --;
+                    mMaxLocation--;
                 }
             }
         });
@@ -154,11 +154,11 @@ public class MainApplication extends Application {
     /**
      * 匹配服务端的cityType
      */
-    private void calcCityType(){
-        if(mAMapLocation != null){
+    private void calcCityType() {
+        if (mAMapLocation != null) {
             List<ConfigModel> configModels = DataCacheHelper.getInstance().getConfigModel();
-            for(ConfigModel configModel : configModels){
-                if(TextUtils.equals(configModel.getCityName() , mAMapLocation.getCity())){
+            for (ConfigModel configModel : configModels) {
+                if (TextUtils.equals(configModel.getCityName(), mAMapLocation.getCity())) {
                     mCityType = configModel.getCityType();
                     break;
                 }
@@ -167,15 +167,15 @@ public class MainApplication extends Application {
 
     }
 
-    public AMapLocation getAmapLocation(){
+    public AMapLocation getAmapLocation() {
         return mAMapLocation;
     }
 
-    public int getCityType(){
+    public int getCityType() {
         return mCityType;
     }
 
-    public void setCityType(int cityType){
+    public void setCityType(int cityType) {
         mCityType = cityType;
     }
 
@@ -242,7 +242,7 @@ public class MainApplication extends Application {
 
     public boolean isLogin() {
         return !TextUtils.isEmpty(AndTools.getCurrentData(this, NetworkRequest.SESSION_COOKIE))
-                    && DataCacheHelper.getInstance().getUserInfo() != null;
+                && !TextUtils.isEmpty(AndTools.getCurrentData(this, DataCacheHelper.KEY_USER_INFO)) && DataCacheHelper.getInstance().getUserInfo() != null;
     }
 
 }

@@ -156,23 +156,34 @@ public class UserInfoFragment extends BaseFragment {
         mListView = (ListView) mFragmentView.findViewById(R.id.nv_list);
         mHeader = getActivity().getLayoutInflater().inflate(R.layout.info_header_layout, null);
         mHeadImageView = (CircleImageView) mHeader.findViewById(R.id.head);
-
-        List<MineAdapter.NaviEntity> list = new ArrayList<MineAdapter.NaviEntity>();
-        list.add(new MineAdapter.NaviEntity("宝宝名", MSG_INTENT_CHILD_NAME));
-        list.add(new MineAdapter.NaviEntity("宝宝性别", MSG_INTENT_CHILD_SEX));
-        list.add(new MineAdapter.NaviEntity("宝宝出生", MSG_INTENT_CHILD_BIRTH));
-        list.add(new MineAdapter.NaviEntity("家庭地址", MSG_INTENT_ADD));
-        list.add(new MineAdapter.NaviEntity("个人介绍", MSG_INTENT_CONTENT));
-        mAdapter = new MineAdapter(getActivity(), mHandler, list);
-        mListView.addHeaderView(mHeader);
-        mListView.setAdapter(mAdapter);
-        mHeader.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                modifyHeadPic();
-            }
-        });
         try {
+            String childName = "";
+            String sex = "";
+            String birthday = "";
+            String address = "";
+            String content = "";
+            List<MineAdapter.NaviEntity> list = new ArrayList<MineAdapter.NaviEntity>();
+            if (DataCacheHelper.getInstance().getUserInfo() != null) {
+                childName = DataCacheHelper.getInstance().getUserInfo().getChildName();
+                sex = DataCacheHelper.getInstance().getUserInfo().getChildSex() == 1 ? "男" : "女";
+                birthday = DataCacheHelper.getInstance().getUserInfo().getBirthday();
+                address = DataCacheHelper.getInstance().getUserInfo().getFamilyAddress();
+                content = DataCacheHelper.getInstance().getUserInfo().getContent();
+            }
+            list.add(new MineAdapter.NaviEntity("宝宝名", childName, MSG_INTENT_CHILD_NAME));
+            list.add(new MineAdapter.NaviEntity("宝宝性别", sex, MSG_INTENT_CHILD_SEX));
+            list.add(new MineAdapter.NaviEntity("宝宝出生", birthday, MSG_INTENT_CHILD_BIRTH));
+            list.add(new MineAdapter.NaviEntity("家庭地址", address, MSG_INTENT_ADD));
+            list.add(new MineAdapter.NaviEntity("个人介绍", content, MSG_INTENT_CONTENT));
+            mAdapter = new MineAdapter(getActivity(), mHandler, list);
+            mListView.addHeaderView(mHeader);
+            mListView.setAdapter(mAdapter);
+            mHeader.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    modifyHeadPic();
+                }
+            });
             String url = DataCacheHelper.getInstance().getUserInfo().getUrl();
             LogUtil.d("dxz", url);
             ImageLoader.getInstance().displayImage(url, mHeadImageView);

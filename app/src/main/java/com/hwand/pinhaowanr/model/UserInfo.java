@@ -17,6 +17,7 @@ public class UserInfo implements NonProguard {
      * roleId : 3
      * url : defaultHead.png
      * relation : 1 父亲 2 母亲 3 其他
+     * content：个人简绍
      */
 
     private int result;
@@ -29,6 +30,7 @@ public class UserInfo implements NonProguard {
     private String url;
     private int relation;
     private int roleId;
+    private String content;
 
     public void setBirthday(String birthday) {
         this.birthday = birthday;
@@ -100,5 +102,13 @@ public class UserInfo implements NonProguard {
 
     public void setRoleId(int roleId) {
         this.roleId = roleId;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

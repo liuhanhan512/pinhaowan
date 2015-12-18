@@ -101,6 +101,13 @@ public class MineAdapter extends BaseAdapter {
             this.msg = what;
 
         }
+
+        public NaviEntity(String str,String desc, int what) {
+            this.content = str;
+            this.desc =desc;
+            this.msg = what;
+
+        }
     }
 
     public static class ViewHolder {

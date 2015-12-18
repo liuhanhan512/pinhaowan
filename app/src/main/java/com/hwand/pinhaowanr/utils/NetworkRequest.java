@@ -21,11 +21,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.MainApplication;
+import com.hwand.pinhaowanr.event.LogoutEvent;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by dxz on 15-11-18.
@@ -82,7 +85,7 @@ public class NetworkRequest {
      */
     public final static void checkSessionCookie(Map<String, String> headers) {
         for (String str : headers.keySet()) {
-            LogUtil.d("dxz", str+":" +headers.get(str));
+            LogUtil.d("dxz", str + ":" + headers.get(str));
         }
         if (headers.containsKey(SET_COOKIE_KEY)
                 && headers.get(SET_COOKIE_KEY).startsWith(SESSION_COOKIE)) {
@@ -97,6 +100,7 @@ public class NetworkRequest {
                     if (!TextUtils.equals(sessionId, cookie)) {
                         AndTools.saveCurrentData2Cache(MainApplication.getInstance(), DataCacheHelper.KEY_USER_INFO, "");
                         DataCacheHelper.getInstance().setUserInfo(null);
+                        EventBus.getDefault().post(new LogoutEvent());
                         AndTools.saveCurrentData2Cache(MainApplication.getInstance(), NetworkRequest.SESSION_COOKIE, cookie);
                     }
                 }
