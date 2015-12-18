@@ -589,13 +589,12 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
                     AndTools.displayImage(null, roleModels.get(3).getUrl(), avatar4);
                 }
 
-                if (size >= 4) {
+                if (size >= 5) {
                     avatar1.setVisibility(View.VISIBLE);
                     avatar2.setVisibility(View.VISIBLE);
                     avatar3.setVisibility(View.VISIBLE);
                     avatar4.setVisibility(View.VISIBLE);
                     avatar5.setVisibility(View.VISIBLE);
-                    avatar6.setVisibility(View.VISIBLE);
 
                     AndTools.displayImage(null, roleModels.get(4).getUrl(), avatar5);
                 }
