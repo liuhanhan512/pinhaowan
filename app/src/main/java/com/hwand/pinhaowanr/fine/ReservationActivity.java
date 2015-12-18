@@ -43,6 +43,7 @@ import com.hwand.pinhaowanr.widget.calendar.CalendarViewPager;
 import com.hwand.pinhaowanr.widget.calendar.UniformGridView;
 
 import java.text.DateFormatSymbols;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -150,7 +151,7 @@ public class ReservationActivity extends BaseActivity {
     }
 
     private void initTitle() {
-        setActionBarTtile(getString(R.string.reservation));
+        setActionBarTtile("选择日期");
     }
 
     private void initViews() {
@@ -237,18 +238,18 @@ public class ReservationActivity extends BaseActivity {
                 }
                 holder.setIsCurrentMonth(isCurrentMonth);
 
-                int monthInt = CalendarUtils.getPureMonthInt(dateInt);
-                Integer monthDataStatus = mCalendarMonthDataStatus.get(monthInt);
-                if (monthDataStatus != null && monthDataStatus == DATA_STATUS_COMPLETE) {
-                    Boolean calendarCacheData = mCalendarCache.get(dateInt);
-                    if (calendarCacheData != null && calendarCacheData) {
-                        holder.setLeaveTip(true);
-                    } else {
-                        holder.setLeaveTip(false);
-                    }
-                } else {
-                    holder.setLeaveTip(false);
-                }
+//                int monthInt = CalendarUtils.getPureMonthInt(dateInt);
+//                Integer monthDataStatus = mCalendarMonthDataStatus.get(monthInt);
+//                if (monthDataStatus != null && monthDataStatus == DATA_STATUS_COMPLETE) {
+//                    Boolean calendarCacheData = mCalendarCache.get(dateInt);
+//                    if (calendarCacheData != null && calendarCacheData) {
+//                        holder.setLeaveTip(true);
+//                    } else {
+//                        holder.setLeaveTip(false);
+//                    }
+//                } else {
+//                    holder.setLeaveTip(false);
+//                }
                 return view;
             }
         });
@@ -482,14 +483,12 @@ public class ReservationActivity extends BaseActivity {
     private class CalendarItemHolder {
 
         private TextView mDateText;
-        private View mLeaveTip;
 
         private boolean mIsToday;
         private boolean mIsCurrent;
 
         public CalendarItemHolder(View v) {
             mDateText = (TextView) v.findViewById(R.id.calendar_date_text);
-            mLeaveTip = v.findViewById(R.id.calendar_date_leave_tip);
         }
 
         public void setText(String text) {
@@ -532,18 +531,10 @@ public class ReservationActivity extends BaseActivity {
 
         private void setCurrentBackground() {
             if (mCalendarItemCurrentTip == null) {
-                mCalendarItemCurrentTip = ReservationActivity.this.getResources().getDrawable(R.mipmap.circle_dot);
+                mCalendarItemCurrentTip = ReservationActivity.this.getResources().getDrawable(R.drawable.circle_solid_red_bg);
             }
             mDateText.setBackgroundDrawable(mCalendarItemCurrentTip);
             mDateText.setSelected(true);
-        }
-
-        public void setLeaveTip(boolean hasLeave) {
-            if (hasLeave) {
-                mLeaveTip.setVisibility(View.VISIBLE);
-            } else {
-                mLeaveTip.setVisibility(View.INVISIBLE);
-            }
         }
 
         public void setIsCurrentMonth(boolean isCurrentMonth) {
@@ -873,19 +864,19 @@ public class ReservationActivity extends BaseActivity {
                 convertView = LayoutInflater.from(ReservationActivity.this)
                         .inflate(R.layout.reservation_list_item_layout, viewGroup, false);
             }
-            ClassDetailSubTitleModel classDetailSubTitleModel = classDetailSubTitleModels.get(position);
+            final ClassDetailSubTitleModel classDetailSubTitleModel = classDetailSubTitleModels.get(position);
 
             TextView time = CommonViewHolder.get(convertView, R.id.time);
             time.setText(getString(R.string.reservation_time, DateUtil.convertLongToString(classDetailSubTitleModel.getStartTime()),
                     DateUtil.convertLongToString(classDetailSubTitleModel.getEndTime())));
 
             TextView reservationStatus = CommonViewHolder.get(convertView, R.id.reservation_status);
-            int state = classDetailSubTitleModel.getState();
+            final int state = classDetailSubTitleModel.getState();
             switch (state) {
                 case STATE_RESERVATED:
                     reservationStatus.setEnabled(true);
                     reservationStatus.setText(getString(R.string.reserved));
-                    reservationStatus.setBackgroundResource(R.drawable.red_solid_corner_bg);
+                    reservationStatus.setBackgroundResource(R.drawable.red_solid_bg);
                     break;
                 case STATE_FULL:
                     reservationStatus.setEnabled(false);
@@ -895,14 +886,21 @@ public class ReservationActivity extends BaseActivity {
                 case STATE_CAN:
                     reservationStatus.setEnabled(true);
                     reservationStatus.setText(getString(R.string.reservation));
-                    reservationStatus.setBackgroundResource(R.drawable.yellow_solid_corner_bg);
+                    reservationStatus.setBackgroundResource(R.drawable.yellow_solid_bg);
                     break;
             }
 
             reservationStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    if (state == STATE_CAN) {
+                        Date date = new Date(classDetailSubTitleModel.getStartTime());
+                        Locale aLocale = Locale.US;
+                        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM", new DateFormatSymbols(aLocale));
+                        fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+                        String month = fmt.format(date);
+                        apply(mId, month, classDetailSubTitleModel.getSubscribeId());
+                    }
                 }
             });
 
@@ -927,7 +925,11 @@ public class ReservationActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(response)) {
                     List<ClassDetailSubTitleModel> list = ClassDetailSubTitleModel.arrayFromData(response);
                     if (list != null && list.size() > 0) {
-                        filterData(list);
+                        try {
+                            filterData(list);
+                        } catch (ParseException e) {
+                        }
+
                     } else {
 
                     }
@@ -942,7 +944,7 @@ public class ReservationActivity extends BaseActivity {
         });
     }
 
-    private void filterData(List<ClassDetailSubTitleModel> list) {
+    private void filterData(List<ClassDetailSubTitleModel> list) throws ParseException {
         Set<String> keys = new TreeSet<String>();
         for (ClassDetailSubTitleModel order : list) {
             Date start = new Date(order.getStartTime());
@@ -966,19 +968,18 @@ public class ReservationActivity extends BaseActivity {
                 }
             }
             classDetailGroupTitleModel.setClassDetailSubTitleModelList(orders);
-            // TODO:key转化为文字
-            Date date = new Date(key);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-DD");
+            Date date = sdf.parse(key);
             Calendar cal = Calendar.getInstance();
             cal.setTime(date);
             int month = cal.get(Calendar.MONTH) + 1;
             int day = cal.get(Calendar.DAY_OF_MONTH);
             int weekday = cal.get(Calendar.DAY_OF_WEEK);
-            SimpleDateFormat fmt = new SimpleDateFormat("hh:mm", Locale.US);
-            fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
             String str_day = "" + month + "月" + day + "日" + "星期" + getResources().getString(WEEK_WORDS[weekday - 1]);
             classDetailGroupTitleModel.setTime(str_day);
             classDetailGroupTitleModels.add(classDetailGroupTitleModel);
         }
+        expandView();
 
 
     }

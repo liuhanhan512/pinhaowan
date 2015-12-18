@@ -9,15 +9,12 @@ import java.util.Date;
  */
 public class DateUtil {
 
-    public static String convertLongToString(long timeSTamp){
-        Date date = new Date(timeSTamp);
-        DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-        String dateFormatted = formatter.format(date);
-
-        return dateFormatted;
+    public static String convertLongToString(long timeSTamp) {
+        DateFormat formatter = new SimpleDateFormat("HH:mm");
+        return convertLongToString(timeSTamp, formatter);
     }
 
-    public static String convertLongToString(long timeSTamp , DateFormat dateFormat){
+    public static String convertLongToString(long timeSTamp, DateFormat dateFormat) {
         Date date = new Date(timeSTamp);
         String dateFormatted = dateFormat.format(date);
 

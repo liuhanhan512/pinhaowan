@@ -25,7 +25,7 @@
 
     <color name="bg_fragment_white">#fbfbfa</color>
     <color name="bg_btn_yellow">#fff100</color>
-    <color name="bg_btn_yellow_light">#fef7a8</color>
+    <color name="bg_btn_yellow_light">#fdef51</color>
     <color name="text_color_light">#a1a1a1</color>
     <color name="text_color_red">#f86150</color>
     <color name="item_divider">#eeeeee</color>
