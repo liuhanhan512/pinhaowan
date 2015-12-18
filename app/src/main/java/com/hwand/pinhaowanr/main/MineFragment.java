@@ -81,7 +81,7 @@ public class MineFragment extends BaseFragment {
                 tx.hide(mCurFragment);
             }
             tx.add(R.id.fragment_container, mLoginFragment, "LoginFragment");
-            tx.addToBackStack("LoginFragment");
+            tx.addToBackStack(null);
             mCurFragment = mLoginFragment;
             tx.commit();
         } else {
@@ -90,7 +90,7 @@ public class MineFragment extends BaseFragment {
                 tx.hide(mCurFragment);
             }
             tx.add(R.id.fragment_container, mMineNaviFragment, "MineNaviFragment");
-            tx.addToBackStack("MineNaviFragment");
+            tx.addToBackStack(null);
             mCurFragment = mMineNaviFragment;
             tx.commit();
         }

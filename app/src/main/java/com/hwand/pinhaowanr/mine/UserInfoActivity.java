@@ -175,6 +175,8 @@ public class UserInfoActivity extends BaseActivity {
                         if (focus != 0) {
                             mFocusCount.setText(focus + "人");
                             AndTools.showToast("关注成功");
+                            mBtnFocus.setText("已关注");
+                            mBtnFocus.setEnabled(false);
                         } else {
                             AndTools.showToast("关注失败");
                         }
