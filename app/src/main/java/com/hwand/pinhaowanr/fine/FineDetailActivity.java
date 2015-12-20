@@ -271,12 +271,11 @@ public class FineDetailActivity extends BaseActivity implements SwipeRefreshLayo
         }
     }
 
-    String PIC_URL = "https://t.alipayobjects.com/images/rmsweb/T1vs0gXXhlXXXXXXXX.jpg";
     private ShareInfo initShareInfo(){
         ShareInfo shareInfo = new ShareInfo();
-        shareInfo.setTitle("Test");
-        shareInfo.setContent("Test Content");
-        shareInfo.setPictureUrl(PIC_URL);
+        shareInfo.setTitle(mHomePageModel.getClassName());
+        shareInfo.setContent(mHomePageModel.getTitle());
+        shareInfo.setPictureUrl(mHomePageModel.getPictureUrl());
         return shareInfo;
     }
 
