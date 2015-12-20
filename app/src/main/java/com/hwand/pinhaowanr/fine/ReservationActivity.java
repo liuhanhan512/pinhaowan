@@ -143,7 +143,12 @@ public class ReservationActivity extends BaseActivity {
         initIntentValues();
         initTitle();
         initViews();
-        getTimeList(mClassDetailModel.getStartMonth());
+
+        Calendar calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+        String dateStr = simpleDateFormat.format(date);
+        getTimeList(dateStr);
     }
 
     private void initIntentValues() {
@@ -396,20 +401,18 @@ public class ReservationActivity extends BaseActivity {
 
         onCurrentDayChange(mCurrentDateInt, old);
 
-        updateReservationList(dateInt);
+        updateReservationList(mCurrentDateInt);
     }
 
     private void updateReservationList(int dateInt){
         String year = String.valueOf(CalendarUtils.getDisplayYear(dateInt));
 
-        String month = "";
-        int monthInt = CalendarUtils.getDisplayMonth(dateInt);
-        if(monthInt < 10){
+        String month =  String.valueOf(CalendarUtils.getDisplayMonth(dateInt));
+        if (month.length() == 1) {
             month = "0" + month;
-        } else {
-            month = String.valueOf(CalendarUtils.getDisplayMonth(dateInt));
         }
         String formatDate = year + "-" + month;
+
         getTimeList(formatDate);
     }
 
@@ -933,6 +936,7 @@ public class ReservationActivity extends BaseActivity {
     }
 
     private void getTimeList(String month) {
+        Log.d("lzc" , "month=========>"+month);
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", mId + "");
         // TODO
