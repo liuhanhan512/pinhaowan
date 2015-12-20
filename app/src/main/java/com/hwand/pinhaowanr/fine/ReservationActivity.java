@@ -833,10 +833,13 @@ public class ReservationActivity extends BaseActivity {
 
     class ReservationAdapter extends BaseAdapter {
 
+        private int groupPosition;
+
         private List<ClassDetailSubTitleModel> classDetailSubTitleModels = new ArrayList<ClassDetailSubTitleModel>();
 
         public ReservationAdapter(int groupPosition) {
             List<ClassDetailSubTitleModel> subTitleModels = classDetailGroupTitleModels.get(groupPosition).getClassDetailSubTitleModelList();
+            this.groupPosition = groupPosition;
             if (subTitleModels != null) {
                 classDetailSubTitleModels.clear();
                 classDetailSubTitleModels.addAll(subTitleModels);
@@ -850,7 +853,7 @@ public class ReservationActivity extends BaseActivity {
 
         @Override
         public Object getItem(int position) {
-            return null;
+            return classDetailSubTitleModels.get(position);
         }
 
         @Override
@@ -859,7 +862,7 @@ public class ReservationActivity extends BaseActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup viewGroup) {
+        public View getView(final int position, View convertView, ViewGroup viewGroup) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(ReservationActivity.this)
                         .inflate(R.layout.reservation_list_item_layout, viewGroup, false);
@@ -875,16 +878,19 @@ public class ReservationActivity extends BaseActivity {
             switch (state) {
                 case STATE_RESERVATED:
                     reservationStatus.setEnabled(true);
+                    reservationStatus.setSelected(true);
                     reservationStatus.setText(getString(R.string.reserved));
                     reservationStatus.setBackgroundResource(R.drawable.red_solid_bg);
                     break;
                 case STATE_FULL:
                     reservationStatus.setEnabled(false);
+                    reservationStatus.setSelected(false);
                     reservationStatus.setText(getString(R.string.fully_booked));
                     reservationStatus.setBackgroundResource(R.drawable.gray_solid_corner_bg);
                     break;
                 case STATE_CAN:
                     reservationStatus.setEnabled(true);
+                    reservationStatus.setSelected(false);
                     reservationStatus.setText(getString(R.string.reservation));
                     reservationStatus.setBackgroundResource(R.drawable.yellow_solid_bg);
                     break;
@@ -899,7 +905,8 @@ public class ReservationActivity extends BaseActivity {
                         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM", new DateFormatSymbols(aLocale));
                         fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
                         String month = fmt.format(date);
-                        apply(mId, month, classDetailSubTitleModel.getSubscribeId());
+//                        final int gp = groupPosition;
+                        apply(groupPosition,position ,mId, month, classDetailSubTitleModel.getSubscribeId());
                     }
                 }
             });
@@ -984,7 +991,7 @@ public class ReservationActivity extends BaseActivity {
 
     }
 
-    private void apply(int classId, String month, int subscribeId) {
+    private void apply(final int groupPosition , final int position , int classId, String month, int subscribeId) {
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", classId + "");
         params.put("month", month + "");
@@ -996,6 +1003,8 @@ public class ReservationActivity extends BaseActivity {
                 //结果（result） 1 已经预约  2 人已经满 3 你不是会员 4 成功
                 if (!TextUtils.isEmpty(response) && response.contains("4")) {
                     AndTools.showToast("成功预约！");
+                    classDetailGroupTitleModels.get(groupPosition).getClassDetailSubTitleModelList().get(position).setState(STATE_RESERVATED);
+                    mAdapter.notifyDataSetChanged();
                     // TODO:设置已预约
                 } else {
                     String msg = "网络问题请重试！";
