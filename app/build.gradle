@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
+
 android {
     compileSdkVersion 22
     buildToolsVersion "23.0.1"
@@ -21,6 +25,14 @@ android {
 
 
         }
+
+        release {
+            storeFile file("./tools/release/pinhaowan.keystore")
+            storePassword "pinhaowan"
+            keyAlias "pinhaowan"
+            keyPassword "pinhaowan"
+        }
+
     }
 
     buildTypes {
@@ -37,15 +49,68 @@ android {
         }
 
         release {
-            minifyEnabled true
+            minifyEnabled false
             shrinkResources false
 
             manifestPlaceholders = [AmapKey: "a7b36a7f85e739a06af70d06be5ece20"]
 
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            signingConfig signingConfigs.release
+
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        // 输出apk名称为pinhaowan_v1.0_2015-01-15_wandoujia.apk
+                        def fileName = "pinhaowan_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+                }
+            }
+
         }
+
+
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+
+
+    productFlavors {
+        wandoujia {
+        }
+        xiaomi {
+        }
+        huawei {
+        }
+        baidu {
+        }
+        qihu {
+        }
+        yingyongbao {
+        }
+        xiaowu {
+        }
+        official {
+        }
+        google {
+
+        }
+        productFlavors.all {
+            flavor -> flavor.manifestPlaceholders = [Umeng: name]
+        }
+
     }
 }
+
+
+
 repositories {
     flatDir {
         dirs 'libs'

@@ -46,6 +46,10 @@
 
         <!--</activity>-->
 
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="${Umeng}" />
+
         <!-- ###################添加UmengAppkey###################### -->
         <meta-data
             android:name="UMENG_APPKEY"

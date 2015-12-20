@@ -936,7 +936,6 @@ public class ReservationActivity extends BaseActivity {
     }
 
     private void getTimeList(String month) {
-        Log.d("lzc" , "month=========>"+month);
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", mId + "");
         // TODO
