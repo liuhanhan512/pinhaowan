@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -392,7 +393,17 @@ public class ReservationActivity extends BaseActivity {
         mTheDataPostToOnCurrentPageChange = 0;
         int old = mCurrentDateInt;
         mCurrentDateInt = dateInt;
+
         onCurrentDayChange(mCurrentDateInt, old);
+
+        updateReservationList(dateInt);
+    }
+
+    private void updateReservationList(int dateInt){
+        String year = String.valueOf(CalendarUtils.getDisplayYear(dateInt));
+        String month = String.valueOf(CalendarUtils.getDisplayMonth(dateInt));
+        String formatDate = year + "-" + month;
+        getTimeList(formatDate);
     }
 
     private void onCurrentDayChange(int dateInt, int oldDateInt) {
@@ -787,7 +798,6 @@ public class ReservationActivity extends BaseActivity {
         private void bindGroupView(final int groupPosition, View groupView) {
             TextView title = (TextView) groupView.findViewById(R.id.day_time);
             title.setText(classDetailGroupTitleModels.get(groupPosition).getTime());
-            ;
         }
 
         @Override
