@@ -2,6 +2,7 @@ package com.hwand.pinhaowanr;
 
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.ImageView;
 
 /**
  * Created by hanhanliu on 15/6/27.
@@ -21,5 +22,4 @@ public class CommonViewHolder {
         }
         return (T) childView;
     }
-
 }
