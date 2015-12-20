@@ -401,7 +401,14 @@ public class ReservationActivity extends BaseActivity {
 
     private void updateReservationList(int dateInt){
         String year = String.valueOf(CalendarUtils.getDisplayYear(dateInt));
-        String month = String.valueOf(CalendarUtils.getDisplayMonth(dateInt));
+
+        String month = "";
+        int monthInt = CalendarUtils.getDisplayMonth(dateInt);
+        if(monthInt < 10){
+            month = "0" + month;
+        } else {
+            month = String.valueOf(CalendarUtils.getDisplayMonth(dateInt));
+        }
         String formatDate = year + "-" + month;
         getTimeList(formatDate);
     }
