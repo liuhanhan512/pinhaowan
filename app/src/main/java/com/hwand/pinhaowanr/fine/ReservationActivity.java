@@ -939,18 +939,24 @@ public class ReservationActivity extends BaseActivity {
         NetworkRequest.get(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                classDetailGroupTitleModels.clear();
+                mAdapter.notifyDataSetChanged();
                 if (!TextUtils.isEmpty(response)) {
+
                     List<ClassDetailSubTitleModel> list = ClassDetailSubTitleModel.arrayFromData(response);
                     if (list != null && list.size() > 0) {
                         try {
                             filterData(list);
                         } catch (ParseException e) {
+                            e.printStackTrace();
+
                         }
 
                     } else {
 
                     }
                 } else {
+
                 }
 
             }
