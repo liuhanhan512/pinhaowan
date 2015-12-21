@@ -36,6 +36,8 @@ import com.hwand.pinhaowanr.widget.DDAlertDialog;
 
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +54,18 @@ public class LaunchSpellDActivity extends BaseActivity {
     private int mCurrentType;
     private double mCurrentPrice;
     private String mCurrentTime;
+
+    private LinearLayout mOnceLayout;
+    private Spinner mSpinnerYear;
+    private Spinner mSpinnerMonth;
+    private Spinner mSpinnerDay;
+    private ArrayList<String> dataYear = new ArrayList<String>();
+    private ArrayList<String> dataMonth = new ArrayList<String>();
+    private ArrayList<String> dataDay = new ArrayList<String>();
+    private ArrayAdapter<String> adapterSpinnerYear;
+    private ArrayAdapter<String> adapterSpinnerMonth;
+    private ArrayAdapter<String> adapterSpinnerDay;
+
 
     private static final String SPELL_D_KEY = "SPELL_D_KEY";
     private static final String SPELL_D_CLASS_KEY = "SPELL_D_CLASS_KEY";
@@ -111,6 +125,53 @@ public class LaunchSpellDActivity extends BaseActivity {
 
         CircleImageView avatar = (CircleImageView) findViewById(R.id.avatar);
         AndTools.displayImage(null, DataCacheHelper.getInstance().getUserInfo().getUrl(), avatar);
+
+        mOnceLayout = (LinearLayout)findViewById(R.id.once_layout);
+        mSpinnerYear = (Spinner) findViewById(R.id.spinner_year);
+        mSpinnerMonth = (Spinner) findViewById(R.id.spinner_month);
+        mSpinnerDay = (Spinner) findViewById(R.id.spinner_day);
+        // 年份设定为当年的前后16年
+        Calendar cal = Calendar.getInstance();
+        for (int i = 0; i < 32; i++) {
+            dataYear.add("" + (cal.get(Calendar.YEAR) - 16 + i));
+        }
+        adapterSpinnerYear = new ArrayAdapter<String>(this, R.layout.spinner_item_layout, dataYear);
+        adapterSpinnerYear.setDropDownViewResource(R.layout.spinner_item_layout);
+        mSpinnerYear.setAdapter(adapterSpinnerYear);
+        mSpinnerYear.setSelection(12);// 默认选中4年前
+
+        // 12个月
+        for (int i = 1; i <= 12; i++) {
+            dataMonth.add("" + (i < 10 ? "0" + i : i));
+        }
+        adapterSpinnerMonth = new ArrayAdapter<String>(this, R.layout.spinner_item_layout, dataMonth);
+        adapterSpinnerMonth.setDropDownViewResource(R.layout.spinner_item_layout);
+        mSpinnerMonth.setAdapter(adapterSpinnerMonth);
+
+        adapterSpinnerDay = new ArrayAdapter<String>(this, R.layout.spinner_item_layout, dataDay);
+        adapterSpinnerDay.setDropDownViewResource(R.layout.spinner_item_layout);
+        mSpinnerDay.setAdapter(adapterSpinnerDay);
+
+        mSpinnerMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                dataDay.clear();
+                Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.YEAR, Integer.valueOf(mSpinnerYear.getSelectedItem().toString()));
+                cal.set(Calendar.MONTH, arg2);
+                int dayofm = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+                for (int i = 1; i <= dayofm; i++) {
+                    dataDay.add("" + (i < 10 ? "0" + i : i));
+                }
+                adapterSpinnerDay.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+
+            }
+        });
+
 
         mAddress = (EditText) findViewById(R.id.address);
         mPeople = (EditText) findViewById(R.id.people_count);
@@ -207,7 +268,17 @@ public class LaunchSpellDActivity extends BaseActivity {
             Map<String, String> params = new HashMap<String, String>();
             params.put("id", mSpellDModel.getId() + "");
             params.put("type", mCurrentType + "");
-            params.put("pinTime", URLEncoder.encode(mCurrentTime));
+            if(mType == Constant.SPELL_D_CLASS_ONE){
+                StringBuilder sb = new StringBuilder("");
+                sb.append(mSpinnerYear.getSelectedItem().toString() + "-");
+                sb.append(mSpinnerMonth.getSelectedItem().toString() + "-");
+                sb.append(mSpinnerDay.getSelectedItem().toString());
+                final String pinTime = sb.toString();
+                params.put("pinTime", URLEncoder.encode(pinTime));
+            } else {
+
+                params.put("pinTime", URLEncoder.encode(mCurrentTime));
+            }
             params.put("roles", count);
             params.put("detailAddress", URLEncoder.encode(address));
             params.put("money", new DecimalFormat("0.00").format(mCurrentPrice));
@@ -297,8 +368,16 @@ public class LaunchSpellDActivity extends BaseActivity {
                 break;
         }
         mCurrentType = type;
-        String[] timeItems = getTimes(type);
-        mTimeSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, timeItems));
+        if(mCurrentType == Constant.SPELL_D_CLASS_ONE){
+            mTimeSpinner.setVisibility(View.GONE);
+            mOnceLayout.setVisibility(View.VISIBLE);
+        } else {
+            mOnceLayout.setVisibility(View.GONE);
+            mTimeSpinner.setVisibility(View.VISIBLE);
+            String[] timeItems = getTimes(type);
+            mTimeSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, timeItems));
+        }
+
     }
 
     private String[] getCategorys() {
