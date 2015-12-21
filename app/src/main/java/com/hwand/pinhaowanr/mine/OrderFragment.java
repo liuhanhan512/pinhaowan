@@ -157,7 +157,7 @@ public class OrderFragment extends BaseFragment implements OrderSlidingAdapter.O
                 LogUtil.d("dxz",CalendarUtils.getPureMonthInt(dayInt)+"");
                 holder.setIsYesterday(dayInt < CalendarUtils.getToday());
                 holder.setIsCurrentMonth(CalendarUtils.getPureMonthInt(dayInt) == curMonthInt);
-                holder.setSeletedTip(mDays.contains(dayInt));
+                holder.setSelectedTip(mDays.contains(dayInt));
 
                 return view;
             }
@@ -264,8 +264,6 @@ public class OrderFragment extends BaseFragment implements OrderSlidingAdapter.O
 
         private TextView mDateText;
 
-        private boolean mIsSelected;
-
         public CalendarItemHolder(View v) {
             mDateText = (TextView) v.findViewById(R.id.calendar_date_text);
         }
@@ -282,8 +280,7 @@ public class OrderFragment extends BaseFragment implements OrderSlidingAdapter.O
             mDateText.setSelected(true);
         }
 
-        public void setSeletedTip(boolean isSelected) {
-            mIsSelected = isSelected;
+        public void setSelectedTip(boolean isSelected) {
             if (isSelected) {
                 setSelectedBackground();
             } else {

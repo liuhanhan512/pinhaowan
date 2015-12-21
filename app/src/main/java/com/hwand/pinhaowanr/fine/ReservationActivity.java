@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -28,6 +27,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.CommonViewHolder;
+import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.ClassDetailGroupTitleModel;
 import com.hwand.pinhaowanr.model.ClassDetailModel;
@@ -101,6 +101,8 @@ public class ReservationActivity extends BaseActivity {
 
     private SparseArray<Boolean> mCalendarCache = new SparseArray<Boolean>();
     private SparseArray<Integer> mCalendarMonthDataStatus = new SparseArray<Integer>();
+
+    private List<Integer> mDays = new ArrayList<Integer>();
 
     private Drawable mCalendarItemTodayTip;
     private Drawable mCalendarItemCurrentTip;
@@ -232,30 +234,12 @@ public class ReservationActivity extends BaseActivity {
                     holder = (CalendarItemHolder) view.getTag();
                 }
                 holder.setText(String.valueOf(CalendarUtils.getDisplayDay(dateInt)));
-                if (dateInt == mCurrentDateInt) {
-                    holder.setCurrentTip(true);
-                } else {
-                    holder.setCurrentTip(false);
-                }
-                if (dateInt == CalendarUtils.getToday()) {
-                    holder.setTodayTip(true);
-                } else {
-                    holder.setTodayTip(false);
-                }
+                holder.setCurrentTip(dateInt == mCurrentDateInt && mDays.isEmpty());
+                holder.setTodayTip(dateInt == CalendarUtils.getToday());
                 holder.setIsCurrentMonth(isCurrentMonth);
+                holder.setIsYesterday(dateInt < CalendarUtils.getToday());
+                holder.setSelectedTip(mDays.contains(dateInt),dateInt);
 
-//                int monthInt = CalendarUtils.getPureMonthInt(dateInt);
-//                Integer monthDataStatus = mCalendarMonthDataStatus.get(monthInt);
-//                if (monthDataStatus != null && monthDataStatus == DATA_STATUS_COMPLETE) {
-//                    Boolean calendarCacheData = mCalendarCache.get(dateInt);
-//                    if (calendarCacheData != null && calendarCacheData) {
-//                        holder.setLeaveTip(true);
-//                    } else {
-//                        holder.setLeaveTip(false);
-//                    }
-//                } else {
-//                    holder.setLeaveTip(false);
-//                }
                 return view;
             }
         });
@@ -404,10 +388,10 @@ public class ReservationActivity extends BaseActivity {
         updateReservationList(mCurrentDateInt);
     }
 
-    private void updateReservationList(int dateInt){
+    private void updateReservationList(int dateInt) {
         String year = String.valueOf(CalendarUtils.getDisplayYear(dateInt));
 
-        String month =  String.valueOf(CalendarUtils.getDisplayMonth(dateInt));
+        String month = String.valueOf(CalendarUtils.getDisplayMonth(dateInt));
         if (month.length() == 1) {
             month = "0" + month;
         }
@@ -563,6 +547,25 @@ public class ReservationActivity extends BaseActivity {
                 mDateText.setAlpha(1);
             } else {
                 mDateText.setAlpha(0.5f);
+            }
+        }
+
+        public void setIsYesterday(boolean isYesterday) {
+            if (isYesterday) {
+                mDateText.setAlpha(0.5f);
+            }
+        }
+
+        public void setSelectedTip(boolean isSelected,int dateInt) {
+            if (isSelected) {
+                mIsCurrent = isSelected;
+                Point p = CalendarGridView.dateToGridPostion(dateInt, dateInt);
+                if (p != null) {
+                    mCurrentDayLine = p.y;
+                } else {
+                    mCurrentDayLine = 0;
+                }
+                setCurrentBackground();
             }
         }
     }
@@ -919,15 +922,20 @@ public class ReservationActivity extends BaseActivity {
             reservationStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (state == STATE_CAN) {
-                        Date date = new Date(classDetailSubTitleModel.getStartTime());
-                        Locale aLocale = Locale.US;
-                        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM", new DateFormatSymbols(aLocale));
-                        fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
-                        String month = fmt.format(date);
+                    if (MainApplication.getInstance().isLogin()) {
+                        if (state == STATE_CAN) {
+                            Date date = new Date(classDetailSubTitleModel.getStartTime());
+                            Locale aLocale = Locale.US;
+                            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM", new DateFormatSymbols(aLocale));
+                            fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+                            String month = fmt.format(date);
 //                        final int gp = groupPosition;
-                        apply(groupPosition,position ,mId, month, classDetailSubTitleModel.getSubscribeId());
+                            apply(groupPosition, position, mId, month, classDetailSubTitleModel.getSubscribeId());
+                        }
+                    } else {
+                        AndTools.showToast("预约需要登录！");
                     }
+
                 }
             });
 
@@ -938,18 +946,13 @@ public class ReservationActivity extends BaseActivity {
     private void getTimeList(String month) {
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", mId + "");
-        // TODO
-//        Date date = new Date(System.currentTimeMillis());
-//        Locale aLocale = Locale.US;
-//        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM", new DateFormatSymbols(aLocale));
-//        fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
-//        String month = fmt.format(date);
         params.put("month", month);
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_APPLY_TIMES, params);
         NetworkRequest.get(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 classDetailGroupTitleModels.clear();
+                mDays.clear();
                 mAdapter.notifyDataSetChanged();
                 if (!TextUtils.isEmpty(response)) {
 
@@ -959,20 +962,26 @@ public class ReservationActivity extends BaseActivity {
                             filterData(list);
                         } catch (ParseException e) {
                             e.printStackTrace();
+                            AndTools.showToast("本月没有可预约信息");
 
                         }
 
                     } else {
-
+                        AndTools.showToast("本月没有可预约信息");
                     }
                 } else {
+                    AndTools.showToast("本月没有可预约信息");
 
                 }
+                mCalendarPager.notifyDataChanged();
 
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                AndTools.showToast("本月没有可预约信息");
+                mDays.clear();
+                mCalendarPager.notifyDataChanged();
             }
         });
     }
@@ -986,6 +995,8 @@ public class ReservationActivity extends BaseActivity {
             fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
             String day = fmt.format(start);
             keys.add(day);
+            int datInt = CalendarUtils.getDateInt(order.getStartTime());
+            mDays.add(datInt);
         }
         for (String key : keys) {
             ClassDetailGroupTitleModel classDetailGroupTitleModel = new ClassDetailGroupTitleModel();
@@ -1017,7 +1028,7 @@ public class ReservationActivity extends BaseActivity {
 
     }
 
-    private void apply(final int groupPosition , final int position , int classId, String month, int subscribeId) {
+    private void apply(final int groupPosition, final int position, int classId, String month, int subscribeId) {
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", classId + "");
         params.put("month", month + "");
@@ -1028,10 +1039,16 @@ public class ReservationActivity extends BaseActivity {
             public void onResponse(String response) {
                 //结果（result） 1 已经预约  2 人已经满 3 你不是会员 4 成功
                 if (!TextUtils.isEmpty(response) && response.contains("4")) {
-                    AndTools.showToast("成功预约！");
+                    new DDAlertDialog.Builder(ReservationActivity.this)
+                            .setTitle("提示").setMessage("成功预约！")
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
                     classDetailGroupTitleModels.get(groupPosition).getClassDetailSubTitleModelList().get(position).setState(STATE_RESERVATED);
                     mAdapter.notifyDataSetChanged();
-                    // TODO:设置已预约
                 } else {
                     String msg = "网络问题请重试！";
                     if (TextUtils.isEmpty(response)) {
@@ -1049,7 +1066,6 @@ public class ReservationActivity extends BaseActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    getFragmentManager().popBackStack();
                                 }
                             }).show();
                 }
@@ -1064,7 +1080,6 @@ public class ReservationActivity extends BaseActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                getFragmentManager().popBackStack();
                             }
                         }).show();
             }
