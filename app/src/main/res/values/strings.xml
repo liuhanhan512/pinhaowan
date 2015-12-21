@@ -92,7 +92,7 @@
     <string name="sign_up_fail_tips">报名失败！</string>
     <string name="sign_up_success_tips">报名成功!</string>
     <string name="class_detail">课程详情</string>
-    <string name="spell_d_time">营业时间：</string>
+    <string name="spell_d_time">营业时间 ：</string>
     <string name="people_cost">人均价格：%1.2f元</string>
     <string name="spell_class_error">人已经满了</string>
 
