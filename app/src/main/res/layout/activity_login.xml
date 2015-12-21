@@ -85,7 +85,7 @@
         android:singleLine="true"
         android:gravity="center"
         android:textColor="@color/black"
-        android:background="@color/bg_btn_yellow_light">
+        android:background="#fef7a8">
     </TextView>
 
 </RelativeLayout>
