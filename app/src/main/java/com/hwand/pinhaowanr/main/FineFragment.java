@@ -471,7 +471,7 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         private void bindChildView(final int groupPosition, int childPosition,
                                    View groupView) {
 
-            HListView listView = (HListView) groupView.findViewById(R.id.listview);
+            final HListView listView = (HListView) groupView.findViewById(R.id.listview);
 
             final FineItemAdpater adapter = new FineItemAdpater(groupPosition);
 
@@ -484,6 +484,16 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             });
 
             listView.setAdapter(adapter);// 设置菜单Adapter
+
+            listView.post(new Runnable() {
+                @Override
+                public void run() {
+                    int screenWidth = AndTools.getScreenWidth(getActivity());
+                    int itemWidth = AndTools.dp2px(getActivity(), 170);
+                    int halfWidth = (screenWidth - itemWidth) / 2;
+                    listView.smoothScrollBy(itemWidth - halfWidth , 0);
+                }
+            });
 
         }
 
