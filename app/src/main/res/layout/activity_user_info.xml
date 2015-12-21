@@ -73,34 +73,42 @@
         android:layout_marginTop="6dp"
         android:background="@color/divider_light_yellow"/>
 
-    <ImageView
-        android:id="@+id/tip"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/item_divider"
         android:layout_below="@+id/divider"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginLeft="12dp"
-        android:src="@mipmap/fine_group_item_image_divider"
-        />
-    <TextView
-        android:id="@+id/tv_about"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/divider"
-        android:layout_marginTop="21dp"
-        android:layout_marginLeft="12dp"
-        android:layout_toRightOf="@+id/tip"
-        android:gravity="center"
-        android:text="关于他"
-        android:textSize="15sp"/>
-    <TextView
-        android:id="@+id/about"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_about"
-        android:layout_marginTop="21dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:textSize="13sp"
-        android:textColor="@color/text_color_light"/>
+        android:layout_marginTop="24dp">
+        <ImageView
+            android:id="@+id/tip"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginLeft="12dp"
+            android:src="@mipmap/fine_group_item_image_divider"
+            />
+        <TextView
+            android:id="@+id/tv_about"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/item_divider"
+            android:layout_marginTop="21dp"
+            android:layout_marginLeft="12dp"
+            android:layout_toRightOf="@+id/tip"
+            android:gravity="center"
+            android:text="关于他"
+            android:textSize="15sp"/>
+        <TextView
+            android:id="@+id/about"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/item_divider"
+            android:layout_below="@+id/tv_about"
+            android:layout_marginTop="21dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:textSize="13sp"
+            android:textColor="@color/text_color_light"/>
+    </RelativeLayout>
 </RelativeLayout>
