@@ -100,6 +100,7 @@
             android:lines="1"
             android:ellipsize="end"
             android:textSize="12sp"
+            android:textColor="@color/text_color_gray_light"
             />
 
 
@@ -111,6 +112,7 @@
             android:layout_marginTop="4dp"
             android:textSize="12sp"
             android:text="Tel"
+            android:textColor="@color/text_color_gray"
             />
 
     </RelativeLayout>
@@ -133,6 +135,7 @@
             android:lines="1"
             android:ellipsize="end"
             android:textSize="12sp"
+            android:textColor="@color/text_color_gray"
             />
 
 
@@ -142,6 +145,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/hours"
             android:layout_marginTop="4dp"
+            android:textColor="@color/text_color_gray"
             android:textSize="12sp"
             android:text="Tel"
             />
