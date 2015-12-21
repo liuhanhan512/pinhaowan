@@ -86,7 +86,7 @@ public class MinePlanFragment extends BaseFragment {
         mPager.setOnPageChangeListener(new ViewPagerListener());
         mPager.setOffscreenPageLimit(2);
         if (mPageAdapter == null) {
-            mPageAdapter = new MinePlanPagerAdapter(getFragmentManager());
+            mPageAdapter = new MinePlanPagerAdapter(getChildFragmentManager());
         }
         mPager.setAdapter(mPageAdapter);
 
