@@ -147,7 +147,6 @@ public class SpellDListActivity extends BaseActivity implements SwipeRefreshLayo
         NetworkRequest.get(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("lzc", "response=========>" + response);
                 if (!TextUtils.isEmpty(response)) {
                     Gson gson = new Gson();
                     SpellDClassResultModel spellDClassResultModel = gson.fromJson(response , SpellDClassResultModel.class);
