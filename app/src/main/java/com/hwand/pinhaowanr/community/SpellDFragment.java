@@ -471,7 +471,7 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
             if (spellDCategoryModel.isSelected()) {
                 categoryLayout.setBackgroundResource(R.drawable.red_solid_corner_bg);
             } else {
-                categoryLayout.setBackgroundResource(R.drawable.red_corner_bg);
+                categoryLayout.setBackgroundResource(R.drawable.red_corner_bg_large);
             }
 
             return convertView;

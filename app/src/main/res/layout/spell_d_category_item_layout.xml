@@ -16,8 +16,9 @@
             android:paddingRight="6dp"
             android:textSize="12sp"
             android:textColor="@color/community_spell_d_category_color"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="63dp"
+            android:singleLine="true"
+            android:layout_height="20dp" />
     </RelativeLayout>
 
 </LinearLayout>
