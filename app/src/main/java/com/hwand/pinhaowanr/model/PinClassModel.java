@@ -35,6 +35,8 @@ public class PinClassModel implements Serializable {
     private int currentRole;
     private String money;
 
+    private int spellStatus ;
+
     private List<PinClassPeopleModel> attendList;
 
     public int getId() {
@@ -43,6 +45,14 @@ public class PinClassModel implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getSpellStatus() {
+        return spellStatus;
+    }
+
+    public void setSpellStatus(int spellStatus) {
+        this.spellStatus = spellStatus;
     }
 
     public int getRoleID() {

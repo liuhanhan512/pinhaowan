@@ -100,7 +100,7 @@
             android:background="@mipmap/corner_yellow_bg"
             android:gravity="center"
             android:singleLine="true"
-            android:text="拼一个" />
+            android:text="@string/pin_class" />
 
         <View
             android:id="@+id/divider"

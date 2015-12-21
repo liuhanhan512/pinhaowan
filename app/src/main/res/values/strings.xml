@@ -83,6 +83,8 @@
     <string name="activity_detail_discuss">详情评论</string>
     <string name="discuss_null_tips">评论不能为空</string>
     <string name="pin_class">拼一个</string>
+    <string name="class_pinned">已拼</string>
+    <string name="class_pin_over">人数已满</string>
     <string name="launch_people">发起人</string>
     <string name="spell_d_class_time">时间: %s</string>
     <string name="spell_d_people_count">人数：%1$d / %2$d</string>
@@ -92,6 +94,7 @@
     <string name="class_detail">课程详情</string>
     <string name="spell_d_time">营业时间：</string>
     <string name="people_cost">人均价格：%1.2f元</string>
+    <string name="spell_class_error">人已经满了</string>
 
     <string name="calendar_sunday">日</string>
     <string name="calendar_monday">一</string>

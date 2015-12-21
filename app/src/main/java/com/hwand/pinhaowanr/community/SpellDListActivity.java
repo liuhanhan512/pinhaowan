@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -18,6 +19,7 @@ import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.PinClassModel;
 import com.hwand.pinhaowanr.model.PinClassPeopleModel;
+import com.hwand.pinhaowanr.model.SpellDClassResultModel;
 import com.hwand.pinhaowanr.utils.AndTools;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
@@ -131,9 +133,50 @@ public class SpellDListActivity extends BaseActivity implements SwipeRefreshLayo
         });
     }
 
+
     @Override
     public void onRefresh() {
         fetchData();
+    }
+
+    private void spellClass(final int position){
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("id", mClassId + "");
+        String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_JOIN_PIN_CLASS, params);
+        NetworkRequest.get(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("lzc", "response=========>" + response);
+                if (!TextUtils.isEmpty(response)) {
+                    Gson gson = new Gson();
+                    SpellDClassResultModel spellDClassResultModel = gson.fromJson(response , SpellDClassResultModel.class);
+                    switch (spellDClassResultModel.getResult()){
+                        case 1:
+                            break;
+                        case 2:
+                            AndTools.showToast(SpellDListActivity.this.getResources().getString(R.string.spell_class_error));
+                            break;
+                        case 3:
+                            break;
+                    }
+                    mPinClassModels.get(position).setSpellStatus(spellDClassResultModel.getResult());
+                    mAdapter.notifyDataSetChanged();
+                } else {
+                    SpellDClassResultModel spellDClassResultModel = new SpellDClassResultModel();
+                    spellDClassResultModel.setResult(3);
+                    mPinClassModels.get(position).setSpellStatus(spellDClassResultModel.getResult());
+                    mAdapter.notifyDataSetChanged();
+
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     class Adapter extends BaseAdapter {
@@ -154,7 +197,7 @@ public class SpellDListActivity extends BaseActivity implements SwipeRefreshLayo
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup viewGroup) {
+        public View getView(final int position, View convertView, ViewGroup viewGroup) {
             if (convertView == null) {
                 convertView = View.inflate(SpellDListActivity.this, R.layout.spell_d_class_list_item_layout, null);
             }
@@ -177,10 +220,29 @@ public class SpellDListActivity extends BaseActivity implements SwipeRefreshLayo
             TextView price = (TextView) convertView.findViewById(R.id.tv_price);
             price.setText(getString(R.string.price, pinClassModel.getMoney()));
 
-            convertView.findViewById(R.id.btn_pin).setOnClickListener(new View.OnClickListener() {
+            TextView pin = (TextView) convertView.findViewById(R.id.btn_pin);
+            switch (pinClassModel.getSpellStatus()){
+                case 0:
+                    pin.setText(R.string.pin_class);
+                    pin.setEnabled(true);
+                    break;
+                case 1:
+                    pin.setText(R.string.class_pinned);
+                    pin.setEnabled(false);
+                    break;
+                case 2:
+                    pin.setText(R.string.class_pin_over);
+                    pin.setEnabled(false);
+                    break;
+                case 3:
+                    pin.setText(R.string.class_pinned);
+                    pin.setEnabled(false);
+                    break;
+            }
+            pin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    spellClass(position);
                 }
             });
 
