@@ -349,7 +349,7 @@ public class LocationChooseActivity extends BaseActivity  {
             } else {
                 address.setText( provinceName + cityName + poiItem.getAdName() + poiItem.getSnippet());
             }
-            distance.setText(""+poiItem.getDistance());
+            distance.setText(getString(R.string.distance_mi , poiItem.getDistance()));
             return convertView;
         }
     }

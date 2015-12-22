@@ -99,6 +99,7 @@
     <string name="search_hint">输入关键字查询</string>
     <string name="search">搜索</string>
     <string name="search_none_tips">搜索内容不能为空</string>
+    <string name="distance_mi">%dm</string>
 
     <string name="calendar_sunday">日</string>
     <string name="calendar_monday">一</string>
