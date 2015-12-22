@@ -127,6 +127,11 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
             if (configModel.getCityType() == mCityType) {
                 List<RegionModel> regionModels = configModel.getRegionMap();
                 if (regionModels != null) {
+                    RegionModel all = new RegionModel();
+                    all.setType(0);
+                    all.setTypeName("全部");
+                    mRegionList.clear();
+                    mRegionList.add(all);
                     mRegionList.addAll(regionModels);
                 }
                 break;
@@ -214,7 +219,6 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
     private void fetchData() {
         if (noData) {
             mSwipeRefreshLayout.setRefreshing(false);
-            AndTools.showToast("已经没有更多内容");
             return;
         }
         isLoading = true;
@@ -241,12 +245,18 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
                         mHomePageModels.addAll(homePageModels);
                         mAdapter.notifyDataSetChanged();
                     } else {
-                        AndTools.showToast("已经没有更多内容");
                         noData = true;
                     }
                 } else {
-                    AndTools.showToast("已经没有更多内容");
                     noData = true;
+                }
+                if (noData && mCount == 0) {
+                    AndTools.showToast("目前条件下没有内容");
+                    mHomePageModels.clear();
+                    mAdapter.notifyDataSetChanged();
+                }
+                if (mCount > 0) {
+                    AndTools.showToast("已经没有更多内容");
                 }
 
             }
@@ -295,7 +305,7 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
                     RegionModel regionModel = mRegionList.get(position);
                     mRegionType = regionModel.getType();
                     mSwipeRefreshLayout.setRefreshing(true);
-                    fetchData();
+                    onRefresh();
                 }
             });
         }
@@ -318,7 +328,7 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
                     mMinAge = ageModel.getMinAge();
                     mMaxAge = ageModel.getMaxAge();
                     mSwipeRefreshLayout.setRefreshing(true);
-                    fetchData();
+                    onRefresh();
 
                 }
             });

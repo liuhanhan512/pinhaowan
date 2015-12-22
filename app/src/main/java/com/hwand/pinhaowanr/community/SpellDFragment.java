@@ -149,6 +149,11 @@ public class SpellDFragment extends BaseCommunityFragment implements SwipeRefres
             if (configModel.getCityType() == MainApplication.getInstance().getCityType()) {
                 List<RegionModel> regionModels = configModel.getRegionMap();
                 if (regionModels != null) {
+                    RegionModel all = new RegionModel();
+                    all.setType(0);
+                    all.setTypeName("全部");
+                    mRegionList.clear();
+                    mRegionList.add(all);
                     mRegionList.addAll(regionModels);
                 }
                 break;
