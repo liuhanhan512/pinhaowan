@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,11 +15,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.hwand.pinhaowanr.BaseActivity;
+import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.PinClassModel;
 import com.hwand.pinhaowanr.model.PinClassPeopleModel;
 import com.hwand.pinhaowanr.model.SpellDClassResultModel;
 import com.hwand.pinhaowanr.utils.AndTools;
+import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.CircleImageView;
@@ -139,24 +140,27 @@ public class SpellDListActivity extends BaseActivity implements SwipeRefreshLayo
         fetchData();
     }
 
-    private void spellClass(final int position){
+    private void spellClass(final int position) {
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", mClassId + "");
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_JOIN_PIN_CLASS, params);
+        LogUtil.d("dxz",url);
         NetworkRequest.get(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 if (!TextUtils.isEmpty(response)) {
                     Gson gson = new Gson();
-                    SpellDClassResultModel spellDClassResultModel = gson.fromJson(response , SpellDClassResultModel.class);
-                    switch (spellDClassResultModel.getResult()){
+                    SpellDClassResultModel spellDClassResultModel = gson.fromJson(response, SpellDClassResultModel.class);
+                    switch (spellDClassResultModel.getResult()) {
                         case 1:
+                            AndTools.showToast("已经拼了这个课程！");
                             break;
                         case 2:
                             AndTools.showToast(SpellDListActivity.this.getResources().getString(R.string.spell_class_error));
                             break;
                         case 3:
+                            AndTools.showToast("拼课成功！");
                             break;
                     }
                     mPinClassModels.get(position).setSpellStatus(spellDClassResultModel.getResult());
@@ -220,7 +224,13 @@ public class SpellDListActivity extends BaseActivity implements SwipeRefreshLayo
             price.setText(getString(R.string.price, pinClassModel.getMoney()));
 
             TextView pin = (TextView) convertView.findViewById(R.id.btn_pin);
-            switch (pinClassModel.getSpellStatus()){
+            for (PinClassPeopleModel model : pinClassModel.getAttendList()) {
+                if (model.getId() == DataCacheHelper.getInstance().getUserInfo().getRoleId()) {
+                    pinClassModel.setSpellStatus(3);
+                    break;
+                }
+            }
+            switch (pinClassModel.getSpellStatus()) {
                 case 0:
                     pin.setText(R.string.pin_class);
                     pin.setEnabled(true);

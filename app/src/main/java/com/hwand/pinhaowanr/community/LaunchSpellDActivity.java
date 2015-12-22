@@ -36,8 +36,10 @@ import com.hwand.pinhaowanr.widget.DDAlertDialog;
 
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -132,13 +134,13 @@ public class LaunchSpellDActivity extends BaseActivity {
         mSpinnerDay = (Spinner) findViewById(R.id.spinner_day);
         // 年份设定为当年的前后16年
         Calendar cal = Calendar.getInstance();
-        for (int i = 0; i < 32; i++) {
-            dataYear.add("" + (cal.get(Calendar.YEAR) - 16 + i));
+        for (int i = 0; i < 2; i++) {
+            dataYear.add("" + (cal.get(Calendar.YEAR)  + i));
         }
         adapterSpinnerYear = new ArrayAdapter<String>(this, R.layout.spinner_item_layout, dataYear);
         adapterSpinnerYear.setDropDownViewResource(R.layout.spinner_item_layout);
         mSpinnerYear.setAdapter(adapterSpinnerYear);
-        mSpinnerYear.setSelection(12);// 默认选中4年前
+        mSpinnerYear.setSelection(0);// 默认选中4年前
 
         // 12个月
         for (int i = 1; i <= 12; i++) {
@@ -265,6 +267,22 @@ public class LaunchSpellDActivity extends BaseActivity {
             // form field with an error.
             focusView.requestFocus();
         } else {
+            if(mType == Constant.SPELL_D_CLASS_ONE){
+                String time = mSpinnerYear.getSelectedItem().toString()+mSpinnerMonth.getSelectedItem().toString()+mSpinnerDay.getSelectedItem().toString();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                String today = sdf.format(new Date(System.currentTimeMillis()));
+                if (Long.valueOf(today) > Long.valueOf(time)) {
+                    new DDAlertDialog.Builder(LaunchSpellDActivity.this)
+                            .setTitle("提示").setMessage("请选择正确的日期")
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
+                    return;
+                }
+            }
             Map<String, String> params = new HashMap<String, String>();
             params.put("id", mSpellDModel.getId() + "");
             params.put("type", mCurrentType + "");
