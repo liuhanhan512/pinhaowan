@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,7 +25,6 @@ import com.hwand.pinhaowanr.event.LocationEvent;
 import com.hwand.pinhaowanr.event.RegionChooseEvent;
 import com.hwand.pinhaowanr.location.CityChooseActivity;
 import com.hwand.pinhaowanr.location.LocationChooseActivity;
-import com.hwand.pinhaowanr.location.RegionChooseActivity;
 import com.hwand.pinhaowanr.model.ConfigModel;
 import com.hwand.pinhaowanr.model.RegionModel;
 import com.hwand.pinhaowanr.utils.AndTools;
@@ -120,7 +118,7 @@ public class CommunityFragment extends BaseFragment {
         AMapLocation aMapLocation = MainApplication.getInstance().getAmapLocation();
         if(aMapLocation != null){
             mCity.setText(aMapLocation.getCity());
-            mRegion.setText(aMapLocation.getDistrict());
+            mRegion.setText(aMapLocation.getRoad());
         }
     }
 
