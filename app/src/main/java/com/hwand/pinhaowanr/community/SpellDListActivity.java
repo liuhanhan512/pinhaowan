@@ -16,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.DataCacheHelper;
+import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.model.PinClassModel;
 import com.hwand.pinhaowanr.model.PinClassPeopleModel;
@@ -145,7 +146,7 @@ public class SpellDListActivity extends BaseActivity implements SwipeRefreshLayo
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", mClassId + "");
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_JOIN_PIN_CLASS, params);
-        LogUtil.d("dxz",url);
+        LogUtil.d("dxz", url);
         NetworkRequest.get(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -225,10 +226,15 @@ public class SpellDListActivity extends BaseActivity implements SwipeRefreshLayo
 
             TextView pin = (TextView) convertView.findViewById(R.id.btn_pin);
             for (PinClassPeopleModel model : pinClassModel.getAttendList()) {
-                if (model.getId() == DataCacheHelper.getInstance().getUserInfo().getRoleId()) {
-                    pinClassModel.setSpellStatus(3);
+                if (MainApplication.getInstance().isLogin()) {
+                    if (model.getId() == DataCacheHelper.getInstance().getUserInfo().getRoleId()) {
+                        pinClassModel.setSpellStatus(3);
+                        break;
+                    }
+                } else {
                     break;
                 }
+
             }
             switch (pinClassModel.getSpellStatus()) {
                 case 0:
