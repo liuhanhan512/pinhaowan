@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
+import com.amap.api.services.core.PoiItem;
 import com.hwand.pinhaowanr.BaseFragment;
 import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
@@ -20,9 +21,11 @@ import com.hwand.pinhaowanr.community.BaseCommunityFragment;
 import com.hwand.pinhaowanr.community.SmallPartnerFragment;
 import com.hwand.pinhaowanr.community.SpellDFragment;
 import com.hwand.pinhaowanr.event.CityChooseEvent;
+import com.hwand.pinhaowanr.event.LocationChooseEvent;
 import com.hwand.pinhaowanr.event.LocationEvent;
 import com.hwand.pinhaowanr.event.RegionChooseEvent;
 import com.hwand.pinhaowanr.location.CityChooseActivity;
+import com.hwand.pinhaowanr.location.LocationChooseActivity;
 import com.hwand.pinhaowanr.location.RegionChooseActivity;
 import com.hwand.pinhaowanr.model.ConfigModel;
 import com.hwand.pinhaowanr.model.RegionModel;
@@ -81,7 +84,7 @@ public class CommunityFragment extends BaseFragment {
         AMapLocation aMapLocation = MainApplication.getInstance().getAmapLocation();
         if(aMapLocation != null){
             mCity.setText(aMapLocation.getCity());
-            mRegion.setText(aMapLocation.getDistrict());
+            mRegion.setText(aMapLocation.getRoad());
         }
 
         initViewPager();
@@ -107,7 +110,8 @@ public class CommunityFragment extends BaseFragment {
                 CityChooseActivity.launch(getActivity());
                 break;
             case R.id.region:
-                RegionChooseActivity.launch(getActivity(), MainApplication.getInstance().getCityType());
+//                RegionChooseActivity.launch(getActivity(), MainApplication.getInstance().getCityType());
+                LocationChooseActivity.launch(getActivity());
                 break;
         }
     }
@@ -138,7 +142,14 @@ public class CommunityFragment extends BaseFragment {
     public void onEventMainThread(RegionChooseEvent event) {
         RegionModel regionModel = event.regionModel;
         if(regionModel != null){
-            mRegion.setText(regionModel.getTypeName());
+//            mRegion.setText(regionModel.getTypeName());
+        }
+    }
+
+    public void onEventMainThread(LocationChooseEvent event) {
+        PoiItem poiItem = event.getPoiItem();
+        if(poiItem != null){
+            mRegion.setText(poiItem.getTitle());
         }
     }
 

@@ -142,7 +142,7 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     public void onEventMainThread(RegionChooseEvent event) {
         RegionModel regionModel = event.regionModel;
         if (regionModel != null) {
-            mRegion.setText(regionModel.getTypeName());
+//            mRegion.setText(regionModel.getTypeName());
         }
     }
 
