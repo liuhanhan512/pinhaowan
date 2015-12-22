@@ -255,7 +255,7 @@ public class FineCategoryListActivity extends BaseActivity implements SwipeRefre
                     mHomePageModels.clear();
                     mAdapter.notifyDataSetChanged();
                 }
-                if (mCount > 0) {
+                if (noData && mCount > 0) {
                     AndTools.showToast("已经没有更多内容");
                 }
 
