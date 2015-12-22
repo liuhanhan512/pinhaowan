@@ -52,7 +52,7 @@ android {
             minifyEnabled false
             shrinkResources false
 
-            manifestPlaceholders = [AmapKey: "a7b36a7f85e739a06af70d06be5ece20"]
+            manifestPlaceholders = [AmapKey: "c53e1d104ab52c93c911fdc9c5146013"]
 
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
