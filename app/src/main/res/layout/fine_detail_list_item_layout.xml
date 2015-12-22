@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:gravity="left|center"
-            android:drawableLeft="@mipmap/mark"
+            android:drawableLeft="@mipmap/red_sign"
             android:text="Title"
             android:drawablePadding="8dp"
             android:textColor="@color/text_color_gray"

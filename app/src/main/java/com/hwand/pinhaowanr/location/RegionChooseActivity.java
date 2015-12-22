@@ -38,7 +38,7 @@ public class RegionChooseActivity extends BaseActivity {
 
     private static final String CITY_TYPE_KEY = "CITY_TYPE_KEY";
 
-    public static void launch(Context context , int cityType){
+    public static void launch(Context context, int cityType) {
         Intent intent = new Intent();
         intent.setClass(context, RegionChooseActivity.class);
         intent.putExtra(CITY_TYPE_KEY, cityType);
@@ -55,17 +55,22 @@ public class RegionChooseActivity extends BaseActivity {
         initViews();
     }
 
-    private void getIntentValue(){
-        mCityType = getIntent().getIntExtra(CITY_TYPE_KEY , -1);
+    private void getIntentValue() {
+        mCityType = getIntent().getIntExtra(CITY_TYPE_KEY, -1);
     }
 
-    private void initData(){
+    private void initData() {
         List<ConfigModel> configModels = DataCacheHelper.getInstance().getConfigModel();
-        if(configModels != null){
-            for(ConfigModel configModel : configModels){
-                if(mCityType == configModel.getCityType()){
+        if (configModels != null) {
+            for (ConfigModel configModel : configModels) {
+                if (mCityType == configModel.getCityType()) {
                     List<RegionModel> regionModels = configModel.getRegionMap();
-                    if(regionModels != null){
+                    if (regionModels != null) {
+                        RegionModel all = new RegionModel();
+                        all.setType(0);
+                        all.setTypeName("全部");
+                        this.regionModels.clear();
+                        this.regionModels.add(all);
                         this.regionModels.addAll(regionModels);
                     }
                 }
@@ -73,12 +78,12 @@ public class RegionChooseActivity extends BaseActivity {
         }
     }
 
-    private void initTitle(){
+    private void initTitle() {
         setActionBarTtile(getString(R.string.city_choose_title));
     }
 
-    private void initViews(){
-        mListView = (ListView)findViewById(R.id.listview);
+    private void initViews() {
+        mListView = (ListView) findViewById(R.id.listview);
 
         mAdapter = new Adapter();
         mListView.setAdapter(mAdapter);
