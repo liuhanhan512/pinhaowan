@@ -25,17 +25,16 @@ import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.event.CityChooseEvent;
 import com.hwand.pinhaowanr.event.LocationChooseEvent;
 import com.hwand.pinhaowanr.event.LocationEvent;
-import com.hwand.pinhaowanr.event.RegionChooseEvent;
 import com.hwand.pinhaowanr.fine.FineCategoryListActivity;
 import com.hwand.pinhaowanr.fine.FineDetailActivity;
 import com.hwand.pinhaowanr.location.CityChooseActivity;
 import com.hwand.pinhaowanr.location.LocationChooseActivity;
-import com.hwand.pinhaowanr.location.RegionChooseActivity;
 import com.hwand.pinhaowanr.model.ConfigModel;
 import com.hwand.pinhaowanr.model.HomePageEntity;
 import com.hwand.pinhaowanr.model.HomePageModel;
 import com.hwand.pinhaowanr.model.RegionModel;
 import com.hwand.pinhaowanr.utils.AndTools;
+import com.hwand.pinhaowanr.utils.LogUtil;
 import com.hwand.pinhaowanr.utils.NetworkRequest;
 import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.SwipeRefreshLayout;
@@ -66,6 +65,10 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     private String[] fineCategorys;
 
+    private double mLongitude;
+
+    private double mLatitude;
+
     private int mCityType = -1;
 
     private View mEmptyView;
@@ -95,7 +98,7 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -107,6 +110,8 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     public void onEventMainThread(LocationEvent event) {
         AMapLocation aMapLocation = MainApplication.getInstance().getAmapLocation();
         if (aMapLocation != null) {
+            mLatitude = aMapLocation.getLatitude();
+            mLongitude = aMapLocation.getLongitude();
             if (topList.size() > 0) {
                 headerView.setVisibility(View.VISIBLE);
                 updateHeaderView();
@@ -129,6 +134,7 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         ConfigModel configModel = event.configModel;
         if (configModel != null) {
             mCityType = configModel.getCityType();
+            MainApplication.getInstance().setCityType(mCityType);
             fetchData();
 
             mCity.setText(configModel.getCityName());
@@ -139,17 +145,18 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         }
     }
 
-    public void onEventMainThread(RegionChooseEvent event) {
-        RegionModel regionModel = event.regionModel;
-        if (regionModel != null) {
-//            mRegion.setText(regionModel.getTypeName());
-        }
-    }
-
     public void onEventMainThread(LocationChooseEvent event) {
+        LogUtil.d("dxz","LocationChooseEvent");
         PoiItem poiItem = event.getPoiItem();
-        if(poiItem != null){
+        if (poiItem != null) {
             mRegion.setText(poiItem.getTitle());
+            mLatitude = poiItem.getLatLonPoint().getLatitude();
+            mLongitude = poiItem.getLatLonPoint().getLongitude();
+            LogUtil.d("dxz",mLatitude+"LocationChooseEvent");
+            if (topList.size() > 0) {
+                headerView.setVisibility(View.VISIBLE);
+                updateHeaderView();
+            }
         }
     }
 
@@ -337,18 +344,16 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         headerSubTitle.setText(homePageModel.getSubtitle());
         headerAddress.setText(homePageModel.getDetailAddress());
 
-        AMapLocation aMapLocation = MainApplication.getInstance().getAmapLocation();
-        if (aMapLocation != null) {
-            double dis = AndTools.getDistance(aMapLocation.getLatitude(), aMapLocation.getLongitude(), homePageModel.getLat(), homePageModel.getLng());
-            String unit = "m";
-            if (dis > 1000) {
-                dis = dis / 1000.0;
-                unit = "km";
-            }
-            BigDecimal bd = new BigDecimal(dis);
-            bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
-            headerDistance.setText(bd.doubleValue() + unit);
+        double dis = AndTools.getDistance(mLatitude, mLongitude, homePageModel.getLat(), homePageModel.getLng());
+        String unit = "m";
+        if (dis > 1000) {
+            dis = dis / 1000.0;
+            unit = "km";
         }
+        BigDecimal bd = new BigDecimal(dis);
+        bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+        LogUtil.d("dxz",bd.doubleValue() + unit +"LocationChooseEvent");
+        headerDistance.setText(bd.doubleValue() + unit);
 
         headerTickets.setText(getString(R.string.remainder_tickets, homePageModel.getRemainTicket()));
 
@@ -502,7 +507,7 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                     int screenWidth = AndTools.getScreenWidth(getActivity());
                     int itemWidth = AndTools.dp2px(getActivity(), 170);
                     int halfWidth = (screenWidth - itemWidth) / 2;
-                    listView.smoothScrollBy(itemWidth - halfWidth , 0);
+                    listView.smoothScrollBy(itemWidth - halfWidth, 0);
                 }
             });
 

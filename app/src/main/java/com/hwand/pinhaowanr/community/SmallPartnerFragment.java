@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
@@ -173,18 +174,16 @@ public class SmallPartnerFragment extends BaseCommunityFragment implements Swipe
     @Override
     public void fetchData() {
         Map<String, String> params = new HashMap<String, String>();
-        /**
          params.put("cityType" , MainApplication.getInstance().getCityType() + "");
          AMapLocation mapLocation = MainApplication.getInstance().getAmapLocation();
          if(mapLocation != null){
          params.put("lng" , mapLocation.getLongitude() + "");
          params.put("lat" , mapLocation.getLatitude() + "");
          }
-         */
 
-        params.put("cityType", "1");
-        params.put("lng", "121.430829");
-        params.put("lat", "31.228781");
+//        params.put("cityType", "1");
+//        params.put("lng", "121.430829");
+//        params.put("lat", "31.228781");
 
         String url = UrlConfig.getHttpGetUrl(UrlConfig.URL_BUDDY_INFO, params);
 
