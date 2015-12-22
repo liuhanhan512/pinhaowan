@@ -77,7 +77,7 @@
                     android:lines="1"
                     android:ellipsize="end"
                     android:textSize="12sp"
-                    android:text="1.8km"
+                    android:text="500m"
                     android:textColor="@color/white"
                     android:shadowColor="#ff000000"
                     android:shadowDx="2"

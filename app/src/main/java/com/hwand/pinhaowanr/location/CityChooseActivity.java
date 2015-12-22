@@ -99,7 +99,7 @@ public class CityChooseActivity extends BaseActivity {
         public View getView(int position, View convertView, ViewGroup viewGroup) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(CityChooseActivity.this)
-                        .inflate(R.layout.location_choose_list_item_layout, viewGroup, false);
+                        .inflate(R.layout.city_choose_list_item_layout, viewGroup, false);
             }
             ConfigModel configModel = configModelList.get(position);
             TextView city = CommonViewHolder.get(convertView, R.id.city);
