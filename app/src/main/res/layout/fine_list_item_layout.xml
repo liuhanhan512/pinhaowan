@@ -37,7 +37,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/title"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
             android:layout_marginTop="6dp">
 
             <TextView
@@ -59,7 +58,7 @@
                 android:layout_alignBottom="@+id/address"
                 android:layout_alignTop="@+id/address"
                 android:layout_centerHorizontal="true"
-                android:layout_marginLeft="2dp"
+                android:layout_marginLeft="1dp"
                 android:layout_toRightOf="@+id/address"
                 android:background="#b7b6b6" />
 
@@ -68,11 +67,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="2dp"
+                android:layout_marginLeft="1dp"
                 android:layout_toRightOf="@+id/divider"
                 android:ellipsize="end"
                 android:lines="1"
-                android:text="1.8km"
+                android:text="500m"
                 android:textColor="#b7b6b6"
                 android:textSize="12sp" />
         </RelativeLayout>

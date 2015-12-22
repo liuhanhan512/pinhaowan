@@ -146,13 +146,13 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     }
 
     public void onEventMainThread(LocationChooseEvent event) {
-        LogUtil.d("dxz","LocationChooseEvent");
+        LogUtil.d("dxz", "LocationChooseEvent");
         PoiItem poiItem = event.getPoiItem();
         if (poiItem != null) {
             mRegion.setText(poiItem.getTitle());
             mLatitude = poiItem.getLatLonPoint().getLatitude();
             mLongitude = poiItem.getLatLonPoint().getLongitude();
-            LogUtil.d("dxz",mLatitude+"LocationChooseEvent");
+            LogUtil.d("dxz", mLatitude + "LocationChooseEvent");
             if (topList.size() > 0) {
                 headerView.setVisibility(View.VISIBLE);
                 updateHeaderView();
@@ -352,7 +352,7 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         }
         BigDecimal bd = new BigDecimal(dis);
         bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
-        LogUtil.d("dxz",bd.doubleValue() + unit +"LocationChooseEvent");
+        LogUtil.d("dxz", bd.doubleValue() + unit + "LocationChooseEvent");
         headerDistance.setText(bd.doubleValue() + unit);
 
         headerTickets.setText(getString(R.string.remainder_tickets, homePageModel.getRemainTicket()));
@@ -562,7 +562,16 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             address.setText(homePageModel.getDetailAddress());
             TextView ticket = CommonViewHolder.get(convertView, R.id.tickets);
             ticket.setText(getString(R.string.remainder_tickets, homePageModel.getRemainTicket()));
-            TextView payment = CommonViewHolder.get(convertView, R.id.payment);
+            TextView distance = CommonViewHolder.get(convertView, R.id.distance);
+            double dis = AndTools.getDistance(mLatitude, mLongitude, homePageModel.getLat(), homePageModel.getLng());
+            String unit = "m";
+            if (dis > 1000) {
+                dis = dis / 1000.0;
+                unit = "km";
+            }
+            BigDecimal bd = new BigDecimal(dis);
+            bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+            distance.setText(bd.doubleValue() + unit);
             return convertView;
         }
     }
