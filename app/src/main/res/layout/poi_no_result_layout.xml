@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/no_result_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/poi_no_result_image"
+        />
+    <TextView
+        android:id="@+id/no_result_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"
+        android:textColor="#858e99"
+        android:layout_below="@+id/no_result_image"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="@string/no_poi_result"
+        android:layout_alignLeft="@+id/no_result_image"
+        android:layout_alignRight="@+id/no_result_image"
+        />
+
+</RelativeLayout>

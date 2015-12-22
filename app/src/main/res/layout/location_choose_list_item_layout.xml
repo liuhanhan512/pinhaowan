@@ -1,16 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:paddingLeft="12dp"
-    android:paddingRight="12dp"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingRight="17dp"
+    android:paddingLeft="17dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:background="#FFFFFF">
 
     <TextView
-        android:id="@+id/city"
+        android:id="@+id/distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@null"
+        android:textColor="#858e99"
+        android:textSize="10dp"
+        />
+
+    <TextView
+        android:id="@+id/poiitem_name"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/distance"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="#222222"
+        android:textSize="12dp"
         android:gravity="left|center"
         />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/poiitem_addr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/poiitem_name"
+        android:layout_marginTop="8dp"
+        android:layout_toLeftOf="@id/distance"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:gravity="left|center"
+        android:textColor="#858e99"
+        android:textSize="10dp"
+        />
+
+</RelativeLayout>

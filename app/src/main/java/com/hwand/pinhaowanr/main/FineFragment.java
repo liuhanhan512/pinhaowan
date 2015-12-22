@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
+import com.amap.api.services.core.PoiItem;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseFragment;
@@ -22,11 +23,13 @@ import com.hwand.pinhaowanr.DataCacheHelper;
 import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
 import com.hwand.pinhaowanr.event.CityChooseEvent;
+import com.hwand.pinhaowanr.event.LocationChooseEvent;
 import com.hwand.pinhaowanr.event.LocationEvent;
 import com.hwand.pinhaowanr.event.RegionChooseEvent;
 import com.hwand.pinhaowanr.fine.FineCategoryListActivity;
 import com.hwand.pinhaowanr.fine.FineDetailActivity;
 import com.hwand.pinhaowanr.location.CityChooseActivity;
+import com.hwand.pinhaowanr.location.LocationChooseActivity;
 import com.hwand.pinhaowanr.location.RegionChooseActivity;
 import com.hwand.pinhaowanr.model.ConfigModel;
 import com.hwand.pinhaowanr.model.HomePageEntity;
@@ -109,7 +112,7 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                 updateHeaderView();
             }
             mCity.setText(aMapLocation.getCity());
-            mRegion.setText(aMapLocation.getDistrict());
+            mRegion.setText(aMapLocation.getRoad());
 
             List<ConfigModel> configModels = DataCacheHelper.getInstance().getConfigModel();
             for (ConfigModel configModel : configModels) {
@@ -140,6 +143,13 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         RegionModel regionModel = event.regionModel;
         if (regionModel != null) {
             mRegion.setText(regionModel.getTypeName());
+        }
+    }
+
+    public void onEventMainThread(LocationChooseEvent event) {
+        PoiItem poiItem = event.getPoiItem();
+        if(poiItem != null){
+            mRegion.setText(poiItem.getTitle());
         }
     }
 
@@ -182,7 +192,7 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         AMapLocation aMapLocation = MainApplication.getInstance().getAmapLocation();
         if (aMapLocation != null) {
             mCity.setText(aMapLocation.getCity());
-            mRegion.setText(aMapLocation.getDistrict());
+            mRegion.setText(aMapLocation.getRoad());
         }
     }
 
@@ -195,7 +205,8 @@ public class FineFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                 CityChooseActivity.launch(getActivity());
                 break;
             case R.id.region:
-                RegionChooseActivity.launch(getActivity(), mCityType);
+//                RegionChooseActivity.launch(getActivity(), mCityType);
+                LocationChooseActivity.launch(getActivity());
                 break;
             case R.id.empty_text:
                 mSwipeRefreshLayout.setRefreshing(true);

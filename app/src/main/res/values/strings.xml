@@ -95,6 +95,10 @@
     <string name="spell_d_time">营业时间 ：</string>
     <string name="people_cost">人均价格：%1.2f元</string>
     <string name="spell_class_error">人已经满了</string>
+    <string name="no_poi_result">无结果</string>
+    <string name="search_hint">输入关键字查询</string>
+    <string name="search">搜索</string>
+    <string name="search_none_tips">搜索内容不能为空</string>
 
     <string name="calendar_sunday">日</string>
     <string name="calendar_monday">一</string>
