@@ -107,6 +107,8 @@
         <!-- 地区选择界面 -->
         <activity
             android:name=".location.LocationChooseActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:windowSoftInputMode="stateHidden|adjustResize"
             android:screenOrientation="portrait">
 
         </activity>
