@@ -7,7 +7,7 @@ import java.util.Map;
  */
 public class UrlConfig {
 
-    public static final String HOST_PATH = "http://123.57.33.24/server/";
+    public static final String HOST_PATH = "http://119.29.26.188/server/";
 
     public static final String URL_LOGIN = HOST_PATH + "Login?";
     public static final String URL_GET_PWD = HOST_PATH + "GetPassword?";
