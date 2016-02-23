@@ -5,31 +5,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.amap.api.location.AMapLocation;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.hwand.pinhaowanr.BaseActivity;
 import com.hwand.pinhaowanr.BaseFragment;
-import com.hwand.pinhaowanr.DataCacheHelper;
-import com.hwand.pinhaowanr.MainApplication;
 import com.hwand.pinhaowanr.R;
-import com.hwand.pinhaowanr.location.LocationDataFeedbackListener;
-import com.hwand.pinhaowanr.location.LocationManager;
 import com.hwand.pinhaowanr.utils.AndTools;
-import com.hwand.pinhaowanr.utils.NetworkRequest;
-import com.hwand.pinhaowanr.utils.UrlConfig;
 import com.hwand.pinhaowanr.widget.CustomViewPager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by hanhanliu on 15/11/20.
@@ -41,14 +28,14 @@ public class MainActivity extends BaseActivity {
     private CustomViewPager mPager;
     private MainPagerAdapter mPageAdapter;
 
-    private static final int FINE = 0;
-    private static final int COMMUNITY = 1;
+//    private static final int FINE = 0;
+    private static final int COMMUNITY = 0;
 //    private static final int STAR_MOM = 2;
-    public static final int MINE = 2;
+    public static final int MINE = 1;
 
-    private static final int TAB_COUNT = 3;
+    private static final int TAB_COUNT = 2;
 
-    private int mCurrentIndex = FINE;
+    private int mCurrentIndex = COMMUNITY;
 
     private List<RelativeLayout> mTabLayouts = new ArrayList<RelativeLayout>();
 
@@ -56,13 +43,13 @@ public class MainActivity extends BaseActivity {
 
     private BaseFragment mCurrentFragment;
 
-    private final int[] FRAGMENT_TITLES = {R.string.fine_text, R.string.community_text, /**R.string.star_mom_text,*/ R.string.mine_text};
+    private final int[] FRAGMENT_TITLES = {/**R.string.fine_text, R.string.community_text,*/ /**R.string.star_mom_text,*/ R.string.mine_text};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_layout);
-        mCurrentIndex = getIntent().getIntExtra(INTENT_KEY_TAB, FINE);
+        mCurrentIndex = getIntent().getIntExtra(INTENT_KEY_TAB, COMMUNITY);
         initTitle();
         initViews();
 //        EventBus.getDefault().register(this);
@@ -116,9 +103,9 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onPageSelected(int position) {
             switch (position) {
-                case FINE:
-
-                    break;
+//                case FINE:
+//
+//                    break;
 
                 case COMMUNITY:
                     break;
@@ -141,8 +128,8 @@ public class MainActivity extends BaseActivity {
     };
 
     private void initTabLayouts() {
-        RelativeLayout fineTab = (RelativeLayout) findViewById(R.id.fine_layout);
-        fineTab.setTag(Integer.valueOf(FINE));
+//        RelativeLayout fineTab = (RelativeLayout) findViewById(R.id.fine_layout);
+//        fineTab.setTag(Integer.valueOf(FINE));
 
         RelativeLayout communityTab = (RelativeLayout) findViewById(R.id.community_layout);
         communityTab.setTag(Integer.valueOf(COMMUNITY));
@@ -153,7 +140,7 @@ public class MainActivity extends BaseActivity {
         RelativeLayout mineTab = (RelativeLayout) findViewById(R.id.mine_layout);
         mineTab.setTag(Integer.valueOf(MINE));
 
-        mTabLayouts.add(fineTab);
+//        mTabLayouts.add(fineTab);
         mTabLayouts.add(communityTab);
 //        mTabLayouts.add(starTab);
         mTabLayouts.add(mineTab);
@@ -202,9 +189,9 @@ public class MainActivity extends BaseActivity {
                 mListFragments = new SparseArray<BaseFragment>(TAB_COUNT);
             }
             switch (position) {
-                case FINE:
-                    mCurrentFragment = FineFragment.newInstance();
-                    break;
+//                case FINE:
+//                    mCurrentFragment = FineFragment.newInstance();
+//                    break;
                 case COMMUNITY:
                     mCurrentFragment = CommunityFragment.newInstance();
                     break;

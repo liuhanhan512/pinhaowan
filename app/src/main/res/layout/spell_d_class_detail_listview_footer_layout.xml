@@ -15,7 +15,8 @@
         android:drawablePadding="6dp"
         android:gravity="left|center"
         android:textColor="@color/text_color_gray"
-        android:text="@string/class_cost" />
+        android:textSize="16sp"
+        android:text="费用" />
 
     <View
         android:layout_width="match_parent"
